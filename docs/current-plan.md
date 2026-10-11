@@ -2,6 +2,8 @@
 
 更新时间：2026-10-11。依据小组会话中的选择整理，不代表 staff 已审批或实验已完成。
 
+课程核对补充见 [课程要求与staff反馈互评](reviews/2026-10-11_9291720_course-requirements_codex.md)：老师针对早期TabM提案建议在遮挡外增加其他鲁棒性设置；不等于批准后来SupCon方案。该记录仅供讨论，不在此擅自改变算法或正式协议。正式评价指标同样须自行实现，开发诊断的库函数结果不能原样替代。
+
 ## 已选择的方向
 
 For unseen products, can adding local visual features reduce false matches between visually similar products under partial occlusion while maintaining same-product matching performance?
