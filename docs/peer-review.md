@@ -34,7 +34,8 @@
 
 - **拉取后优先阅读** [PythonCode进度与CNN交接](reviews/2026-10-11_009a241_python-progress_codex.md) 及 [LR开发结果](experiments/2026-10-11-lr-feature-pilot.md)：传统LR/SVM已写未完整跑，CNN LR已小试未合入；JPEG/填边复核及阈值风险待回应。请组员把更新文档一起提供给各自AI，记录已读SHA与负责范围，不替其他成员确认已读。
 
-- [2026-10-11 预处理填边与特征缓存](reviews/2026-10-11_3054cd3_preprocessing-features_claude.md)：R1 白色填边使 HSV/HOG 携带长宽比，影响与 CNN 的特征比较；R2 `.npz` 特征与保存的 JPEG 不对应。合成数据复现；复查 `94c9c2e` 的 PythonCode 版本，两项仍在，R2 已在 02 的干净/干扰对照中实际触发。待负责人回应，未改代码。
+- [2026-10-11 可配置流程（01/02/03 与 SupCon）](reviews/2026-10-11_88e1760_pipeline_claude.md)：Mac/Python 3.11 CPU 复现 5 项合成测试通过；R1 LR/SVM 图片对特征只有绝对差，与 Readme 写的“绝对差+逐元素乘积”不符；R2 官方 holdout 查询依赖两处抽样恰好一致，建议加断言；R3 SupCon 温度边界不自动扩展；R4 小的一致性问题。待负责人回应，未改代码。
+- [2026-10-11 预处理填边与特征缓存](reviews/2026-10-11_3054cd3_preprocessing-features_claude.md)：R2 JPEG 缓存不一致已在 `88e1760` 修复并验证（干净缓存与保存 JPEG 提取差 0.0）；R1 白色填边由负责人暂缓，解读特征比较时需说明。
 - [2026-10-11 SML课内特征与测试安排](reviews/2026-10-11_ae5a1d6_feature-options_codex.md)：池化及layer3/layer4初试已完成，层级比较无稳定胜者；先处理预处理互评，再做训练/成本验证；DINOv2已暂缓；关联[已测诊断结果](experiments/2026-10-11-feature-diagnostics.md)。
 - [2026-10-11 课程要求与staff反馈](reviews/2026-10-11_9291720_course-requirements_codex.md)：官方特征/评价限制、课程依据及Canvas真实反馈；鲁棒性扩展待讨论，TabM反馈不代表SupCon批准；只更新文档。
 - [2026-10-11 商品匹配特征方案](reviews/2026-10-11_8990473_features_codex.md)：静态检查与方案比较；全局/区域CNN为待讨论建议，未采纳、未改代码、未完成特征效果测试。各项回应与最新状态以记录正文为准。

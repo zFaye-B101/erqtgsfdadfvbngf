@@ -8,6 +8,7 @@
 
 ### 最近更新：2026-10-11
 
+- **互评更新（Claude）：** 在本会话 Mac/Python 3.11 CPU 临时环境复现 `PythonCode/tests` 5 项合成测试通过（与组员 Windows 记录的库版本一致）。[预处理互评](docs/reviews/2026-10-11_3054cd3_preprocessing-features_claude.md) R2 改为已验证、R1 暂缓；新增 [可配置流程互评](docs/reviews/2026-10-11_88e1760_pipeline_claude.md)：LR/SVM 图片对特征只有绝对差，与 Readme 描述不符（R1），官方 holdout 查询覆盖缺少断言（R2），待负责人回应。只改文档，未改代码；真实 SOP、Windows、GPU 仍未验证。
 **最新代码交接：固定 01/02/03 入口的可配置流程已合入 PythonCode。**
 
 - 01 仅清理和导出图片；02 运行 LR/SVM；新增 03 运行 SupCon-based matching。配置选择 HSV48/HSV_HOG192、ResNet18 Global512 或 Global512+Local2048，无需修改编号入口。
