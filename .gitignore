@@ -247,3 +247,5 @@ outputs/
 # Local outputs from the standalone PythonCode workflow
 PythonCode/results_traditional*/
 PythonCode/processed_sop*/
+# Notebook baseline outputs at the repository root
+/results_traditional*/

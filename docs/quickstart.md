@@ -21,6 +21,10 @@ python 02_SOP_Traditional_Baselines.py
 
 ## 1. 获取仓库
 
+原版 [02_SOP_Traditional_Baselines.ipynb](../notebooks/02_SOP_Traditional_Baselines.ipynb) 也已上传，保留用户的中文学习说明；01与已有版本完全相同。完整 `sop_baselines.py` 与 `sop_features.py` 位于同一 `notebooks/` 目录，不依赖 `PythonCode/`。用户明确要求两套目录独立运行；未来改动应注明更新哪套入口，不能假设自动同步。
+
+Notebook 01的输出相对其工作目录；02的 `DATA_DIR` 默认指向仓库根目录的 `processed_sop/`，运行前应改为01实际输出的位置。若单独下载并打开 `notebooks/`，只需保留两份Notebook与两个同目录辅助模块，并指定本机数据路径。结果默认放在02计算出的 `PROJECT_ROOT` 下的 `results_traditional_v1/`，不要混用不同入口的检查点。Notebook原版并非已整理的最终英文提交文件，上传时无执行输出，也未运行训练。
+
 首次在 Windows 的终端运行（需要 Git；当前仓库为 Public，克隆无需登录，推送需要写入权限）：
 
 ```bash
