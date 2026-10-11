@@ -39,4 +39,4 @@ For unseen products, can adding local visual features reduce false matches betwe
 
 ## 下一步
 
-先锁定共同开发样本/配对清单、像素处理和指标；池化初试完成，后续优先测试中间层并同步验证一轮LR训练及成本。Windows环境仍需实际核验。文献综述按数据集引用加至少两篇额外研究论文组织，说明SupCon相对课堂方法的新意，不要求排除课堂论文；见[原要求澄清](reviews/2026-10-11_9291720_course-requirements_codex.md)。尚无正式模型结果或staff批准凭证。
+当前阶段仍是特征选择，尚未进入正式三模型实验。先锁定共同开发样本/配对清单、像素处理和指标；像素处理需一并决定[预处理互评](reviews/2026-10-11_3054cd3_preprocessing-features_claude.md)中的填边（R1）和特征缓存（R2）问题；池化初试完成，后续优先测试中间层并同步验证一轮LR训练及成本。Windows环境仍需实际核验。文献综述按数据集引用加至少两篇额外研究论文组织，说明SupCon相对课堂方法的新意，不要求排除课堂论文；见[原要求澄清](reviews/2026-10-11_9291720_course-requirements_codex.md)。尚无正式模型结果或staff批准凭证。
