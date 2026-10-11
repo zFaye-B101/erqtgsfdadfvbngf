@@ -1,0 +1,36 @@
+IMPLEMENTATION VALIDATION - 2026-10-11
+
+Python 3.11.15, CPU, isolated local isolated verification environment.
+torch 2.14.1+cpu, torchvision 0.29.1+cpu, numpy 2.4.6,
+pandas 3.0.6, scikit-learn 1.9.1, OpenCV 4.14.0, Pillow 12.3.0.
+No existing Conda environment was modified.
+
+Python compilation: passed.
+Five synthetic tests: passed, 16.368 seconds in the recorded final run.
+
+1. SupCon loss agrees with an independent NumPy implementation of paper Eq. (2).
+   Finite gradients and numerical gradient checking passed. Multi-view input
+   and rejection of batches without positives were checked.
+2. Synthetic ZIP preprocessing preserves train/test, removes small/missing
+   images and the remaining singleton product, and exports 224x224 images.
+3. ResNet18 extraction produces 2560 dimensions (global512 plus local2048),
+   is frozen, and returns deterministic finite features. This test uses RANDOM
+   weights to avoid a download; pretrained-weight performance is not assessed.
+4. Two outer/two inner product-fold LR/SVM/SupCon runs on 96 synthetic images
+   passed for HSV48 and HSV_HOG192 under all five default test conditions.
+   Shared pair manifests remain identical. Predictions, metrics, ablations,
+   figures, checkpoints, combined summaries and completed-fold resume passed.
+   A single alternative 64-dimensional profile preserves folds and pairs and
+   supports reporting without a paired comparison. Pair tampering is rejected.
+5. A 512-dimensional SupCon fit uses only training-product scaling statistics.
+   Checkpoint reload reproduces matching scores exactly. Changing projector
+   weights does not change inference. LR/SVM accept 512-dimensional inputs.
+   Product batching handles a final singleton product without losing samples.
+
+Recorded command: python -m unittest discover -s tests -v
+Detailed local output is retained on the implementation machine; it is not uploaded.
+
+Not executed: a full real SOP run, ten-fold experimental results, official
+holdout scoring on real data, pretrained ResNet downloads/performance or GPU
+training. Synthetic results are execution checks, not reportable experiments.
+The SupCon implementation is the documented project adaptation in Readme.txt.

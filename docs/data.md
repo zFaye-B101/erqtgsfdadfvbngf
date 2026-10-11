@@ -1,5 +1,10 @@
 # SOP 数据下载与资格
 
+## 当前 PythonCode 数据接口（2026-10-11）
+
+新01仅完成原图资格检查、单图商品排除、224x224填边RGB JPEG和审计清单导出。02/03通过data_dir读取清单及图片，按配置重新构建共同干净/扰动特征缓存；原NPZ不再读取，因此已有合格处理目录可复用而无需重跑01。所有条件从同一JPEG解码出发，白色填边仍进入特征，不能声称其影响已解决。缓存、共同配对协议和模型输出留在本机。下文Notebook的NPZ说明仅适用于历史入口。
+
+
 数据集不在仓库内，也不应放入最终提交包。
 
 - [作者的数据集入口](https://github.com/rksltnl/Deep-Metric-Learning-CVPR16#stanford-online-products-dataset)

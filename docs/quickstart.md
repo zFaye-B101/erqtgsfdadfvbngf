@@ -1,5 +1,14 @@
 # 从 GitHub 拉取并运行
 
+## 当前 PythonCode 三步流程（2026-10-11）
+
+在 PythonCode 中使用同一 Python 3.11+ 解释器：先运行01清理图片，再运行02的LR/SVM和03的SupCon。已有完整处理目录可配置 data_dir 后跳过01。修改 experiment_config.json 的 feature_profile 可选择 handcrafted、resnet18_global（512维）或 resnet18（512/2560维对照），只重跑02/03。
+
+基础依赖见 [PythonCode/requirements-base.txt](../PythonCode/requirements-base.txt)；既有 Conda OpenCV 无需再叠装 pip OpenCV。03及ResNet需另装匹配的torch/torchvision，CPU命令见 [Readme.txt](../PythonCode/Readme.txt)。新01不再提取模型特征；02/03从统一保存JPEG构建干净/扰动缓存。默认结果为 results_v2/run_name/feature_profile/算法目录。
+
+开发可运行02/03的 --smoke-test；两者均使用 --skip-official-test 可暂缓官方holdout。合成检查：在 PythonCode 下执行 python -m unittest discover -s tests -v，与根目录原有数据工具测试不同。历史Notebook保持独立，后文Notebook操作仅适用于历史入口。Windows CPU合成检查已通过，真实SOP完整实验与GPU未验证。
+
+
 当前提供环境检查、全量预处理，以及新增的纯 Python 传统基线试跑入口。LR/SVM 的嵌套验证代码已上传但尚未执行真实训练；SupCon 与正式三模型实验仍未完成。
 
 ## 纯 Python 入口（无需 Notebook）

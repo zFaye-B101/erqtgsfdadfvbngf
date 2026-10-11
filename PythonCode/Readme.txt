@@ -1,171 +1,144 @@
-COMP90051 SOP traditional baseline experiments
-=============================================
+SOP MATCHING EXPERIMENT PIPELINE
 
-Files to put together in your PyCharm project root:
-  01_SOP_Preprocessing.py
-  sop_features.py
-  02_SOP_Traditional_Baselines.py
-  sop_baselines.py
-  Stanford_Online_Products.zip (local only)
+Fixed entry points
+01_SOP_Preprocessing.py: audit original ZIP images, exclude unreadable/missing
+images, originals with either side below 100 pixels, and products with only
+one eligible image. Export padded 224x224 RGB JPEGs and audit tables. Preserve
+official train/test labels. Run once per dataset.
+02_SOP_Traditional_Baselines.py: nested product-fold LR and RBF SVM experiments.
+03_SOP_SupCon.py: nested supervised contrastive representation learning and
+cosine matching on unseen products.
 
-Environment: activate Unimelb_SML_A2 and select its Python interpreter in PyCharm.
-Packages are already included in the environment previously installed:
-numpy, pandas, scipy, scikit-learn, matplotlib, Pillow and opencv.
-No Notebook, IPython, torch, GPU or pretrained weights are needed for 02.
+From the PythonCode directory, using your activated Python 3.11 environment:
+python 01_SOP_Preprocessing.py
+python 02_SOP_Traditional_Baselines.py
+python 03_SOP_SupCon.py
 
-1. Run 01_SOP_Preprocessing.py ONCE. It writes processed_sop/ beside the script.
-   If processed_sop already contains a completed clean_manifest.csv and
-   image_features_hsv_hog.npz plus images/, do not rerun 01 into that folder.
-2. Run 02_SOP_Traditional_Baselines.py using the same environment.
-   Check DATA_DIR, OUTPUT_DIR and CONFIG near the top if changing defaults.
-   Do not run sop_features.py or sop_baselines.py separately.
-3. Results go to results_traditional_py_v1/. Keep data, caches and model weights
-   local; do not upload or include them in the submission code ZIP.
-4. If interrupted, rerun 02 with the IDENTICAL configuration, source code,
-   input data and environment. Completed outer folds and caches are reused.
-   Changed settings/code require a NEW output directory. No results are mixed.
+01 searches beside Code and its parents for Stanford_Online_Products.zip.
+An explicit input is supported:
+python 01_SOP_Preprocessing.py --zip-path "D:/data/Stanford_Online_Products.zip"
+Nonempty preprocessing outputs are never overwritten. If the original 01
+already finished and clean_manifest.csv, audit_summary.json and images/ exist,
+set data_dir to that folder and run 02/03 directly. Old feature NPZs are ignored;
+the new feature bank builds reusable caches on the first experiment run.
 
-Terminal commands (run from your project root):
-  conda activate Unimelb_SML_A2
-  python 01_SOP_Preprocessing.py
-  python 02_SOP_Traditional_Baselines.py
+Dependencies
+Use the same Python interpreter for installation and IDE execution.
+Base libraries: numpy, pandas, Pillow, OpenCV, scikit-learn and matplotlib.
+requirements-base.txt provides an optional pip installation list. Existing
+Conda OpenCV also works; do not install another OpenCV build unnecessarily.
+03 and ResNet features additionally need compatible torch/torchvision.
+For CPU:
+python -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+Device settings accept auto, cpu, cuda or mps. Auto selects an available
+accelerator then CPU. CPU-only PyTorch cannot use an NVIDIA GPU.
 
-In PyCharm, select the environment's python.exe, open a numbered script, and
-use Run. Both scripts use their own directory for default paths, rather than
-depending on the Run Configuration's working directory.
+Changing features
+Edit feature_profile in experiment_config.json; keep 01/02/03 unchanged:
+handcrafted: HSV48 versus HSV_HOG192.
+resnet18_global: frozen ImageNet ResNet18 global pooling, 512 dimensions.
+resnet18: global512 versus global512 plus four 2x2 pooled region descriptors,
+2560 dimensions total. This paired comparison measures added spatial detail.
+The ResNet classifier is removed; IMAGENET1K_V1 weights are frozen and downloaded
+by torchvision on first use. ImageNet normalization is applied to the same
+padded 224x224 images used by other features, without an extra center crop.
 
-Optional custom paths:
-  python 01_SOP_Preprocessing.py --zip-path "D:/data/Stanford_Online_Products.zip" --output-dir "D:/data/processed_sop"
-  python 02_SOP_Traditional_Baselines.py --data-dir "D:/data/processed_sop" --output-dir "D:/results/baseline_run1"
-Optional protocol flags:
-  python 02_SOP_Traditional_Baselines.py --all-train
-  python 02_SOP_Traditional_Baselines.py --skip-official-test
-Changing flags changes the protocol, so use a NEW output directory.
+Example configuration change:
+"feature_profile": "resnet18_global"
+Rerun only 02 and 03. No preprocessing rerun is needed. Outputs are separated
+by profile; 02 and 03 reuse the same extracted features and corruption caches.
 
-The original .ipynb files are retained as historical copies. They are no longer
-required for the workflow. Both numbered .py scripts and both helper modules
-contain English comments, descriptions and messages. Script 02 prints tables
-to the terminal and saves plots as PNG files; it has no interactive-display
-dependency. Importing the numbered scripts does not launch the workflow.
-Existing completed preprocessing outputs remain compatible. Earlier baseline
-checkpoints have a different helper-code fingerprint and must not be resumed
-with the updated helpers; the new default result directory keeps them separate.
+For a new fixed extractor, implement dimension, metadata and __call__(images)
+returning an N x D float array in sop_feature_bank.py. Register it in EXTRACTORS
+and add a configuration profile with extractor and column ranges. With one
+feature use comparisons: []; with variants declare baseline/added comparisons.
+An extractor learned from SOP labels must be fitted inside training folds,
+not globally in the feature bank, to avoid validation/test leakage.
 
-What script 02 implements
-------------------
-LR and RBF SVM; HSV48 (global colour) versus HSV + spatial gradient192.
-The gradient feature is a simplified cell histogram, not full standard HOG.
-This is a TRADITIONAL feature pilot, not the ResNet512 / region2048 experiment.
-SupCon is not implemented here; all three algorithms remain required later.
+Shared experiment protocol
+Formal defaults select whole official-training products across categories
+until at least 10,000 cleaned original images are included. All images of those
+products are retained. use_all_official_train can include every eligible train
+product. Ten outer and three inner folds split PRODUCTS, with manual category
+stratification. Official test results are supplementary and are never used
+for fitting, tuning or threshold selection.
 
-Official train/test SKU partition is retained. At least 10,000 eligible original
-training images are selected, retaining all images of each chosen product.
-Products are selected by a seeded round-robin across the 12 categories.
-Set use_all_official_train=True to use the full cleaned official training set.
-The selected dataset size is not the number of sampled training pairs.
-Default training cap: 1,000 anchor products -> at most 3,000 pairs per fold.
-Default evaluation cap: 500 anchor products -> at most 1,500 pairs per fold.
-This controls RBF SVM cost and must be reported as pair sampling, not full-data
-training. Each image pair is contained within one product partition.
+Each sampled anchor has a same-product positive, same-category random negative
+and same-category colour-hard negative. Hard selection always uses clean HSV48,
+including ResNet experiments. Saved product folds, pair CSVs and checksums are
+shared across algorithms and feature profiles. Feature changes preserve pairs.
+All methods train on clean inputs. Test conditions corrupt only the query;
+reference images remain clean. Occlusion/noise/blur/rotation operate on image
+content, keeping padding fixed. Features are recomputed from corrupted images.
 
-Manual category-stratified 10-fold OUTER CV on selected official TRAIN SKUs.
-Manual 3-fold INNER CV on outer-training SKUs for C selection and thresholds.
-No sklearn model_selection, metrics, GridSearchCV or automatic CV is used.
-Only sklearn's classifier training is used. Scaling is manually fitted on
-each relevant training fold. Each model has three C candidates; inner-only
-range extensions are attempted when the winner is at a boundary. Read
-grid_requirement_audit.json; unresolved ranges must be revisited honestly.
-Do not force middle values to win or use outer-test scores to choose ranges.
+LR/SVM use absolute difference plus elementwise product of image features.
+Input scaling and C search are fitted within inner training folds; three C
+candidates are tested with optional boundary extensions. SupCon searches three
+temperatures by clean inner-validation matching AUC. Its scaler and neural
+network are independently refitted in every inner and outer training partition.
+Architecture and epochs are preset. Outer tests never select settings.
+Thresholds use inner out-of-fold positive scores for the configured validation
+recall (0.95). Outer-test recall is not guaranteed to equal that target.
+Metrics are calculated manually. Report outer-fold means and sample standard
+deviations, all/random/colour-hard subsets, and separate official holdout results.
 
-Pair sampling: one same-SKU positive; one same-category random negative;
-one same-category colour-hard negative per anchor. The latter is selected
-from up to 50 other-product candidate images by CLEAN HSV48 distance, using
-the same selection rule for every method. It is a colour-similarity proxy;
-it does not prove products are perceptually similar. Positive pairs are
-shared between the random and colour-hard reporting subsets. The combined
-set has 1:2 positive/negative ratio; each separate subset has 1:1. Precision,
-accuracy and AP therefore describe this sampled benchmark, not deployment
-prevalence. The random negative excludes the same SKU but is not required
-to be visually dissimilar. Pair manifests make the selection reproducible.
+Training budgets differ: LR/SVM use capped sampled pairs; SupCon samples clean
+images from every training product across epochs unless train_product_cap is
+set. Shared tests make evaluation comparable, but training compute is not equal.
+Record budgets and external ImageNet pretraining when interpreting comparisons.
+A single 512-dimensional profile does not provide a spatial-feature ablation.
 
-Train on clean images only. Perturb QUERY only; reference stays clean.
-Five separate conditions, not combined corruptions:
-  clean; occlusion25 (grey rectangle, approximately 25% content area);
-  noise005 (Gaussian pixel noise, std=0.05 on the [0,1] scale, clipped);
-  blur15 (Pillow GaussianBlur radius=1.5 pixels);
-  rotation15 (fixed +15 degrees, fixed canvas, white fill; may crop content).
-Corruptions affect the actual image content, leaving script 01's padding
-unchanged. Seeds are derived from image IDs. All classifiers and feature
-sets use exactly the same corrupted images, pairs and product folds.
-No augmented image is counted toward the minimum 10,000 original images.
-The one-level-per-corruption design is a first robustness experiment,
-not a full severity curve. Add prespecified levels in a NEW run if needed.
+SupCon paper adaptation
+Khosla et al., Supervised Contrastive Learning, NeurIPS 2020:
+https://arxiv.org/abs/2004.11362
+https://github.com/HobbitLong/SupContrast
+sop_supcon.py implements Eq. (2): normalized representations, self exclusion,
+all same-product positives, mean positive log probabilities outside the log.
+Each batch contains >=2 products and >=2 distinct clean images per product;
+other products supply negatives.
+Frozen descriptors feed a trainable MLP encoder and projection head. Inference
+retains the normalized encoder representation and discards the projection
+head for cosine scoring. Checkpoints save weights, training-only scaling,
+settings and training products. load_model supports trusted local inference.
 
-C is tuned by mean clean-validation ROC-AUC across the three inner folds.
-The operating threshold is chosen from selected-C pooled inner out-of-fold
-clean scores to target 95% validation TPR, then fixed for every outer-test
-condition. Test TPR may differ from 95%, and pooled inner scores need not
-have exactly the final-refit score distribution. Report actual test TPR
-and FPR together, rather than calling the test result 'FPR at 95% TPR'.
-Each feature/model configuration has its own validation-derived threshold;
-they are comparable at the same validation target, not guaranteed equal
-test recall. Use paired FPR/TPR deltas to judge the matching tradeoff.
+Differences from the paper: fixed descriptors instead of an end-to-end CNN;
+different clean product images instead of two stochastic augmented views of
+each image; unseen-product matching instead of linear ImageNet classification.
+This is a project adaptation and does not claim the original classification
+results. Test conditions do not enable training augmentation. Twenty epochs
+is a configurable starting budget, not the original paper training schedule.
 
-Metrics computed manually: TP/FP/TN/FN, accuracy, precision, TPR/recall,
-FPR, F1, balanced accuracy, ROC-AUC (tie-aware ranks), average precision
-(score-tie groups). Summary gives mean +/- 1 SD over 10 outer folds;
-these are descriptive fold variability, not independent-sample confidence
-intervals. Outer training sets overlap and pairs can share images/SKUs.
-Figures show FPR, TPR, F1 and ROC-AUC with error bars. Pairwise ablation
-deltas use the same outer fold, pair set, corruption and algorithm.
+Configuration, outputs and resuming
+Paths resolve relative to experiment_config.json. --config selects another file.
+02/03 accept --data-dir, --results-dir, --protocol-dir, --all-train and
+--skip-official-test. Both must use identical common settings for comparisons.
+data_dir: reusable images and clean manifest.
+cache_dir: extractor-specific feature arrays and metadata.
+protocol_dir: common folds, pairs and integrity checks.
+results_dir/run_name/feature_profile/baselines or supcon: tuning, per-pair
+predictions, checkpoints, fold metrics, summary CSVs and figures.
+After both 02 and 03 finish, combined_summary_mean_sd.csv combines all methods.
+paired_feature_deltas.csv and paired_delta_mean_sd.csv contain ablations.
+grid_requirement_audit.json flags hyperparameter boundary choices; review these
+using inner validation only.
 
-Optional final official holdout is enabled by default. It refits each
-configuration on selected official-train products with NEW inner tuning,
-then evaluates a fixed sample from official-test products. It is one extra
-holdout, not the source of CV error bars. Do not use it for model selection.
-SupCon and ResNet experiments should reuse protocol.json product folds,
-saved pair IDs and the SAME corruption function for comparable results.
+Completed outer folds resume only under identical configuration/data/code.
+Changing model settings requires a new run_name. Changing data, sampling,
+folds, conditions or protocol code also requires a new protocol_dir. Changed
+extractor code receives a new cache identity. Dataset fingerprints cover
+manifest bytes plus image file size/mtime, not every image's content hash.
+Do not edit saved pair CSVs.
 
-Teacher feedback and report reminders
-------------------------------------
-The teacher's feedback recommends robustness beyond partial occlusion:
-noise, blur and rotations. All three are included in this implementation.
-Describe why they model real image variation and discuss failures, not
-only which algorithm has the largest accuracy.
-The feedback also requires explaining how the chosen recent paper was
-not discussed in class. For SupCon, distinguish the supervised contrastive
-objective and its use of same-label positives from taught NN/CNN/ResNet
-architectures and pretraining. Cite the selected paper, check the complete
-course materials, and do not claim an approved paper title solely from
-the screenshot: the screenshot confirms conference/year but names no paper.
-Do not describe a frozen-feature adaptation as full end-to-end replication.
+Execution checks
+python 02_SOP_Traditional_Baselines.py --smoke-test
+python 03_SOP_SupCon.py --smoke-test
+These use 384 images, 2 outer/2 inner folds, smaller pair caps and one SupCon
+epoch, writing to separate folders. They are execution checks, not formal
+experimental evidence. Full nested runs can take substantial time.
+python -m unittest discover -s tests -v
+Synthetic checks cover loss, gradients, train-only scaling, checkpoint reload,
+512-dimensional input, shared folds/pairs, metrics and resume. The ResNet check
+uses random weights for dimensions/frozen inference, not pretrained accuracy.
 
-This code addresses the baseline evaluation requirements, NOT the whole
-assignment: SupCon, at least two relevant literature papers, the four-page
-report and team meetings still need to be completed.
-No experiments or tests were executed when these files were authored.
-Actual runtime, convergence, chosen C values and performance are unknown
-until you run the scripts. Preserve logs and disclose actual data/pair
-counts and limitations in the report.
-
-Outputs
--------
-protocol.json: parameters, products, folds, data/source fingerprints, versions.
-experiment_manifest.csv: image-to-feature mapping and corrupted query coverage.
-outer_fold_metrics.csv: every outer-fold metric, condition and negative subset.
-summary_mean_sd.csv: means and SDs for the report.
-paired_feature_deltas.csv / paired_delta_mean_sd.csv: effect of adding gradient.
-all_tuning_records.json / grid_requirement_audit.json: inner tuning evidence.
-figures/: four metrics with error bars for random and colour-hard negatives.
-outer_XX/: pair manifests, inner tuning, saved models, per-pair predictions.
-official_holdout/: supplementary official test outputs and final models.
-feature_cache/: locally cached corruption features; do not submit these.
-
-Pretrained ResNet explanation
-----------------------------
-ResNet need not be pretrained on SOP. Use public ImageNet-pretrained ResNet18
-weights as a fixed feature extractor. Pretraining data relevance matters;
-random/unrelated data is not equivalent to useful image pretraining.
-If any weights are fine-tuned on SOP, fit them only on each training fold.
-Never pretrain/fine-tune using all SOP products before claiming unseen-product
-cross-validation. ResNet feature extraction will be a separate later step.
+Original Python versions remain available in Git history. Historical notebooks are
+not active entry points for the new configuration.

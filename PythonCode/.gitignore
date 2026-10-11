@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.verification_env/
+.verification_artifacts/
+processed_sop*/
+feature_cache*/
+protocols/
+results*/
+Stanford_Online_Products.zip

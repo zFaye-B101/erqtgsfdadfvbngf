@@ -1,5 +1,10 @@
 # 协作与运行路径
 
+## 最新共享运行接口（2026-10-11）
+
+PythonCode现包含固定01/02/03、experiment_config.json和共同辅助模块。切换特征改配置，不改编号入口；新固定提取器注册于sop_feature_bank.py。01独立清理，02/03共享商品折/配对和像素输入。依赖、缓存、模型、路径与断点规则见[Readme.txt](../PythonCode/Readme.txt)。根目录原有Notebook、数据工具和已归档开发结果保持原状。不要将机器环境、生成配对/缓存、模型权重或原图推送。
+
+
 每次开始前读 [AGENTS.md](../AGENTS.md) 和 [CONTRIBUTING.md](../CONTRIBUTING.md)。每次更新共享文件，必须在同一提交/PR内同步根目录 README 及受影响的相关文件；交接时说明验证结果和未完成项。
 
 ## 同步范围

@@ -1,0 +1,66 @@
+{
+  "run_name": "experiment_v2",
+  "feature_profile": "handcrafted",
+  "data_dir": "processed_sop",
+  "protocol_dir": "protocols/shared_v2",
+  "cache_dir": "feature_cache_v2",
+  "results_dir": "results_v2",
+  "mode": "formal",
+  "seed": 20261011,
+  "minimum_train_images": 10000,
+  "use_all_official_train": false,
+  "outer_folds": 10,
+  "inner_folds": 3,
+  "train_anchor_cap": 1000,
+  "evaluation_anchor_cap": 500,
+  "negative_candidates": 50,
+  "target_validation_recall": 0.95,
+  "run_official_test": true,
+  "conditions": {
+    "clean": {},
+    "occlusion25": {"area_fraction": 0.25, "fill": 127},
+    "noise005": {"sigma": 0.05},
+    "blur15": {"radius": 1.5},
+    "rotation15": {"degrees": 15.0}
+  },
+  "feature_profiles": {
+    "handcrafted": {
+      "features": {
+        "HSV48": {"extractor": "hsv_hog", "columns": [0, 48]},
+        "HSV_HOG192": {"extractor": "hsv_hog", "columns": [0, 192]}
+      },
+      "comparisons": [["HSV48", "HSV_HOG192"]]
+    },
+    "resnet18": {
+      "features": {
+        "ResNet18_Global512": {"extractor": "resnet18", "columns": [0, 512]},
+        "ResNet18_GlobalLocal2560": {"extractor": "resnet18", "columns": [0, 2560]}
+      },
+      "comparisons": [["ResNet18_Global512", "ResNet18_GlobalLocal2560"]]
+    },
+    "resnet18_global": {
+      "features": {"ResNet18_Global512": {"extractor": "resnet18", "columns": [0, 512]}},
+      "comparisons": []
+    }
+  },
+  "extraction": {"device": "auto", "batch_size": 64},
+  "baselines": {
+    "c_grids": {"LR": [0.01, 0.1, 1.0], "SVM": [0.1, 1.0, 10.0]},
+    "maximum_grid_extensions": 2
+  },
+  "supcon": {
+    "temperature_grid": [0.05, 0.1, 0.2],
+    "epochs": 20,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "products_per_batch": 32,
+    "images_per_product": 2,
+    "hidden_dim": 256,
+    "representation_dim": 128,
+    "projection_dim": 128,
+    "device": "auto",
+    "cpu_threads": 4,
+    "train_product_cap": null,
+    "view_mode": "clean_product_images"
+  }
+}

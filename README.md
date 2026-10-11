@@ -8,6 +8,15 @@
 
 ### 最近更新：2026-10-11
 
+**最新代码交接：固定 01/02/03 入口的可配置流程已合入 PythonCode。**
+
+- 01 仅清理和导出图片；02 运行 LR/SVM；新增 03 运行 SupCon-based matching。配置选择 HSV48/HSV_HOG192、ResNet18 Global512 或 Global512+Local2048，无需修改编号入口。
+- 02/03 共用商品折、带校验的图片对、HSV 困难负例和查询图扰动；所有特征均从同一保存 JPEG 解码图提取，修复旧流程干净 NPZ 与扰动 JPEG 输入不一致的问题。白色填边仍保留，影响尚待量化。
+- SupCon 实现论文 Eq.(2)，采用固定描述子上的可训练表示网络与投影头、同商品不同干净图片作正例、保留表示网络作余弦匹配。是项目应用适配，不是原论文端到端分类复现。
+- Windows CPU 上 5 项合成检查通过，含 01 筛选、两种特征的 LR/SVM/SupCon 两层折流程、五种测试条件、512 维输入、模型重载和断点复用。真实 SOP 十折、真实官方 holdout、预训练 ResNet 与 GPU 性能尚未验证。
+- 使用方式见 [PythonCode/Readme.txt](PythonCode/Readme.txt)，配置见 [experiment_config.json](PythonCode/experiment_config.json)，验证边界见 [VALIDATION.txt](PythonCode/VALIDATION.txt)，历史评审回应见 [本轮交接](docs/reviews/2026-10-11-configurable-pipeline-response.md)。下方旧记录中的“SupCon尚缺/CNN尚未接入”仅描述此前版本；旧开发数值没有被重算或提升为正式结果。
+
+
 **本轮交接必读：拉取后先读更新文档，再运行或修改代码。** 请组员及各自AI依次读取 [当前方案](docs/current-plan.md)、[CNN+LR三轮结果](docs/experiments/2026-10-11-lr-feature-pilot.md)、[PythonCode进度与互评](docs/reviews/2026-10-11_009a241_python-progress_codex.md)，记录所读提交和负责事项。`git fetch`不更新本地工作树；有未提交改动时先保留，不强制覆盖。本条是提醒，不表示成员已读或已同意。
 
 - 已对齐最新PythonCode传统流程与用户CNN小试：传统LR/SVM及10x3验证代码已上传但无完整运行凭证；CNN的Global512/G+L2560已跑LR开发测试，尚未接入正式.py。SupCon尚缺。新增24行两轮选参结果、48行调参记录和12行参数/阈值；未改组员代码。
@@ -37,9 +46,9 @@
 
 ## 现在开始运行
 
-纯 Python 入口：在 `PythonCode/` 中使用 `Unimelb_SML_A2` 环境，依次执行 `python 01_SOP_Preprocessing.py` 和 `python 02_SOP_Traditional_Baselines.py`。若已有完整 `processed_sop/`，直接运行02；默认结果存入 `PythonCode/results_traditional_py_v1/`，图表保存为PNG。可通过脚本参数指定其他数据路径，完整命令见 [Readme.txt](PythonCode/Readme.txt)。本入口是传统基线试跑，现有预处理评审问题仍未修复。
+纯 Python 入口：在 `PythonCode/` 中使用同一个 Python 3.11+ 环境，依次运行 `python 01_SOP_Preprocessing.py`、`python 02_SOP_Traditional_Baselines.py`、`python 03_SOP_SupCon.py`。已有完整处理结果时，配置 `data_dir` 后跳过01。以后换特征主要修改 `experiment_config.json` 的 `feature_profile`，重新运行02/03。输出默认位于 `PythonCode/results_v2/`，按运行名、特征和算法分开保存。开发先使用 `--smoke-test`，或02/03同时加 `--skip-official-test`；正式设置与历史CNN小试仍须区分。
 
-先看 [拉取与运行说明](docs/quickstart.md)，按 [环境配置与验收](docs/environment.md) 配置后端与内核。正式入口是 [PythonCode/](PythonCode/)：按 [Readme.txt](PythonCode/Readme.txt) 先运行 `01_SOP_Preprocessing.py`，再运行 `02_SOP_Traditional_Baselines.py`。`notebooks/` 中的 Notebook 仅为历史流程/可选预览。SOP ZIP 和生成的 `processed_sop/` 都留在本机，不上传。
+详细依赖、数据路径、缓存与运行方法见 [英文运行说明](PythonCode/Readme.txt) 和 [quickstart](docs/quickstart.md)。数据、缓存、模型权重和机器环境留在本机。
 
 ## 先读这些
 
@@ -54,7 +63,7 @@
 ## 当前状态：2026-10-11
 
 - 研究问题：面对训练时未见过的商品，局部视觉特征是否能减少部分遮挡下相似商品的误匹配，同时维持同商品匹配率？
-- 当前阶段：CNN特征LR开发选参已完成三轮，Global512与G+L2560均保留；传统特征LR/SVM的.py与嵌套验证框架已上传但待真实运行。下一步协调共同协议与接口、解决传统预处理问题并整合CNN/SupCon；尚未完成正式三模型或嵌套实验。
+- 当前阶段：CNN特征LR开发选参已完成三轮；可配置的共同特征/配对接口及LR、SVM、SupCon已实现并通过Windows CPU合成检查，尚未完成真实SOP正式三模型或十折实验。最终特征和正式参数仍待验证。
 - 当前算法方向：Logistic Regression、RBF SVM、SupCon-based matching。不是旧草稿中的 LightGBM 或 TabM。
 - 代码格式：共享与最终提交代码以 `PythonCode/` 的 `.py` 为准，Notebook 不再作为正式入口。
 - SOP 数据资格检查已完成；`PythonCode/01_SOP_Preprocessing.py`（及历史 Notebook 版本）已提供全量预处理代码，但 Windows 全量运行尚未验证，也不是已完成的模型或实验。
@@ -78,7 +87,7 @@
 | `tools/` | 文档提取工具，不是实验代码 |
 | `sop_project/` | 可复用的环境诊断、SOP 数据读取和核验 |
 | `notebooks/` | 历史/可选的独立Notebook流程，非正式提交入口：环境预览、预处理、传统基线02及同目录辅助模块；尚无正式训练结果 |
-| `PythonCode/` | 五个英文脚本/说明：全量预处理、传统基线训练与鲁棒性测试；无需Notebook，尚无真实训练结果 |
+| `PythonCode/` | 固定01/02/03英文入口、特征/协议/模型辅助模块、配置、合成测试和说明；已做Windows CPU合成验证，尚无真实正式训练结果 |
 | `tests/` | 使用合成数据的数据读取测试 |
 
 最终提交需单独整理四页 PDF 报告，以及包含代码、`Readme.txt` 和必要自动化脚本的 ZIP；不含数据。具体格式以官方原件为准。本仓库不配置公共许可证，也不自动向 Canvas 提交。
