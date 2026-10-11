@@ -22,6 +22,6 @@
 
 ## 现有 Notebook
 
-新的共享入口是 `notebooks/00_setup_and_data.ipynb`，支持 ZIP 和解压目录，按单元格从上往下运行。`materials/sop_data_check.ipynb` 保留为早期数据核验记录。Windows 依赖仍待验证；运行后显示的本机原图不能随 Notebook 输出提交到 GitHub。
+`notebooks/00_setup_and_data.ipynb` 用于环境检查和前 20 张图片预览，可选运行。`notebooks/01_SOP_Preprocessing.ipynb` 才执行全量 ZIP 图片审计、筛选、224×224 导出和 HSV/HOG 特征缓存；需与 `notebooks/sop_features.py` 一起使用。输出位于本机 `processed_sop/`，已由 `.gitignore` 排除。`materials/sop_data_check.ipynb` 保留为早期核验记录。Windows 全量预处理仍待运行验证；目前没有模型训练 Notebook。
 
 仓库原为私有，现由用户改为 Public。未来任何权限或可见性变更仍需单独确认，不由 AI 擅自调整；现有资料公开不等于获得再分发授权。

@@ -1,6 +1,6 @@
 # 从 GitHub 拉取并运行
 
-本阶段仅检查环境和数据。三模型、正式划分、特征提取和嵌套评估尚未实现，不要把通过数据读取当成实验完成。
+当前可检查环境、全量清理数据并构造初步图像特征；三模型、正式划分和嵌套评估尚未实现，不要把预处理完成当成实验完成。
 
 ## 1. 获取仓库
 
@@ -30,6 +30,10 @@ git pull --ff-only
 - 缺少基础依赖时才启用安装格的 `INSTALL_BASE = True`，安装到当前内核。基础包不包含 PyTorch。
 - 后续格会提示输入 SOP ZIP 或已解压文件夹的完整路径。支持直接包含 `Ebay_train.txt` / `Ebay_test.txt` 的目录，或它上一级且子文件夹叫 `Stanford_Online_Products` 的目录。
 - 检查前 20 张图片并显示第一张。前 20 张只是读取测试，不是全量资格核验，也不能用于正式划分。
+
+`00_setup_and_data.ipynb` 是可选的环境/少量图片预览，不是全量预处理的前置步骤。环境可用后，在同一 PyCharm 项目中打开 `notebooks/01_SOP_Preprocessing.ipynb`，并选择已安装 `numpy`、`pandas`、Pillow 和 OpenCV 的内核。配套模块 `notebooks/sop_features.py` 需与 Notebook 一起保留。该 Notebook 直接读取 SOP ZIP；若当前目录和父目录找不到 ZIP，按提示输入完整路径。
+
+全量预处理会检查 ZIP 索引对应的图片是否存在、能否解码、原始宽高是否均至少 100；排除只剩一张合格图片的商品，导出保持比例并填充到 224×224 的图片，同时计算 192 维 HSV+空间 HOG 特征。默认输出到 Notebook 当前工作目录的 `processed_sop/`，并生成清单、排除记录、全量审计表和摘要。它不创建实验划分、不训练模型，也不生成遮挡样本。运行时间和磁盘占用会随完整数据集而增加。
 
 如果当前 PyCharm 无法打开 Notebook，仍可用终端方式继续下一节，不必立即更换软件。
 
@@ -71,6 +75,7 @@ python -m sop_project.data --full
 - 组内确认环境报告、数据图片/商品总数、是否成功显示图片。
 - 然后再确认 PyTorch 安装版本、公共特征提取与正式商品级划分。
 - 提交 Notebook 前清除输出，尤其是显示的原图；数据、配置和缓存仍保存在本机。
+- `processed_sop/`、ZIP 和缓存由 `.gitignore` 排除；提交前仍检查 Git 状态，确认没有数据或生成结果进入提交。
 - 运行 `python -m unittest discover -s tests -v` 可检查数据工具。测试只临时生成合成图片，不需要真实数据集。
 
 ## 验证记录

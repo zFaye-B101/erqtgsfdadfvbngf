@@ -8,14 +8,16 @@
 
 ### 最近更新：2026-10-11
 
+- 新增 `notebooks/01_SOP_Preprocessing.ipynb` 与 `notebooks/sop_features.py`：提供全量 ZIP 清理、224×224 图片导出和 HSV/HOG 特征缓存；运行结果留在本机并由 `.gitignore` 排除。代码尚未在 Windows 上完成全量运行。
+- `00_setup_and_data.ipynb` 仍用于环境检查和少量图片预览；完整预处理入口是 `01_SOP_Preprocessing.ipynb`。本次只增加数据准备，不实现模型训练或正式评估。
 - 新增统一协作规则和提交检查单，明确每次文件变更的 README 与相关文件同步要求。
 - 用户已选择大家直接提交到 `main`，不要求分支/PR；按文件分工，不同时编辑同一 Notebook。官方未限定只能一个 Notebook，最终按 [多文件代码包提交说明](docs/submission.md) 整理运行入口。
 - 修正仓库改名后的拉取地址与 Public 状态说明；保留组员清空辅导说明的修改，并同步资料索引与清单。
-- 本次仅修改规范与说明；文件链接/哈希检查及已有数据工具回归测试通过，不代表 Windows 或正式实验已验证。
+- 此前的协作规范更新已通过文件链接/哈希检查及已有数据工具回归测试；这些结果不代表本次新增 Notebook 已在 Windows 或全量数据上验证。
 
 ## 现在开始运行
 
-先看 [拉取与运行说明](docs/quickstart.md)，在 PyCharm 打开 [00_setup_and_data.ipynb](notebooks/00_setup_and_data.ipynb)。支持本机 SOP ZIP 或已解压目录，数据不用上传。环境检查不自动安装 PyTorch。
+先看 [拉取与运行说明](docs/quickstart.md)：可选运行 [00_setup_and_data.ipynb](notebooks/00_setup_and_data.ipynb) 检查环境并预览少量图片，再运行 [01_SOP_Preprocessing.ipynb](notebooks/01_SOP_Preprocessing.ipynb) 做全量预处理。SOP ZIP 和生成的 `processed_sop/` 都留在本机，不上传。
 
 ## 先读这些
 
@@ -30,7 +32,7 @@
 
 - 研究问题：面对训练时未见过的商品，局部视觉特征是否能减少部分遮挡下相似商品的误匹配，同时维持同商品匹配率？
 - 当前算法方向：Logistic Regression、RBF SVM、SupCon-based matching。不是旧草稿中的 LightGBM 或 TabM。
-- SOP 数据资格检查已完成；[现有 Notebook](materials/sop_data_check.ipynb) 仅用于数据检查，不是已完成的模型或实验。
+- SOP 数据资格检查已完成；`01_SOP_Preprocessing.ipynb` 已提供全量预处理代码，但 Windows 全量运行尚未验证，也不是已完成的模型或实验。
 - 用户确认 Windows/PyCharm 主机已下载数据；新公共读取代码在 Mac 上通过测试，Windows 依赖与 GPU 尚待运行检查。
 - 官方 DOCX 是空白模板，不是已提交版本。历史文件中的提交状态只代表当时的记录。
 - 资料归档不代表代码可复现、实验完成或作业提交。
@@ -48,7 +50,7 @@
 | `docs/` | 当前方案、协作说明、下载说明、文件清单 |
 | `tools/` | 文档提取工具，不是实验代码 |
 | `sop_project/` | 可复用的环境诊断、SOP 数据读取和核验 |
-| `notebooks/` | 当前运行入口，不含模型训练 |
+| `notebooks/` | 环境/预览入口与全量数据预处理；不含模型训练 |
 | `tests/` | 使用合成数据的数据读取测试 |
 
 最终提交需单独整理四页 PDF 报告，以及包含代码、`Readme.txt` 和必要自动化脚本的 ZIP；不含数据。具体格式以官方原件为准。本仓库不配置公共许可证，也不自动向 Canvas 提交。

@@ -13,6 +13,7 @@ For unseen products, can adding local visual features reduce false matches betwe
 
 ## 建议方案，尚待小规模验证
 
+- 新增的 `01_SOP_Preprocessing.ipynb` 当前会生成 192 维 HSV+空间 HOG 逐图特征；`sop_features.py` 提供 SIFT 图片对特征函数。这是可复用的初步预处理代码，不取代下列待验证的特征比较，也不表示正式评估协议已经确定。
 - 固定外部预训练图像编码器，构造 global-only 与 global+local 两种特征条件。
 - 以 2x2 区域池化作为局部特征候选，先不增加检测器；区域不等于语义部件。
 - LR/SVM 使用图片对特征差异；SupCon 在每张图的特征上训练嵌入网络，再做匹配。

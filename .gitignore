@@ -234,6 +234,7 @@ Stanford_Online_Products/
 checkpoints/
 weights/
 feature_cache/
+processed_sop/
 .DS_Store
 .env
 .env.*
