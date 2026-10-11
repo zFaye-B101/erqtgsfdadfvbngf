@@ -1,6 +1,17 @@
 # COMP90051 Product Matching
 
-小组私有协作仓库：同步作业要求、代码、研究资料与实验决策。不要公开发布课程材料，也不要上传数据集、凭据或模型缓存。
+小组协作仓库：同步作业要求、代码、研究资料与实验决策。当前地址为 [zFaye-B101/erqtgsfdadfvbngf](https://github.com/zFaye-B101/erqtgsfdadfvbngf)。2026-10-11 核验为 Public，任何人都可读取；公开不代表课程资料或论文获得了自由转载许可。不要上传数据集、凭据、个人信息或模型缓存。
+
+## 所有协作者与 AI 必读
+
+开始修改前，先读 [AGENTS.md](AGENTS.md) 与 [CONTRIBUTING.md](CONTRIBUTING.md)，并简短确认本次范围。**每次更新共享文件，必须在同一次提交/PR中更新本 README，以及受影响的文档、配置、调用代码、测试和资料索引。** 不支持自动读取 AGENTS.md 的 AI，也必须先由使用者提供该文件。
+
+### 最近更新：2026-10-11
+
+- 新增统一协作规则和提交检查单，明确每次文件变更的 README 与相关文件同步要求。
+- 用户已选择大家直接提交到 `main`，不要求分支/PR；按文件分工，不同时编辑同一 Notebook。官方未限定只能一个 Notebook，最终按 [多文件代码包提交说明](docs/submission.md) 整理运行入口。
+- 修正仓库改名后的拉取地址与 Public 状态说明；保留组员清空辅导说明的修改，并同步资料索引与清单。
+- 本次仅修改规范与说明；文件链接/哈希检查及已有数据工具回归测试通过，不代表 Windows 或正式实验已验证。
 
 ## 现在开始运行
 
@@ -31,7 +42,7 @@
 | `materials/official/` | 作业说明、要求、三份官方模板；原件和 Markdown 版 |
 | `materials/planning/` | 早期选题和启动草稿，保留历史，不作为当前方案 |
 | `materials/research/` | SOP 数据核验及旧候选研究记录 |
-| `materials/guidance/` | 历史辅导说明；用户已删除 PPT，本仓库不恢复 |
+| `materials/guidance/` | 用户已删除 PPT 并清空说明；不恢复 |
 | `materials/sop_data_check.ipynb` | 数据核验代码，已清除嵌入图片与运行输出 |
 | `papers/` | 当前选定的 SupCon 论文，PDF 和 Markdown |
 | `docs/` | 当前方案、协作说明、下载说明、文件清单 |

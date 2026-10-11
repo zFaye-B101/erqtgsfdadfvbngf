@@ -4,20 +4,23 @@
 
 ## 1. 获取仓库
 
-首次在 Windows 的终端运行（需要 Git，并登录有仓库权限的 GitHub 账号）：
+首次在 Windows 的终端运行（需要 Git；当前仓库为 Public，克隆无需登录，推送需要写入权限）：
 
 ```bash
-git clone https://github.com/zFaye-B101/comp90051-product-matching.git
-cd comp90051-product-matching
+git clone https://github.com/zFaye-B101/erqtgsfdadfvbngf.git
+cd erqtgsfdadfvbngf
 ```
 
-已有克隆时，在仓库目录运行：
+已有克隆时，在仓库目录运行；旧名字的本地文件夹可以保留：
 
 ```bash
+git remote set-url origin https://github.com/zFaye-B101/erqtgsfdadfvbngf.git
 git pull --ff-only
 ```
 
-若提示本地修改冲突，先提交自己的修改或保留备份再处理，不使用强制覆盖命令。如果没有 Git，也可在已登录的仓库网页使用 Code > Download ZIP；但 ZIP 下载不是可持续拉取的 Git 克隆。
+若提示本地修改冲突，先提交自己的修改或保留备份再处理，不使用强制覆盖命令。如果没有 Git，也可在仓库网页使用 Code > Download ZIP；但 ZIP 下载不是可持续拉取的 Git 克隆。修改前先读 [AGENTS.md](../AGENTS.md)，每次变更同时更新 README 与相关文件。
+
+本组当前直接更新 `main`，不要求个人分支或 PR。各人负责不同文件，避免同时编辑一个 Notebook。自己提交完成且工作区干净后，先 `git pull --rebase origin main` 再 `git push origin main`；发生冲突先处理，不强制推送。详见 [协作规范](../CONTRIBUTING.md)。
 
 ## 2. 在 PyCharm 打开整个仓库目录
 

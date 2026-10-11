@@ -24,7 +24,7 @@ SupCon 原件下载自 [NeurIPS 官方 PDF](https://proceedings.neurips.cc/paper
 - [数据核验 Notebook](../materials/sop_data_check.ipynb) / [代码导出](../materials/sop_data_check.md)。上传副本清除了输出、附件及单元格运行元数据，源代码没有改动。
 - [SOP 资格核验](../materials/research/stanford-online-products-audit.md)。
 - [早期 SOP 提案](../materials/planning/2026-09-25-sop-startup.md)、[早期启动计划](../materials/planning/2026-09-25-startup.md)、[UCI HAR/SCARF 备选](../materials/research/uci-har-scarf.md)均为历史记录。
-- [第三方辅导说明](../materials/guidance/README.md)仍保留作为历史记录；用户于 2026-10-11 明确确认删除了 `墨大COMP90051A2P1.pptx`，本仓库不恢复、不上传该 PPT。
+- 用户于 2026-10-11 明确确认删除了 `墨大COMP90051A2P1.pptx`，随后在提交 `7cc8e2b` 中清空了 `materials/guidance/README.md`。保留该修改，不恢复 PPT 或说明内容。
 - [旧目录首页](../materials/README.md)已标注为历史版本。
 
 ## 转换和完整性
@@ -33,5 +33,6 @@ SupCon 原件下载自 [NeurIPS 官方 PDF](https://proceedings.neurips.cc/paper
 - DOCX 提取正文和表格；空白模板的手写空间及页码域不等于缺失内容。原件保留，可继续填写。
 - 原件未改写。Markdown 是阅读副本，不是官方新版本。
 - [机器清单](materials-manifest.json)列出来源、上传路径、哈希及排除原因。
+- 修改归档材料时，按 [协作规则](../AGENTS.md) 同步本索引与机器清单；保留原始哈希并核验当前副本哈希，不自动从旧本地目录恢复已删除内容。
 - 本轮范围是 A2 作业目录和当前选定的 SupCon 论文，不是整门课程或其他作业。
 - 排除 SOP 数据集、系统 `.DS_Store`、零字节误建文件、Notebook 嵌入图片/输出，以及用户已删除的 PPT。没有删除本地源文件。
