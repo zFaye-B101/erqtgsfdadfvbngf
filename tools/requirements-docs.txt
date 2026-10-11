@@ -1,0 +1,5 @@
+# Document conversion only; not the model training environment.
+pypdf
+python-docx
+python-pptx
+# Also install Poppler (pdftotext) through your operating system.

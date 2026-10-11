@@ -1,0 +1,161 @@
+[
+  {
+    "source": ".DS_Store",
+    "status": "Operating-system metadata excluded"
+  },
+  {
+    "source": "README.md",
+    "repository_path": "materials/README.md",
+    "status": "Historical banner added; local absolute path sanitized where present",
+    "original_sha256": "c588a3ab2dcf51b75f5dd982dca01c2a74f1c948c8462f01ba0fd27e0201cc0c",
+    "uploaded_sha256": "d8788847b07e36bf39d930e32661e56f2aa6112d73cf032b9f7b24c5bc9798f9",
+    "markdown": null
+  },
+  {
+    "source": "guidance/.DS_Store",
+    "status": "Operating-system metadata excluded"
+  },
+  {
+    "source": "guidance/README.md",
+    "repository_path": "materials/guidance/README.md",
+    "status": "Original copied",
+    "original_sha256": "619bfe31238d9a383c876f48c7d416bac972943ad83ad2f8d4c332c497cc4699",
+    "uploaded_sha256": "70c66899048cd1a89f5606f19836530435c30d4dd2a535ac63ccf683c76d3b88",
+    "markdown": null
+  },
+  {
+    "source": "official/GroupAgreement.docx",
+    "repository_path": "materials/official/GroupAgreement.docx",
+    "status": "Original copied",
+    "original_sha256": "99a1f7d1d7f91d364fcfa1c84e88d10be7a2951adebe8eedf53d975b85812161",
+    "uploaded_sha256": "99a1f7d1d7f91d364fcfa1c84e88d10be7a2951adebe8eedf53d975b85812161",
+    "markdown": "materials/official/GroupAgreement.md"
+  },
+  {
+    "source": "official/GroupAgreement.docx.download.json",
+    "repository_path": "materials/official/GroupAgreement.docx.download.json",
+    "status": "Original copied",
+    "original_sha256": "98aa1f60231ea120a880f5dcdbd3a32eea762e0757b72c262425c24b567cee38",
+    "uploaded_sha256": "98aa1f60231ea120a880f5dcdbd3a32eea762e0757b72c262425c24b567cee38",
+    "markdown": null
+  },
+  {
+    "source": "official/MeetingMinutes.docx",
+    "repository_path": "materials/official/MeetingMinutes.docx",
+    "status": "Original copied",
+    "original_sha256": "f997bb9acd2a8d508dd9fea5cefc994640350dd9dd41c89865225b97fc1eec80",
+    "uploaded_sha256": "f997bb9acd2a8d508dd9fea5cefc994640350dd9dd41c89865225b97fc1eec80",
+    "markdown": "materials/official/MeetingMinutes.md"
+  },
+  {
+    "source": "official/MeetingMinutes.docx.download.json",
+    "repository_path": "materials/official/MeetingMinutes.docx.download.json",
+    "status": "Original copied",
+    "original_sha256": "2cd6fd4aac43c68312ae94ddea19c363e7990eab73735ef8293c2b315cdf50a9",
+    "uploaded_sha256": "2cd6fd4aac43c68312ae94ddea19c363e7990eab73735ef8293c2b315cdf50a9",
+    "markdown": null
+  },
+  {
+    "source": "official/Project.pdf",
+    "repository_path": "materials/official/Project.pdf",
+    "status": "Original copied",
+    "original_sha256": "c154205fcab73300d7e2f253d4ec6d27235b596f307cec29823337939b6b20dc",
+    "uploaded_sha256": "c154205fcab73300d7e2f253d4ec6d27235b596f307cec29823337939b6b20dc",
+    "markdown": "materials/official/Project.md"
+  },
+  {
+    "source": "official/Project.pdf.download.json",
+    "repository_path": "materials/official/Project.pdf.download.json",
+    "status": "Original copied",
+    "original_sha256": "d8e02435d8af7c95d7d00c72d137838d2c2eb313258ac6f48c30424342976790",
+    "uploaded_sha256": "d8e02435d8af7c95d7d00c72d137838d2c2eb313258ac6f48c30424342976790",
+    "markdown": null
+  },
+  {
+    "source": "official/Questions.docx",
+    "repository_path": "materials/official/Questions.docx",
+    "status": "Original copied",
+    "original_sha256": "645eb65f6feec6dcb33a38306fce0fd94fb2411db30946331592215bc0087c1d",
+    "uploaded_sha256": "645eb65f6feec6dcb33a38306fce0fd94fb2411db30946331592215bc0087c1d",
+    "markdown": "materials/official/Questions.md"
+  },
+  {
+    "source": "official/REQUIREMENTS.md",
+    "repository_path": "materials/official/REQUIREMENTS.md",
+    "status": "Original copied",
+    "original_sha256": "04e4d0be0e59ff3f776b861c962514b09ca0a5216f1c8c9aa056215b94b90427",
+    "uploaded_sha256": "04e4d0be0e59ff3f776b861c962514b09ca0a5216f1c8c9aa056215b94b90427",
+    "markdown": null
+  },
+  {
+    "source": "official/canvas-page-2026-09-27.md",
+    "repository_path": "materials/official/canvas-page-2026-09-27.md",
+    "status": "Original copied",
+    "original_sha256": "f8d24f4ce7f88ab995acee45933fa7936034b1b17527e974fe78d968552356ae",
+    "uploaded_sha256": "f8d24f4ce7f88ab995acee45933fa7936034b1b17527e974fe78d968552356ae",
+    "markdown": null
+  },
+  {
+    "source": "planning/2026-09-25-sop-startup.md",
+    "repository_path": "materials/planning/2026-09-25-sop-startup.md",
+    "status": "Historical banner added; local absolute path sanitized where present",
+    "original_sha256": "909ca444d3a3bf8927007b1f10a54ea0a9810de6f6f169e67058e0f0926f1c97",
+    "uploaded_sha256": "bf4d03024dceed5ff50d7a74cd4927dac1f901670a665452458511352e4bdc20",
+    "markdown": null
+  },
+  {
+    "source": "planning/2026-09-25-startup.md",
+    "repository_path": "materials/planning/2026-09-25-startup.md",
+    "status": "Historical banner added; local absolute path sanitized where present",
+    "original_sha256": "bbd2f415105001b0e341e81dbe1b4e821702b2696029b2c306cbfec76d957b38",
+    "uploaded_sha256": "9ad8ec9a1973d12c50477e02529ed2428e8c1184636b553c6be9d372a0e9317d",
+    "markdown": null
+  },
+  {
+    "source": "research/.DS_Store",
+    "status": "Operating-system metadata excluded"
+  },
+  {
+    "source": "research/data/Stanford_Online_Products.zip",
+    "status": "Dataset excluded"
+  },
+  {
+    "source": "research/stanford-online-products-audit.md",
+    "repository_path": "materials/research/stanford-online-products-audit.md",
+    "status": "Original copied",
+    "original_sha256": "3862d0eabd86ebfe66b417dd4224a0fd9b3d85f2734a6be8fce095193cab7b22",
+    "uploaded_sha256": "3862d0eabd86ebfe66b417dd4224a0fd9b3d85f2734a6be8fce095193cab7b22",
+    "markdown": null
+  },
+  {
+    "source": "research/uci-har-scarf.md",
+    "repository_path": "materials/research/uci-har-scarf.md",
+    "status": "Historical banner added; local absolute path sanitized where present",
+    "original_sha256": "691838b51ce0f640746b58a6e4162f831cbd4a4fc70fd2b35bc812b56814a59e",
+    "uploaded_sha256": "87f082b585b23df35f8ea251dae1d186041b79eb5ef4809510aec1b4d4798f1c",
+    "markdown": null
+  },
+  {
+    "source": "sop_data_check",
+    "status": "Empty placeholder excluded"
+  },
+  {
+    "source": "sop_data_check.ipynb",
+    "repository_path": "materials/sop_data_check.ipynb",
+    "status": "Code unchanged; outputs, attachments and execution metadata removed",
+    "original_sha256": "dac2356cf0d328a5564ea0740f1e1a7edc07a85fa7a0821fdfa9bdcdc1cc7593",
+    "uploaded_sha256": "99d1e091df1149edc5968f5a530de00812dde32ef2c078b179b3d87db9b5c429",
+    "markdown": null
+  },
+  {
+    "source": "SupCon-2020.pdf",
+    "repository_path": "papers/SupCon-2020.pdf",
+    "status": "Paper original and reading copy",
+    "uploaded_sha256": "3da9d0812b27de20e3623ea0f71933dd866f10459fdf04e1129f9f5abdc093cd",
+    "markdown": "papers/SupCon-2020.md"
+  },
+  {
+    "source": "guidance/墨大COMP90051A2P1.pptx",
+    "status": "User confirmed deletion; not restored or uploaded"
+  }
+]

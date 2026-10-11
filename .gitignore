@@ -218,3 +218,26 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+# Project data, generated artifacts and secrets
+data/
+datasets/
+Stanford_Online_Products/
+*.zip
+*.tar
+*.tar.gz
+*.npy
+*.npz
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+checkpoints/
+weights/
+feature_cache/
+.DS_Store
+.env
+.env.*
+*.pem
+*.key
+*.p12
+.idea/
