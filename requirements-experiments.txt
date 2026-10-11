@@ -1,6 +1,5 @@
-# Development diagnostics, PythonCode LR/SVM baselines and plotting.
-# Not a final reproducibility lock; the baseline training has not been run.
+# Development diagnostics and the configured PythonCode pipeline.
+# Shared versions are maintained in PythonCode/requirements-base.txt.
+# Synthetic CPU checks passed; full real SOP experiments remain unverified.
 # Install torch/torchvision separately for the selected hardware backend.
 -r requirements-base.txt
-scikit-learn>=1.5,<2
-matplotlib>=3.8,<4

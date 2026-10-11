@@ -1,23 +1,18 @@
 """Clean original SOP images and export reusable inputs for scripts 02 and 03."""
 
 from pathlib import Path, PurePosixPath
-import sys
 import argparse
 from io import BytesIO
 from zipfile import ZipFile
 import json
 import time
 
-import numpy as np
 import pandas as pd
 from PIL import Image
 
 cwd = Path(__file__).resolve().parent
-module_dir = next((p for p in [cwd, cwd / "notebooks", *cwd.parents] if (p / "sop_features.py").is_file()), None)
-if module_dir is None:
+if not (cwd / "sop_features.py").is_file():
     raise FileNotFoundError("Place sop_features.py in the same directory as this script.")
-if str(module_dir) not in sys.path:
-    sys.path.insert(0, str(module_dir))
 
 from sop_features import resize_for_model
 

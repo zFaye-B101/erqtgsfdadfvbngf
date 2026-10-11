@@ -1,5 +1,14 @@
 # 从 GitHub 拉取并运行
 
+## 最新 v3 修复（2026-10-11，覆盖此前 v2 的对应状态）
+
+- 新增 handcrafted_content 和 handcrafted_padding_audit，支持排除填边的HSV/HOG以及与原填边版本的配对对照；原handcrafted保持为对照，ResNet仍使用明确记录的填边输入。真实SOP收益未量化。
+- 每个外层训练商品集合再独立预留20%校准商品（每大类至少2个，保留足够拟合商品）。校准商品不参与内层选参、归一化或训练；最终模型在其上定阈值后不再重训，直接评估外层测试。有限样本校准不保证测试召回率达到95%。
+- SupCon温度边界胜出时按内层验证扩展三点窗口，最多两次、因子2、温度限制0.005至1.0；复用已评估候选、保存搜索历史并保留未解决的边界警告。
+- 官方holdout默认关闭。新协议/缓存/结果使用v3目录，不能复用v2阈值或断点；已有01处理图片可继续使用。01/02/03编号入口不变，选特征和参数仍改配置。
+- Windows CPU合成检查覆盖填边探针、阈值校准隔离、温度扩展和端到端流程，验证边界见[VALIDATION](../PythonCode/VALIDATION.txt)。真实SOP十折、正式holdout、预训练ResNet及GPU仍未验证。下方此前状态保留为历史记录。
+
+
 ## 当前 PythonCode 三步流程（2026-10-11）
 
 在 PythonCode 中使用同一 Python 3.11+ 解释器：先运行01清理图片，再运行02的LR/SVM和03的SupCon。已有完整处理目录可配置 data_dir 后跳过01。修改 experiment_config.json 的 feature_profile 可选择 handcrafted、resnet18_global（512维）或 resnet18（512/2560维对照），只重跑02/03。

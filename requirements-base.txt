@@ -1,6 +1,4 @@
-# Data preprocessing and notebook setup only; model-training dependencies will be set later.
-numpy>=1.24,<3
-pandas>=2,<4
-Pillow>=10,<13
+# Shared PythonCode base dependencies plus optional historical notebook kernel.
+# Install torch/torchvision separately for the selected hardware backend.
+-r PythonCode/requirements-base.txt
 ipykernel>=6,<8
-opencv-python-headless>=4.8,<5

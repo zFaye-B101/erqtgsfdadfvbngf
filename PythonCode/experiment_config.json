@@ -1,10 +1,10 @@
 {
-  "run_name": "experiment_v2",
+  "run_name": "experiment_v3",
   "feature_profile": "handcrafted",
   "data_dir": "processed_sop",
-  "protocol_dir": "protocols/shared_v2",
-  "cache_dir": "feature_cache_v2",
-  "results_dir": "results_v2",
+  "protocol_dir": "protocols/shared_v3",
+  "cache_dir": "feature_cache_v3",
+  "results_dir": "results_v3",
   "mode": "formal",
   "seed": 20261011,
   "minimum_train_images": 10000,
@@ -15,7 +15,8 @@
   "evaluation_anchor_cap": 500,
   "negative_candidates": 50,
   "target_validation_recall": 0.95,
-  "run_official_test": true,
+  "run_official_test": false,
+  "calibration_fraction": 0.2,
   "conditions": {
     "clean": {},
     "occlusion25": {"area_fraction": 0.25, "fill": 127},
@@ -24,6 +25,22 @@
     "rotation15": {"degrees": 15.0}
   },
   "feature_profiles": {
+    "handcrafted_content": {
+      "features": {
+        "ContentHSV48": {"extractor": "hsv_hog_content", "columns": [0, 48]},
+        "ContentHSV_HOG192": {"extractor": "hsv_hog_content", "columns": [0, 192]}
+      },
+      "comparisons": [["ContentHSV48", "ContentHSV_HOG192"]]
+    },
+    "handcrafted_padding_audit": {
+      "features": {
+        "HSV48": {"extractor": "hsv_hog", "columns": [0, 48]},
+        "HSV_HOG192": {"extractor": "hsv_hog", "columns": [0, 192]},
+        "ContentHSV48": {"extractor": "hsv_hog_content", "columns": [0, 48]},
+        "ContentHSV_HOG192": {"extractor": "hsv_hog_content", "columns": [0, 192]}
+      },
+      "comparisons": [["HSV48", "ContentHSV48"], ["HSV_HOG192", "ContentHSV_HOG192"]]
+    },
     "handcrafted": {
       "features": {
         "HSV48": {"extractor": "hsv_hog", "columns": [0, 48]},
@@ -50,6 +67,9 @@
   },
   "supcon": {
     "temperature_grid": [0.05, 0.1, 0.2],
+    "maximum_grid_extensions": 2,
+    "temperature_extension_factor": 2.0,
+    "temperature_bounds": [0.005, 1.0],
     "epochs": 20,
     "learning_rate": 0.001,
     "weight_decay": 0.0001,

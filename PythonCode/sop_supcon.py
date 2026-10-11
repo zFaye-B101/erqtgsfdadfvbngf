@@ -27,6 +27,8 @@ from torch.nn import functional as F
 from sop_feature_bank import choose_device
 from sop_protocol import manual_metrics, manual_roc_auc, recall_threshold, write_json
 from sop_reporting import evaluate_scores, report_results
+from sop_calibration import calibrate
+from sop_tuning import search_temperatures
 
 
 class SupConLoss(nn.Module):
@@ -218,9 +220,7 @@ def load_model(path, device="cpu"):
 def tune_inner(experiment, context, name, bank, directory):
     config = experiment.config
     settings = config["supcon"]
-    grid = sorted(float(t) for t in settings["temperature_grid"])
-    evaluations = {}
-    for temperature in grid:
+    def evaluate(temperature):
         fold_auc, labels, scores = [], [], []
         for index, (training_products, validation_products, _, validation_pairs) in enumerate(context["inner"]):
             if set(training_products) & set(validation_products):
@@ -235,20 +235,19 @@ def tune_inner(experiment, context, name, bank, directory):
                        {"features": name, "shared_protocol_id": experiment.protocol_id,
                         "fold": context["fold"], "inner_fold": index + 1})
             del fitted
-        evaluations[temperature] = {"mean_auc": float(np.mean(fold_auc)), "fold_auc": fold_auc,
+        return {"mean_auc": float(np.mean(fold_auc)), "fold_auc": fold_auc,
                                     "labels": labels, "scores": scores}
-    middle = grid[len(grid) // 2]
-    best = max([middle] + [t for t in grid if t != middle], key=lambda t: evaluations[t]["mean_auc"])
+    best, grid, evaluations, history = search_temperatures(evaluate, settings['temperature_grid'],
+        settings['maximum_grid_extensions'], settings['temperature_extension_factor'], settings['temperature_bounds'])
     selected = evaluations[best]
-    threshold = recall_threshold(selected["labels"], selected["scores"], config["target_validation_recall"])
     result = {"fold": context["fold"], "algorithm": "SupCon", "features": name,
-              "temperature": best, "threshold": threshold, "final_grid": grid,
+              "temperature": best, "final_grid": grid, "history": history,
               "boundary_unresolved": best in (grid[0], grid[-1]),
               "candidate_results": {str(t): {k: v for k, v in record.items() if k in {"mean_auc", "fold_auc"}}
                                     for t, record in evaluations.items()},
-              "validation_metrics": manual_metrics(selected["labels"], selected["scores"], threshold),
+              "mean_validation_auc": selected['mean_auc'],
               "objective": "Mean clean-validation matching ROC-AUC across inner product folds",
-              "threshold_note": "Inner OOF cosine scores; held-out TPR may differ from validation target.",
+              "threshold_note": "Fixed final encoder calibrated separately on products excluded from tuning and fitting.",
               "adaptation": "fixed_features_learned_encoder_distinct_clean_product_images"}
     write_json(Path(directory) / "tuning.json", result)
     return result
@@ -263,7 +262,11 @@ def run_fold(experiment, context, directory):
         tuning = tune_inner(experiment, context, name, bank, target)
         fitted = fit_representation(experiment.frame, bank["clean"], context["train_products"],
                                     tuning["temperature"], experiment.config["supcon"], context["seed"])
+        tuning['threshold'] = calibrate(context, matching_scores(fitted, context['calibration_pairs'], bank),
+                                       experiment.config, target)
+        write_json(target / 'tuning.json', tuning)
         save_model(fitted, target / "model.pt", {"threshold": tuning["threshold"], "features": name,
+                   "calibration_products": context['calibration_products'],
                    "shared_protocol_id": experiment.protocol_id, "fold": context["fold"]})
         score_by_condition = {condition: matching_scores(fitted, context["test_pairs"], bank, condition)
                               for condition in bank}

@@ -22,7 +22,7 @@ def load_config(path, smoke=False):
                       inner_folds=2, train_anchor_cap=24, evaluation_anchor_cap=12,
                       use_all_official_train=False, run_official_test=False,
                       maximum_grid_extensions=0)
-        config["supcon"].update(epochs=1, products_per_batch=8)
+        config["supcon"].update(epochs=1, products_per_batch=8, maximum_grid_extensions=0)
         for field in ("protocol_dir", "cache_dir", "results_dir"):
             config[field] += "_smoke"
     validate_config(config)
@@ -45,6 +45,8 @@ def validate_config(config):
         raise ValueError("Select features and put clean first in conditions.")
     if not 0 < config["target_validation_recall"] <= 1:
         raise ValueError("Validation recall must be in (0, 1].")
+    if not 0 < config['calibration_fraction'] < .5:
+        raise ValueError('Calibration fraction must be in (0, 0.5).')
     for field in ("train_anchor_cap", "evaluation_anchor_cap", "negative_candidates"):
         if config[field] < 1:
             raise ValueError(field + " must be positive.")
@@ -62,8 +64,13 @@ def validate_config(config):
             raise ValueError("Each classifier requires three increasing positive C values.")
     sup = config["supcon"]
     grid = sup["temperature_grid"]
-    if len(grid) < 3 or len(set(grid)) != len(grid) or any(not math.isfinite(t) or t <= 0 for t in grid):
-        raise ValueError("SupCon needs at least three distinct positive temperatures.")
+    if len(grid) != 3 or not 0 < grid[0] < grid[1] < grid[2] or any(not math.isfinite(t) for t in grid):
+        raise ValueError("SupCon needs three increasing finite positive temperatures.")
+    lower, upper = sup['temperature_bounds']
+    if not 0 < lower <= grid[0] < grid[2] <= upper or not math.isfinite(upper):
+        raise ValueError('Temperature bounds must contain the initial positive grid.')
+    if sup['maximum_grid_extensions'] < 0 or not math.isfinite(sup['temperature_extension_factor']) or sup['temperature_extension_factor'] <= 1:
+        raise ValueError('Temperature extensions must be nonnegative and the factor finite and >1.')
     if sup["view_mode"] != "clean_product_images":
         raise ValueError("Implemented SupCon views are distinct clean images of each product.")
     if sup["products_per_batch"] < 2 or sup["images_per_product"] < 2:

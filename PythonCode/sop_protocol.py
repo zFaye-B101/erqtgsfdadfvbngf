@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import json
+import math
 import numpy as np
 import pandas as pd
 from PIL import Image, ImageFilter
@@ -27,13 +28,19 @@ def select_train_products(manifest, config):
     queues = {int(cat): list(rng.permutation(group.index.to_numpy()).astype(int))
               for cat, group in products.groupby("category")}
     selected, image_count = [], 0
+    # Ensure every outer training category supports inner folds and calibration.
+    minimum = math.ceil((2 * config['inner_folds'] + 2) * config['outer_folds'] / (config['outer_folds'] - 1))
+    counts = {category: 0 for category in queues}
+    if any(len(queue) < minimum for queue in queues.values()):
+        raise ValueError('Not enough products per category for outer folds, inner pairing and independent calibration.')
     # Round-robin sampling across categories; retain ALL images of each chosen SKU.
-    while image_count < config["minimum_train_images"]:
+    while image_count < config["minimum_train_images"] or min(counts.values()) < minimum:
         moved = False
         for cat in sorted(queues):
             if queues[cat]:
                 product = queues[cat].pop()
                 selected.append(int(product))
+                counts[cat] += 1
                 image_count += int(products.loc[product, "images"])
                 moved = True
         if not moved:

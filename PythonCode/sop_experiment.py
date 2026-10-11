@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd
 
 from sop_config import validate_config
+from sop_calibration import split_calibration_products
 from sop_feature_bank import build_banks, dataset_digest, extract_cached, file_digest
 from sop_protocol import make_pairs, product_folds, select_train_products, write_json
 
@@ -70,14 +71,14 @@ class Experiment:
         self.folds = product_folds(self.frame, self.selected, config["outer_folds"], config["seed"] + 100)
         fields = ("mode", "seed", "minimum_train_images", "use_all_official_train",
                   "outer_folds", "inner_folds", "train_anchor_cap", "evaluation_anchor_cap",
-                  "negative_candidates", "target_validation_recall", "conditions", "run_official_test")
-        self.protocol = {"protocol_version": 2, "dataset_id": self.dataset_id,
+                  "negative_candidates", "target_validation_recall", "conditions", "run_official_test", "calibration_fraction")
+        self.protocol = {"protocol_version": 3, "dataset_id": self.dataset_id,
                          "settings": {key: config[key] for key in fields},
                          "selected_train_products": self.selected, "outer_product_folds": self.folds,
                          "frame_image_ids": self.frame.image_id.tolist(),
                          "selected_train_images": int(manifest.class_id.isin(self.selected).sum()),
-                         "hard_negative_rule": "clean_HSV48_same_category_50_or_configured_candidates",
-                         "protocol_source": file_digest([Path(__file__).with_name("sop_protocol.py"), __file__])}
+                         "hard_negative_rule": "clean_content_HSV48_same_category_configured_candidates",
+                         "protocol_source": file_digest([Path(__file__).with_name("sop_protocol.py"), Path(__file__).with_name("sop_calibration.py"), __file__])}
         self.protocol_id = hashlib.sha256(json.dumps(self.protocol, sort_keys=True).encode()).hexdigest()
         self.directory = Path(config["protocol_dir"])
         guard_directory(self.directory, self.protocol)
@@ -89,7 +90,7 @@ class Experiment:
             self.query_mask |= self.frame.class_id.isin(queries).to_numpy()
         # Colour matching remains independent of the experimental representation.
         self.hard_features = extract_cached(self.frame, config["data_dir"], config,
-                                           self.dataset_id, "hsv_hog", "clean", self.query_mask)[:, :48]
+                                           self.dataset_id, "hsv_hog_content", "clean", self.query_mask)[:, :48]
         self.banks = build_banks(self.frame, config["data_dir"], config, self.dataset_id, self.query_mask)
         self.frame.to_csv(self.directory / "experiment_manifest.csv", index=False)
         print(f"{config['mode'].upper()} protocol: {self.protocol['selected_train_images']} images, "
@@ -123,6 +124,8 @@ class Experiment:
     def context(self, fold):
         config = self.config
         if fold == "official":
+            if not config['run_official_test']:
+                raise ValueError('Official holdout is disabled in this configuration.')
             train_products = self.selected
             test_products = sorted(int(p) for p in self.frame.loc[self.frame.source_split.eq("test"), "class_id"].unique())
             directory = self.directory / "official_holdout"
@@ -134,8 +137,18 @@ class Experiment:
             train_seed, test_seed, inner_seed = (config["seed"] + fold * 1000 + x for x in (1, 2, 100))
         if set(train_products) & set(test_products):
             raise ValueError("Training and test products overlap.")
+        outer_training_products = train_products
+        train_products, calibration_products = split_calibration_products(
+            self.frame, outer_training_products, config['calibration_fraction'], config['inner_folds'], inner_seed + 900)
+        write_json(directory / 'training_partitions.json', {'outer_training_products': outer_training_products,
+                   'fitting_products': train_products, 'calibration_products': calibration_products,
+                   'test_products': test_products})
         train_pairs = self.pairs(directory, "train_pairs.csv", train_products, config["train_anchor_cap"], train_seed)
+        calibration_pairs = self.pairs(directory, 'calibration_pairs.csv', calibration_products,
+                                      config['evaluation_anchor_cap'], inner_seed + 901)
         test_pairs = self.pairs(directory, "test_pairs.csv", test_products, config["evaluation_anchor_cap"], test_seed)
+        if not self.query_mask[test_pairs.query_row.to_numpy()].all():
+            raise ValueError('Test query images are missing from the corruption coverage mask.')
         inner_folds = product_folds(self.frame, train_products, config["inner_folds"], inner_seed)
         write_json(directory / "inner_product_folds.json", inner_folds)
         inner = []
@@ -147,6 +160,8 @@ class Experiment:
                                     config["evaluation_anchor_cap"], inner_seed + index * 11 + 2)
             inner.append((training_products, validation_products, training, validation))
         return {"fold": fold, "train_products": train_products, "test_products": test_products,
+                "calibration_products": calibration_products, "calibration_pairs": calibration_pairs,
+                "outer_training_products": outer_training_products,
                 "train_pairs": train_pairs, "test_pairs": test_pairs, "inner": inner,
                 "seed": inner_seed, "directory": directory}
 
@@ -161,13 +176,13 @@ class Experiment:
         from sop_feature_bank import _INSTANCES
         files = [Path(__file__).with_name(name) for name in
                  ("sop_baselines.py", "sop_supcon.py", "sop_reporting.py", "sop_config.py",
-                  "sop_feature_bank.py", "sop_features.py", "sop_protocol.py", "sop_experiment.py")]
+                  "sop_feature_bank.py", "sop_features.py", "sop_protocol.py", "sop_experiment.py", "sop_calibration.py", "sop_tuning.py")]
         identity = {"shared_protocol_id": self.protocol_id, "config": self.config,
                     "code_fingerprint": file_digest(files), "algorithm_family": algorithm,
                     "python": platform.python_version(), "numpy": np.__version__,
                     "pandas": pd.__version__, "sklearn": sklearn.__version__, "Pillow": PIL.__version__,
                     "extractors": [value.metadata for key, value in _INSTANCES.items()
-                                   if key[0] in {"hsv_hog"} | {s["extractor"] for s in self.config["feature_sets"].values()}
+                                   if key[0] in {"hsv_hog_content"} | {s["extractor"] for s in self.config["feature_sets"].values()}
                                    and key[1] == json.dumps(self.config["extraction"], sort_keys=True)]}
         if algorithm == "supcon":
             import torch

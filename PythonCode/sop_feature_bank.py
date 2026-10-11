@@ -12,7 +12,7 @@ import numpy as np
 from PIL import Image
 
 from sop_features import image_feature_vector
-from sop_protocol import corrupt_image, write_json
+from sop_protocol import content_box, corrupt_image, write_json
 
 
 def choose_device(requested, torch):
@@ -41,6 +41,15 @@ class HandcraftedExtractor:
 
     def __call__(self, images):
         return np.stack([image_feature_vector(image) for image in images])
+
+
+class ContentHandcraftedExtractor(HandcraftedExtractor):
+    """Exclude known padding before HSV statistics and spatial gradient cells."""
+    content_only = True
+
+    def __init__(self, settings):
+        super().__init__(settings)
+        self.metadata.update(extractor='hsv_hog_content', geometry='metadata_content_rectangle_without_padding')
 
 
 class ResNet18Extractor:
@@ -78,7 +87,8 @@ class ResNet18Extractor:
 
 
 # Add new fixed extractors here; the numbered entry points do not change.
-EXTRACTORS = {"hsv_hog": HandcraftedExtractor, "resnet18": ResNet18Extractor}
+EXTRACTORS = {"hsv_hog": HandcraftedExtractor, "hsv_hog_content": ContentHandcraftedExtractor,
+              "resnet18": ResNet18Extractor}
 _INSTANCES = {}
 
 
@@ -148,6 +158,8 @@ def extract_cached(frame, data_dir, config, dataset_id, extractor_name, conditio
                 if image.size != (224, 224):
                     raise ValueError("Expected preprocessing script 01's 224 x 224 images.")
                 images.append(corrupt_image(image, row, condition, config["conditions"][condition], seed))
+                if getattr(extractor, 'content_only', False):
+                    images[-1] = images[-1].crop(content_box(row, image.width))
             result[chunk] = extractor(images)
             if (start // batch_size) % 50 == 0:
                 print(f"Features {extractor_name}/{condition}: {min(start + batch_size, len(indexes))}/{len(indexes)}", flush=True)

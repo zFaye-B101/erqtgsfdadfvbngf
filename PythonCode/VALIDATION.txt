@@ -1,36 +1,43 @@
-IMPLEMENTATION VALIDATION - 2026-10-11
+IMPLEMENTATION VALIDATION - VERSION 3 - 2026-10-11
 
-Python 3.11.15, CPU, isolated local isolated verification environment.
+Windows Python 3.11.15, CPU, isolated local verification environment.
 torch 2.14.1+cpu, torchvision 0.29.1+cpu, numpy 2.4.6,
 pandas 3.0.6, scikit-learn 1.9.1, OpenCV 4.14.0, Pillow 12.3.0.
 No existing Conda environment was modified.
 
-Python compilation: passed.
-Five synthetic tests: passed, 16.368 seconds in the recorded final run.
+Seven synthetic tests passed; final repository run: 40.386 seconds.
+Python source compilation also passed.
+1. SupCon loss matches an independent NumPy implementation of paper Eq. (2).
+   Finite and numerical gradients, multi-view input and invalid batches checked.
+2. Synthetic ZIP processing filters small/missing images and singleton products,
+   preserves official labels, and exports padded 224x224 RGB images.
+3. Random-weight frozen ResNet18 produces finite deterministic 2560-dimensional
+   features. This is a shape test, not pretrained-weight performance evidence.
+4. Two outer/two inner product folds on a 192-image synthetic fixture, selecting
+   144 images/36 products to satisfy pairing and calibration minimums. LR/SVM
+   and SupCon run for padded HSV48/192 under all five default conditions.
+   Fitting/calibration/test products are disjoint; inner folds exclude all
+   calibration products. Shared pairs, integrity checks, caching, reports,
+   ablations, checkpoints, combined summaries and completed-fold resume checked.
+   Final checkpoint scores reproduce recorded calibration scores without refit.
+   Content-only extraction and a 64-dimensional profile preserve test pairs.
+5. A 512-dimensional fit learns scaling only from fitting products. Checkpoint
+   reload preserves matching scores; changing projection weights does not affect
+   inference. LR/SVM accept 512-dimensional inputs. Product batching retains
+   every selected product when the final batch would contain only one product.
+6. Pure-colour pictures with different aspect ratios show padded descriptor
+   differences but identical content-only descriptors. Simulated inner AUC
+   verifies temperature expansion, candidate reuse and hard search bounds.
+7. Pair features are exactly D-dimensional absolute differences. Synthetic
+   official-holdout pairs pass with full corruption coverage; deliberately
+   removing coverage for a test query raises an error before evaluation.
 
-1. SupCon loss agrees with an independent NumPy implementation of paper Eq. (2).
-   Finite gradients and numerical gradient checking passed. Multi-view input
-   and rejection of batches without positives were checked.
-2. Synthetic ZIP preprocessing preserves train/test, removes small/missing
-   images and the remaining singleton product, and exports 224x224 images.
-3. ResNet18 extraction produces 2560 dimensions (global512 plus local2048),
-   is frozen, and returns deterministic finite features. This test uses RANDOM
-   weights to avoid a download; pretrained-weight performance is not assessed.
-4. Two outer/two inner product-fold LR/SVM/SupCon runs on 96 synthetic images
-   passed for HSV48 and HSV_HOG192 under all five default test conditions.
-   Shared pair manifests remain identical. Predictions, metrics, ablations,
-   figures, checkpoints, combined summaries and completed-fold resume passed.
-   A single alternative 64-dimensional profile preserves folds and pairs and
-   supports reporting without a paired comparison. Pair tampering is rejected.
-5. A 512-dimensional SupCon fit uses only training-product scaling statistics.
-   Checkpoint reload reproduces matching scores exactly. Changing projector
-   weights does not change inference. LR/SVM accept 512-dimensional inputs.
-   Product batching handles a final singleton product without losing samples.
+Command: python -m unittest discover -s tests -v
+Detailed logs are retained locally and are not uploaded as machine-path output.
 
-Recorded command: python -m unittest discover -s tests -v
-Detailed local output is retained on the implementation machine; it is not uploaded.
-
-Not executed: a full real SOP run, ten-fold experimental results, official
-holdout scoring on real data, pretrained ResNet downloads/performance or GPU
-training. Synthetic results are execution checks, not reportable experiments.
-The SupCon implementation is the documented project adaptation in Readme.txt.
+Not executed: full real SOP ten-fold experiments, real official holdout scoring,
+real padding ablation, pretrained ResNet download/performance or GPU training.
+Synthetic metrics are not reportable experimental results. Finite calibration
+recall does not guarantee held-out recall. The original padded baseline remains
+selectable; CNN still uses its documented padded geometry. SupCon remains the
+fixed-feature project adaptation described in Readme.txt.

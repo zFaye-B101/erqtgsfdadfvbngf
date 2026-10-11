@@ -14,7 +14,7 @@ python 01_SOP_Preprocessing.py
 python 02_SOP_Traditional_Baselines.py
 python 03_SOP_SupCon.py
 
-01 searches beside Code and its parents for Stanford_Online_Products.zip.
+01 searches beside PythonCode and its parents for Stanford_Online_Products.zip.
 An explicit input is supported:
 python 01_SOP_Preprocessing.py --zip-path "D:/data/Stanford_Online_Products.zip"
 Nonempty preprocessing outputs are never overwritten. If the original 01
@@ -35,7 +35,15 @@ accelerator then CPU. CPU-only PyTorch cannot use an NVIDIA GPU.
 
 Changing features
 Edit feature_profile in experiment_config.json; keep 01/02/03 unchanged:
-handcrafted: HSV48 versus HSV_HOG192.
+handcrafted: original padded HSV48 versus HSV_HOG192 (retained baseline).
+handcrafted_content: ContentHSV48 versus ContentHSV_HOG192, excluding padding.
+handcrafted_padding_audit: all four padded/content variants, paired comparisons
+of padding removal for each dimension. Use this profile for development checks.
+The content rectangle is recovered from original dimensions, not detected from
+pixel colour. HSV counts and HOG cells operate only on that rectangle, after
+the same JPEG decode and query corruption. HOG resizes the rectangle to its
+128x128 descriptor grid. ResNet still uses its documented padded input; this
+update does not claim padding has been removed from CNN features.
 resnet18_global: frozen ImageNet ResNet18 global pooling, 512 dimensions.
 resnet18: global512 versus global512 plus four 2x2 pooled region descriptors,
 2560 dimensions total. This paired comparison measures added spatial detail.
@@ -61,24 +69,39 @@ until at least 10,000 cleaned original images are included. All images of those
 products are retained. use_all_official_train can include every eligible train
 product. Ten outer and three inner folds split PRODUCTS, with manual category
 stratification. Official test results are supplementary and are never used
-for fitting, tuning or threshold selection.
+for fitting, tuning or threshold selection. run_official_test defaults to false;
+enable it only after the protocol is finalized.
 
 Each sampled anchor has a same-product positive, same-category random negative
-and same-category colour-hard negative. Hard selection always uses clean HSV48,
+and same-category colour-hard negative. Hard selection always uses clean CONTENT-ONLY HSV48,
 including ResNet experiments. Saved product folds, pair CSVs and checksums are
 shared across algorithms and feature profiles. Feature changes preserve pairs.
 All methods train on clean inputs. Test conditions corrupt only the query;
 reference images remain clean. Occlusion/noise/blur/rotation operate on image
 content, keeping padding fixed. Features are recomputed from corrupted images.
 
-LR/SVM use absolute difference plus elementwise product of image features.
+LR/SVM use the absolute difference only: abs(query - reference), with D pair
+dimensions for D image dimensions. No elementwise-product term is concatenated.
 Input scaling and C search are fitted within inner training folds; three C
 candidates are tested with optional boundary extensions. SupCon searches three
-temperatures by clean inner-validation matching AUC. Its scaler and neural
+temperatures by clean inner-validation matching AUC. A boundary winner can
+extend the three-value window up to maximum_grid_extensions=2 times with a
+factor of 2, within temperature_bounds=[0.005, 1.0]. Only new candidates are
+trained; evaluated candidates are reused and equal AUC favours the middle.
+All decisions use inner validation only. Exhausted boundaries remain flagged. Its scaler and neural
 network are independently refitted in every inner and outer training partition.
 Architecture and epochs are preset. Outer tests never select settings.
-Thresholds use inner out-of-fold positive scores for the configured validation
-recall (0.95). Outer-test recall is not guaranteed to equal that target.
+Each outer training set reserves category-stratified calibration products:
+calibration_fraction=0.2, rounded up with >=2 products per category. At least
+2*inner_folds products per category remain for model fitting and inner tuning.
+Calibration products are excluded from all tuning, scaler fitting and model
+training. The selected final model is fitted once on fitting products, scored
+on clean calibration pairs, and its threshold is chosen for target recall 0.95.
+That SAME fixed model evaluates all test conditions; it is not refitted after
+calibration. Test recall still need not equal the finite-sample calibration
+target. training_partitions.json and calibration.json record these partitions.
+The >=10000-image count describes the selected dataset, not every fitting fold.
+Small datasets lacking enough products fail clearly instead of reusing products.
 Metrics are calculated manually. Report outer-fold means and sample standard
 deviations, all/random/colour-hard subsets, and separate official holdout results.
 
@@ -128,11 +151,15 @@ folds, conditions or protocol code also requires a new protocol_dir. Changed
 extractor code receives a new cache identity. Dataset fingerprints cover
 manifest bytes plus image file size/mtime, not every image's content hash.
 Do not edit saved pair CSVs.
+Version 3 defaults use experiment_v3, protocols/shared_v3, feature_cache_v3 and
+results_v3. Keep v2 outputs as historical evidence; do not reuse their completed
+folds or thresholds. Existing processed_sop images remain compatible, so 01
+does not need to be rerun. Switching feature profiles shares the v3 pair lists.
 
 Execution checks
 python 02_SOP_Traditional_Baselines.py --smoke-test
 python 03_SOP_SupCon.py --smoke-test
-These use 384 images, 2 outer/2 inner folds, smaller pair caps and one SupCon
+These select at least 384 images (more if product counts require it), 2 outer/2 inner folds, smaller pair caps and one SupCon
 epoch, writing to separate folders. They are execution checks, not formal
 experimental evidence. Full nested runs can take substantial time.
 python -m unittest discover -s tests -v
@@ -140,5 +167,5 @@ Synthetic checks cover loss, gradients, train-only scaling, checkpoint reload,
 512-dimensional input, shared folds/pairs, metrics and resume. The ResNet check
 uses random weights for dimensions/frozen inference, not pretrained accuracy.
 
-Original Python versions remain available in Git history. Historical notebooks are
+Original Python files remain available in Git history. Historical notebooks are
 not active entry points for the new configuration.

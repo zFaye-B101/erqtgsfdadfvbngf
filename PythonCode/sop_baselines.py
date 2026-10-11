@@ -13,6 +13,7 @@ from sklearn.exceptions import ConvergenceWarning
 
 from sop_protocol import manual_metrics, manual_roc_auc, pair_matrix, recall_threshold, write_json
 from sop_reporting import evaluate_scores, report_results
+from sop_calibration import calibrate
 
 def fit_classifier(X, y, algorithm, c, seed):
     # Fit scaling on THIS training fold only; never fit on validation/test.
@@ -69,13 +70,12 @@ def tune_inner(context, bank, algorithm, name, config, directory):
             break
         grid = [grid[0] / 10, grid[0], grid[1]] if best == grid[0] else [grid[1], grid[2], grid[2] * 10]
     chosen = evaluations[best]
-    threshold = recall_threshold(chosen["y"], chosen["score"], config["target_validation_recall"])
     result = {"fold": context["fold"], "algorithm": algorithm, "features": name,
-              "C": best, "threshold": threshold, "final_grid": grid,
+              "C": best, "final_grid": grid,
               "boundary_unresolved": best != grid[1], "history": history,
-              "validation_metrics": manual_metrics(chosen["y"], chosen["score"], threshold),
+              "mean_validation_auc": chosen['mean_auc'],
               "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
-              "threshold_note": "Pooled inner OOF clean scores; test TPR need not equal validation target."}
+              "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning."}
     write_json(Path(directory) / "tuning.json", result)
     return result
 
@@ -90,8 +90,12 @@ def run_fold(experiment, context, directory):
             tuning = tune_inner(context, bank, algorithm, name, experiment.config, target)
             model = fit_classifier(matrix(context["train_pairs"], bank), context["train_pairs"].label.to_numpy(),
                                    algorithm, tuning["C"], context["seed"])
+            tuning['threshold'] = calibrate(context, scores(model, matrix(context['calibration_pairs'], bank)),
+                                            experiment.config, target)
+            write_json(target / 'tuning.json', tuning)
             with (target / "model.pkl").open("wb") as stream:
                 pickle.dump({**model, "threshold": tuning["threshold"], "C": tuning["C"],
+                             "fitting_products": context['train_products'], "calibration_products": context['calibration_products'],
                              "features": name, "input_dimension": bank["clean"].shape[1]}, stream)
             score_by_condition = {condition: scores(model, matrix(context["test_pairs"], bank, condition))
                                   for condition in bank}

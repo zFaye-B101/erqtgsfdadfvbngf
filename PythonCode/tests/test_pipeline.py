@@ -122,8 +122,8 @@ class PipelineTests(unittest.TestCase):
             root = Path(folder)
             rows = []
             for category in range(3):
-                for product in range(8):
-                    sku = category * 8 + product
+                for product in range(16):
+                    sku = category * 16 + product
                     for view in range(4):
                         image_id = len(rows) + 1
                         relative = f'images/train/{sku}/{image_id}.jpg'
@@ -143,13 +143,37 @@ class PipelineTests(unittest.TestCase):
             for fold in (1, 2):
                 context = experiment.context(fold)
                 self.assertFalse(set(context['train_products']) & set(context['test_products']))
+                self.assertFalse(set(context['calibration_products']) & set(context['train_products']))
+                self.assertFalse(set(context['calibration_products']) & set(context['test_products']))
                 for train, validation, _, _ in context['inner']:
                     self.assertFalse(set(train) & set(validation))
+                    self.assertFalse(set(context['calibration_products']) & (set(train) | set(validation)))
             snapshots = {p.relative_to(root / 'protocol'): p.read_bytes() for p in (root / 'protocol').rglob('*pairs.csv')}
             first = baselines(experiment)
             second = supcon(Experiment(config))
             combine_results(experiment)
             self.assertTrue((second.parent / 'combined_summary_mean_sd.csv').exists())
+            for directory in (first, second):
+                records = list(directory.rglob('calibration.json'))
+                self.assertEqual(len(records), 8 if directory == first else 4)
+                for path in records:
+                    import json
+                    record = json.loads(path.read_text())
+                    self.assertFalse(set(record['calibration_products']) & set(record['fitting_products']))
+                    predictions = pd.read_csv(path.with_name('calibration_predictions.csv.gz'))
+                    if directory == second:
+                        fitted = load_model(path.with_name('model.pt'))
+                        self.assertEqual(fitted['training_products'], record['fitting_products'])
+                        name = 'HSV_HOG192' if path.parent.name.endswith('HSV_HOG192') else 'HSV48'
+                        actual = matching_scores(fitted, predictions, experiment.banks[name])
+                    else:
+                        import pickle
+                        from sop_baselines import matrix, scores
+                        with path.with_name('model.pkl').open('rb') as stream:
+                            fitted = pickle.load(stream)
+                        self.assertEqual(fitted['fitting_products'], record['fitting_products'])
+                        actual = scores(fitted, matrix(predictions, experiment.banks[fitted['features']]))
+                    np.testing.assert_allclose(actual, predictions.score.to_numpy(), atol=1e-7)
             for rel, value in snapshots.items():
                 self.assertEqual(value, (root / 'protocol' / rel).read_bytes())
             self.assertEqual(baselines(Experiment(config)), first)
@@ -163,6 +187,13 @@ class PipelineTests(unittest.TestCase):
             self.assertEqual(changed.protocol_id, experiment.protocol_id)
             pd.testing.assert_frame_equal(changed.context(1)['test_pairs'], experiment.context(1)['test_pairs'])
             self.assertEqual(changed.banks['Alternative64']['clean'].shape[1], 64)
+            content = copy.deepcopy(config)
+            content['feature_profile'] = 'content'
+            content['feature_sets'] = {'ContentHSV48': {'extractor': 'hsv_hog_content', 'columns': [0, 48]}}
+            content['comparisons'] = []
+            content_experiment = Experiment(content)
+            self.assertEqual(content_experiment.protocol_id, experiment.protocol_id)
+            pd.testing.assert_frame_equal(content_experiment.context(1)['test_pairs'], experiment.context(1)['test_pairs'])
             from sop_reporting import report_results
             synthetic_rows = pd.read_csv(first / 'outer_fold_metrics.csv')
             synthetic_rows = synthetic_rows[synthetic_rows.features.eq('HSV48')].copy()
@@ -173,6 +204,58 @@ class PipelineTests(unittest.TestCase):
             path.write_text(path.read_text() + '\n')
             with self.assertRaisesRegex(ValueError, 'checksum'):
                 experiment.context(1)
+
+    def test_content_padding_and_temperature_expansion(self):
+        from types import SimpleNamespace
+        from sop_features import resize_for_model, image_feature_vector
+        from sop_protocol import content_box
+        from sop_tuning import search_temperatures
+        images, content = [], []
+        for size in [(300, 300), (600, 150)]:
+            image = resize_for_model(Image.new('RGB', size, (200, 30, 30)))
+            row = SimpleNamespace(original_width=size[0], original_height=size[1])
+            images.append(image_feature_vector(image))
+            content.append(image_feature_vector(image.crop(content_box(row, 224))))
+        self.assertGreater(np.abs(images[0][:48] - images[1][:48]).sum(), .1)
+        np.testing.assert_array_equal(content[0], content[1])
+        seen = []
+        def evaluate(value):
+            seen.append(value)
+            return {'mean_auc': 1 - abs(value - .4)}
+        best, grid, records, history = search_temperatures(evaluate, [.05, .1, .2], 2, 2, [.005, 1])
+        self.assertEqual(best, .4)
+        self.assertEqual(grid, [.2, .4, .8])
+        self.assertEqual(len(seen), len(set(seen)))
+        self.assertEqual(len(history), 3)
+        best, grid, records, history = search_temperatures(lambda value: {'mean_auc': value}, [.25, .5, 1], 2, 2, [.005, 1])
+        self.assertEqual(best, 1)
+        self.assertEqual(len(history), 1)
+
+    def test_pair_features_and_official_query_coverage(self):
+        from sop_protocol import pair_matrix
+        pairs = pd.DataFrame({'query_row': [0], 'reference_row': [1]})
+        bank = {'clean': np.array([[1., 2., 3.], [3., 5., 7.]])}
+        np.testing.assert_array_equal(pair_matrix(pairs, bank, [0, 3]), [[2., 3., 4.]])
+        with tempfile.TemporaryDirectory(dir=ARTIFACTS) as folder:
+            experiment = object.__new__(Experiment)
+            experiment.config = load_config(ROOT / 'experiment_config.json', smoke=True)
+            experiment.config['run_official_test'] = True
+            records = []
+            for category in range(2):
+                for product in range(16):
+                    for view in range(2):
+                        records.append({'class_id': category * 16 + product, 'super_class_id': category,
+                                        'image_id': len(records), 'source_split': 'train' if product < 12 else 'test'})
+            experiment.frame = pd.DataFrame(records)
+            experiment.selected = sorted(experiment.frame.loc[experiment.frame.source_split.eq('train'), 'class_id'].unique().tolist())
+            experiment.directory = Path(folder)
+            experiment.hard_features = np.zeros((len(records), 48))
+            experiment.query_mask = np.ones(len(records), dtype=bool)
+            context = experiment.context('official')
+            query = int(context['test_pairs'].query_row.iloc[0])
+            experiment.query_mask[query] = False
+            with self.assertRaisesRegex(ValueError, 'coverage mask'):
+                experiment.context('official')
 
 if __name__ == '__main__':
     unittest.main()

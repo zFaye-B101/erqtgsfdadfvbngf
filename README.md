@@ -8,7 +8,14 @@
 
 ### 最近更新：2026-10-11
 
-- **互评更新（Claude）：** 在本会话 Mac/Python 3.11 CPU 临时环境复现 `PythonCode/tests` 5 项合成测试通过（与组员 Windows 记录的库版本一致）。[预处理互评](docs/reviews/2026-10-11_3054cd3_preprocessing-features_claude.md) R2 改为已验证、R1 暂缓；新增 [可配置流程互评](docs/reviews/2026-10-11_88e1760_pipeline_claude.md)：LR/SVM 图片对特征只有绝对差，与 Readme 描述不符（R1），官方 holdout 查询覆盖缺少断言（R2），待负责人回应。只改文档，未改代码；真实 SOP、Windows、GPU 仍未验证。
+**当前版本 v3：针对组员评审再次修复。** 新增内容区域HSV/HOG与填边对照配置；最终模型采用独立商品校准集定阈值后不再重训；SupCon温度支持受限边界扩展；官方测试集默认关闭。使用 `results_v3/`、`protocols/shared_v3/` 和新缓存，保留旧结果。已有01图片可复用，编号入口不变。真实SOP收益和正式十折仍未验证；详情见[本轮回应](docs/reviews/2026-10-11-v3-calibration-padding-response.md)及[英文说明](PythonCode/Readme.txt)。下面v2交接中的“填边仍保留/阈值仍移植”描述的是上一版；原填边特征仍可作为显式对照选择。
+
+本轮追加读取组员 `3c92796` 的[新评审](docs/reviews/2026-10-11_88e1760_pipeline_claude.md)：LR/SVM保留绝对差、修正乘积项的错误说明；官方测试查询增加扰动覆盖检查；01取消历史helper回退；基础依赖清单统一复用。评审原文与Mac复查证据保留，新实现的实际回应见上方链接。
+
+v3在Windows CPU的7项合成检查全部通过（40.386秒），含校准模型保存后重现分数与故意缺失官方query扰动覆盖的报错检查；这不是正式SOP实验结果。
+
+- **互评更新（Claude，针对88e1760的历史复查）：** 在本会话 Mac/Python 3.11 CPU 临时环境复现 `PythonCode/tests` 5 项合成测试通过（与组员 Windows 记录的库版本一致）。[预处理互评](docs/reviews/2026-10-11_3054cd3_preprocessing-features_claude.md) R2 改为已验证、R1 暂缓；新增 [可配置流程互评](docs/reviews/2026-10-11_88e1760_pipeline_claude.md)：LR/SVM 图片对特征只有绝对差，与 Readme 描述不符（R1），官方 holdout 查询覆盖缺少断言（R2），当时待负责人回应。只改文档，未改代码；真实 SOP、Windows、GPU 未在该评审环境验证。v3的实施者回应见上方链接，不表示评审者已独立复查v3。
+
 **最新代码交接：固定 01/02/03 入口的可配置流程已合入 PythonCode。**
 
 - 01 仅清理和导出图片；02 运行 LR/SVM；新增 03 运行 SupCon-based matching。配置选择 HSV48/HSV_HOG192、ResNet18 Global512 或 Global512+Local2048，无需修改编号入口。
@@ -47,7 +54,7 @@
 
 ## 现在开始运行
 
-纯 Python 入口：在 `PythonCode/` 中使用同一个 Python 3.11+ 环境，依次运行 `python 01_SOP_Preprocessing.py`、`python 02_SOP_Traditional_Baselines.py`、`python 03_SOP_SupCon.py`。已有完整处理结果时，配置 `data_dir` 后跳过01。以后换特征主要修改 `experiment_config.json` 的 `feature_profile`，重新运行02/03。输出默认位于 `PythonCode/results_v2/`，按运行名、特征和算法分开保存。开发先使用 `--smoke-test`，或02/03同时加 `--skip-official-test`；正式设置与历史CNN小试仍须区分。
+纯 Python 入口：在 `PythonCode/` 中使用同一个 Python 3.11+ 环境，依次运行 `python 01_SOP_Preprocessing.py`、`python 02_SOP_Traditional_Baselines.py`、`python 03_SOP_SupCon.py`。已有完整处理结果时，配置 `data_dir` 后跳过01。以后换特征主要修改 `experiment_config.json` 的 `feature_profile`，重新运行02/03。输出默认位于 `PythonCode/results_v3/`，按运行名、特征和算法分开保存。开发先使用 `--smoke-test`，或02/03同时加 `--skip-official-test`；正式设置与历史CNN小试仍须区分。
 
 详细依赖、数据路径、缓存与运行方法见 [英文运行说明](PythonCode/Readme.txt) 和 [quickstart](docs/quickstart.md)。数据、缓存、模型权重和机器环境留在本机。
 

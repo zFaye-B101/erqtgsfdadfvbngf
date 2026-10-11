@@ -30,6 +30,8 @@
 
 ## 记录模板
 
+最新实施者回应见[v3回应](reviews/2026-10-11-v3-calibration-padding-response.md)：读取3c92796新增评审后，修正LR/SVM乘积项描述、增加官方query扰动覆盖检查，及独立商品校准、内容区域特征对照、有界温度扩展和依赖统一。Windows CPU七项合成检查通过；是实施者验证，不替评审者宣称已独立复查v3，也不是正式结果。下方88e1760评审的待回应事项对应其历史提交。
+
 已记录的互评：
 
 - **拉取后优先阅读** [PythonCode进度与CNN交接](reviews/2026-10-11_009a241_python-progress_codex.md) 及 [LR开发结果](experiments/2026-10-11-lr-feature-pilot.md)：传统LR/SVM已写未完整跑，CNN LR已小试未合入；JPEG/填边复核及阈值风险待回应。请组员把更新文档一起提供给各自AI，记录已读SHA与负责范围，不替其他成员确认已读。
