@@ -1,0 +1,13 @@
+seed,condition,layer,products,positive_pairs,negative_pairs,roc_auc
+42,Clean,layer3,100,100,100,0.8683
+42,Clean,layer4,100,100,100,0.8438
+42,Occluded25%,layer3,100,100,100,0.8421
+42,Occluded25%,layer4,100,100,100,0.8337
+43,Clean,layer3,100,100,100,0.8637
+43,Clean,layer4,100,100,100,0.8838
+43,Occluded25%,layer3,100,100,100,0.8528
+43,Occluded25%,layer4,100,100,100,0.8691
+44,Clean,layer3,100,100,100,0.8284
+44,Clean,layer4,100,100,100,0.8300
+44,Occluded25%,layer3,100,100,100,0.7924
+44,Occluded25%,layer4,100,100,100,0.7983

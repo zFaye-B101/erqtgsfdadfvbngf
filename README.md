@@ -10,8 +10,9 @@
 
 - 新增 [预处理填边与特征缓存互评](docs/reviews/2026-10-11_3054cd3_preprocessing-features_claude.md)：R1 `resize_for_model` 的白色填边进入HSV/HOG特征，使特征携带长宽比（合成探针复现），已归档的传统特征AUC可能因此偏低；R2 `.npz` 特征按未压缩图计算，与保存的JPEG不一致。待负责人回应，未改代码；同步互评索引、诊断说明与当前方案，并在当前状态注明仍处于特征选择阶段。
 - 新增 [环境配置与验收](docs/environment.md) 和 `requirements-experiments.txt`：提供Mac/Linux、Windows CPU、Windows CUDA选择流程、Notebook内核及验收代码；区分Mac实测和待验证新环境，避免混装OpenCV。未改实验实现或自动安装依赖。
-- 归档 [已测特征开发诊断](docs/experiments/2026-10-11-feature-diagnostics.md)、[CNN三种子CSV](docs/experiments/2026-10-11-resnet18-seed-results.csv)和[平均/最大池化三种子CSV](docs/experiments/2026-10-11-pooling-seed-results.csv)：本轮平均池化AUC在各条件均高于最大池化；它是独立开发抽样，与此前多特征结果不混算；非正式模型实验。
-- 更新 [SML课内测试安排](docs/reviews/2026-10-11_ae5a1d6_feature-options_codex.md)：池化初试完成，后续优先中间层及现有表示的训练/成本验证；暂缓DINOv2，不增加其代码或依赖，继续使用SupCon论文。
+- 归档 [已测特征开发诊断](docs/experiments/2026-10-11-feature-diagnostics.md)、[CNN三种子CSV](docs/experiments/2026-10-11-resnet18-seed-results.csv)、[平均/最大池化CSV](docs/experiments/2026-10-11-pooling-seed-results.csv)和[layer3/layer4 CSV](docs/experiments/2026-10-11-layer-seed-results.csv)：平均池化本轮较高；层级比较无稳定赢家。各轮独立开发抽样，不混算；不是正式模型实验。
+- 新增 [layer3/layer4三种子CSV](docs/experiments/2026-10-11-layer-seed-results.csv)：三种子胜负不一致、无稳定层级赢家；更新测试安排，先回应预处理填边/特征缓存互评，再开展统一输入下的训练/成本小试。代码未改，仍属开发诊断。
+- 更新 [SML课内测试安排](docs/reviews/2026-10-11_ae5a1d6_feature-options_codex.md)：池化与层级初试完成，暂无最终特征决定；暂缓DINOv2，不增加其代码或依赖，继续使用SupCon论文。
 - 澄清 [文献综述要求](docs/reviews/2026-10-11_9291720_course-requirements_codex.md)：解释新方法与课堂内容的区别，不是禁止引用课堂论文；需数据集引用加至少两篇额外研究论文。
 - 新增 [课程要求与staff反馈互评](docs/reviews/2026-10-11_9291720_course-requirements_codex.md)：区分官方要求、课件依据及待讨论方案；记录老师建议扩展噪声/模糊/旋转、TabM反馈适用边界，以及正式指标/CV/调参须自行实现。只改文档，未实施或批准最终方案。
 - 新增 [特征方案互评](docs/reviews/2026-10-11_8990473_features_codex.md)，供组员及其AI讨论：建议小样本比较冻结ResNet18全局与2x2区域表示，HSV/HOG作为轻量对照、SIFT可选。当前仅建议，尚未定案或修改实现。
@@ -41,7 +42,7 @@
 ## 当前状态：2026-10-11
 
 - 研究问题：面对训练时未见过的商品，局部视觉特征是否能减少部分遮挡下相似商品的误匹配，同时维持同商品匹配率？
-- 当前阶段：仍在做特征选择（CNN池化/层级与传统特征的开发诊断），尚未进入正式三模型实验或嵌套评估。
+- 当前阶段：仍在做特征选择（CNN池化/层级与传统特征的开发诊断），并核对几何处理一致性；尚未进入正式三模型实验或嵌套评估。
 - 当前算法方向：Logistic Regression、RBF SVM、SupCon-based matching。不是旧草稿中的 LightGBM 或 TabM。
 - SOP 数据资格检查已完成；`01_SOP_Preprocessing.ipynb` 已提供全量预处理代码，但 Windows 全量运行尚未验证，也不是已完成的模型或实验。
 - 用户确认 Windows/PyCharm 主机已下载数据；新公共读取代码在 Mac 上通过测试，Windows 依赖与 GPU 尚待运行检查。
