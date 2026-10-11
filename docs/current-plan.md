@@ -15,7 +15,8 @@ For unseen products, can adding local visual features reduce false matches betwe
 
 ## 建议方案，尚待小规模验证
 
-- 用户希望之后分别测试[课内外新增候选](reviews/2026-10-11_ae5a1d6_feature-options_codex.md)：中间层CNN、最大池化、ResNet50、AE、PCA及DINOv2。优先级/分工只是建议，新增候选未运行；下面的原有G/G+L路线仍为候选而非固定最终特征，SupCon论文选择不变。
+- 用户已要求按[SML课内测试安排](reviews/2026-10-11_ae5a1d6_feature-options_codex.md)分别检查池化、中间层和现有表示的训练/成本；DINOv2暂缓，不进入测试线。ResNet50/AE为后续备选，PCA按维度成本需要考虑。负责人及最终特征仍待确认，SupCon论文选择不变。
+- [已完成开发诊断](experiments/2026-10-11-feature-diagnostics.md)已归档：含CNN逐种子CSV、环境/冒烟与传统特征汇总，缺失原始明细明确标注。只是冻结特征/单项评分测试，无正式三模型或嵌套评估结果。
 - 新增的 `01_SOP_Preprocessing.ipynb` 当前会生成 192 维 HSV+空间 HOG 逐图特征；`sop_features.py` 提供 SIFT 图片对特征函数。这是可复用的初步预处理代码，不取代下列待验证的特征比较，也不表示正式评估协议已经确定。
 - 固定外部预训练图像编码器，构造 global-only 与 global+local 两种特征条件。
 - 以 2x2 区域池化作为局部特征候选，先不增加检测器；区域不等于语义部件。
@@ -38,4 +39,4 @@ For unseen products, can adding local visual features reduce false matches betwe
 
 ## 下一步
 
-确认 Windows 环境与数据路径，跑通小数据子集；测量一轮完整训练和验证成本后，再锁定样本量、采样规则、嵌入结构、超参数及正式协议。尚无正式模型结果或 staff 批准凭证。
+先锁定共同开发样本/配对清单、像素处理和指标，再分开测试池化与中间层；同步验证一轮LR训练及成本。Windows环境仍需实际核验。文献综述按数据集引用加至少两篇额外研究论文组织，说明SupCon相对课堂方法的新意，不要求排除课堂论文；见[原要求澄清](reviews/2026-10-11_9291720_course-requirements_codex.md)。尚无正式模型结果或staff批准凭证。
