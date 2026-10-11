@@ -1,0 +1,5 @@
+# Development diagnostics and plotting; not a final reproducibility lock.
+# Install torch/torchvision separately for the selected hardware backend.
+-r requirements-base.txt
+scikit-learn>=1.5,<2
+matplotlib>=3.8,<4

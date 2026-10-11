@@ -8,6 +8,7 @@
 
 ### 最近更新：2026-10-11
 
+- 新增 [环境配置与验收](docs/environment.md) 和 `requirements-experiments.txt`：提供Mac/Linux、Windows CPU、Windows CUDA选择流程、Notebook内核及验收代码；区分Mac实测和待验证新环境，避免混装OpenCV。未改实验实现或自动安装依赖。
 - 归档 [已测特征开发诊断](docs/experiments/2026-10-11-feature-diagnostics.md)及[CNN三种子CSV](docs/experiments/2026-10-11-resnet18-seed-results.csv)：用户回传结果与工作台汇总分开标注，缺失原始日志/配置不补造；非正式模型实验。
 - 更新 [SML课内测试安排](docs/reviews/2026-10-11_ae5a1d6_feature-options_codex.md)：池化、中间层及现有表示的训练/成本验证；暂缓DINOv2，不增加其代码或依赖，继续使用SupCon论文。
 - 澄清 [文献综述要求](docs/reviews/2026-10-11_9291720_course-requirements_codex.md)：解释新方法与课堂内容的区别，不是禁止引用课堂论文；需数据集引用加至少两篇额外研究论文。
@@ -20,11 +21,11 @@
 - 新增 [提交代码与中文学习副本规范](docs/code-style.md)：提交代码按功能大块添加英文 Markdown，源码添加必要英文注释，自定义输出使用英文。
 - 范围仅限最终提交代码及配套运行说明；资料、论文、历史文件和仓库管理文档不要求翻译。可另建含对应源码、中文注释和逐块详解的学习副本，不进入最终提交包。
 - 英文实现为唯一依据，已有中文副本随源码同步；继续直接协作 `main`，每批共享改动同步 README 与相关文件。
-- 本次仅上传诊断结果文档/CSV并调整测试安排与说明；未修改代码、重跑试验或启动自动监控。早期互评保留为历史快照，开发诊断不等于正式实验完成。
+- 本次补充环境配置和验收入口；已保留诊断结果文档/CSV和测试安排，未改实验实现、重跑试验或启动监控。早期互评保留为历史快照，开发诊断不等于正式实验完成。
 
 ## 现在开始运行
 
-先看 [拉取与运行说明](docs/quickstart.md)：可选运行 [00_setup_and_data.ipynb](notebooks/00_setup_and_data.ipynb) 检查环境并预览少量图片，再运行 [01_SOP_Preprocessing.ipynb](notebooks/01_SOP_Preprocessing.ipynb) 做全量预处理。SOP ZIP 和生成的 `processed_sop/` 都留在本机，不上传。
+先看 [拉取与运行说明](docs/quickstart.md)，按 [环境配置与验收](docs/environment.md) 配置后端与内核。可选运行 [00_setup_and_data.ipynb](notebooks/00_setup_and_data.ipynb) 预览少量图片；确定需要全量导出后才运行 [01_SOP_Preprocessing.ipynb](notebooks/01_SOP_Preprocessing.ipynb)。SOP ZIP 和生成的 `processed_sop/` 都留在本机，不上传。
 
 ## 先读这些
 

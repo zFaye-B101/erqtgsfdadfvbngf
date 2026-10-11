@@ -24,6 +24,8 @@ git pull --ff-only
 
 ## 2. 在 PyCharm 打开整个仓库目录
 
+先按 [环境配置与验收](environment.md) 配置Python3.12、依赖与内核。新环境可装`requirements-experiments.txt`（包含基础依赖），torch/torchvision另按Mac、CPU或CUDA安装。已有GUI版OpenCV时不要直接叠装headless。
+
 选择本项目的 Python 解释器，并打开 [00_setup_and_data.ipynb](../notebooks/00_setup_and_data.ipynb)。从第一个代码格开始运行。
 
 - 第一格输出当前内核、Python、依赖导入结果与 GPU 信息，不自动安装软件。
@@ -84,4 +86,4 @@ python -m sop_project.data --full
 
 Notebook 格式校验通过，全部代码格已在 Mac 的 Python 3.12.14 / Pillow 12.3.0 中使用真实 SOP 依次执行，默认安装开关关闭；图片对象成功读取为 400x268。未保存数据图片或执行输出到仓库。环境诊断也在另一个 Python 3.9.6 解释器中运行通过，能报告缺失依赖及 CPU-only PyTorch。
 
-这些不是 Windows 实测，也不是完整模型训练。基础依赖范围尚未锁定；主运行机验证后应另存可复现环境版本，不提前生成未经验证的 GPU 安装方案。
+这些不是 Windows 实测，也不是完整模型训练。依赖范围尚未锁定；主运行机验证后应另存可复现环境版本。[环境指南](environment.md)提供官方后端选择流程与命令，但Windows/CUDA仍待实测，不能当作已验证记录。

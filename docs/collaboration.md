@@ -18,7 +18,7 @@
 5. 代码与 README/相关文件放在同一次提交。提交后工作区干净时 `git pull --rebase origin main`，解决冲突再 `git push origin main`；不 force push，不覆盖队友改动。
 6. 交接时注明改动及运行验证状态；仅写好代码不能记为测试通过。提交形式详见 [submission.md](submission.md)，不必强行合成一个 Notebook。
 
-当前基础环境入口见 [quickstart.md](quickstart.md)，`requirements-base.txt` 仅包含图片读取和 Notebook 依赖；模型训练依赖版本仍待验证。`tools/requirements-docs.txt` 仅供文档转换。
+配置入口见 [environment.md](environment.md)，运行与路径见 [quickstart.md](quickstart.md)。`requirements-base.txt`包含预处理和Notebook依赖，`requirements-experiments.txt`增加开发诊断和绘图；torch/torchvision按硬件另装，最终训练版本仍待验证。不要混装GUI/headless OpenCV、不共享`.venv`，交接实际解释器、版本和验收结果。`tools/requirements-docs.txt`仅供文档转换。
 
 ## 交叉评审
 
