@@ -20,6 +20,14 @@
 
 当前基础环境入口见 [quickstart.md](quickstart.md)，`requirements-base.txt` 仅包含图片读取和 Notebook 依赖；模型训练依赖版本仍待验证。`tools/requirements-docs.txt` 仅供文档转换。
 
+## 交叉评审
+
+后续成员和 AI 可以相互检查已提交的更新，并提出不同解决方法，详见 [互评规范与模板](peer-review.md)。每次接手只先检查自己将使用或修改的模块，不做无范围的全仓库重写。
+
+更新者交接提交号、影响文件/接口、实际验证和待办；评审者记录具体问题及证据，并比较保留现状、最小修复和有实际价值的替代方案。负责人回应后再实施，协议改变先由用户确认。记录分别区分建议、决定、代码修改和验证通过，不能仅因已推送就关闭问题。
+
+默认只读评审实现，评审记录可按现有 main 流程提交并同步 README；不直接覆盖他人工作，也不要求强制 PR 或阻塞每次提交。文档评审与讨论可用中文，实际提交代码仍遵守 [英文代码规范](code-style.md)。此处没有启动自动监控或跨会话消息任务。
+
 ## 现有 Notebook
 
 `notebooks/00_setup_and_data.ipynb` 用于环境检查和前 20 张图片预览，可选运行。`notebooks/01_SOP_Preprocessing.ipynb` 才执行全量 ZIP 图片审计、筛选、224×224 导出和 HSV/HOG 特征缓存；需与 `notebooks/sop_features.py` 一起使用。输出位于本机 `processed_sop/`，已由 `.gitignore` 排除。`materials/sop_data_check.ipynb` 保留为早期核验记录。Windows 全量预处理仍待运行验证；目前没有模型训练 Notebook。
