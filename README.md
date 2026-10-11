@@ -8,6 +8,10 @@
 
 ### 最近更新：2026-10-11
 
+**本轮入口修复与文档整合已获用户批准。** 基于 `231f2d6` 补充[特征与实验决策](docs/current-plan.md)、[数据处理边界](docs/data.md)及[四页报告和提交核对](docs/submission.md)。不改变特征、算法、配置或已有实验数值；授权范围仅为入口修复、测试和本批文档的提交/推送。
+
+**02入口已修复并验证：** 新增标准 `__main__` 调用及三个真实子进程回归测试。修复前帮助输出测试失败；修复后Mac/Python3.11 CPU的10项测试全部通过，包含原有7项与`--help`、必填参数、两个method的合成smoke结果检查。详见[入口互评](docs/reviews/2026-10-11_231f2d6_entrypoint_codex.md)与[验证记录](PythonCode/VALIDATION.txt)。这不是Windows复测、真实SOP正式实验或预训练CNN性能证据。
+
 **当前版本 v3：针对组员评审再次修复。** 新增内容区域HSV/HOG与填边对照配置；最终模型采用独立商品校准集定阈值后不再重训；SupCon温度支持受限边界扩展；官方测试集默认关闭。使用 `results_v3/`、`protocols/shared_v3/` 和新缓存，保留旧结果。已有01图片可复用。本次整理将入口合并为01预处理和02实验命令，算法与实验细节保持不变。真实SOP收益和正式十折仍未验证；详情见[本轮回应](docs/reviews/2026-10-11-v3-calibration-padding-response.md)及[英文说明](PythonCode/Readme.txt)。下面v2交接中的“填边仍保留/阈值仍移植”描述的是上一版；原填边特征仍可作为显式对照选择。
 
 本轮追加读取组员 `3c92796` 的[新评审](docs/reviews/2026-10-11_88e1760_pipeline_claude.md)：LR/SVM保留绝对差、修正乘积项的错误说明；官方测试查询增加扰动覆盖检查；01取消历史helper回退；基础依赖清单统一复用。评审原文与Mac复查证据保留，新实现的实际回应见上方链接。
@@ -21,7 +25,7 @@
 - 01 清理并导出图片；02 通过 `--method baselines` 运行 LR/SVM，或通过 `--method supcon` 运行 SupCon。配置选择 HSV/HOG 或 ResNet18 特征，不必为特征切换修改实验入口。
 - 两种实验方法共用商品折、带校验的图片对、HSV 困难负例和查询图扰动；特征从同一处理后 JPEG 解码图提取。填边对传统 HSV/HOG 的影响可通过配置进行对照。
 - SupCon 实现论文 Eq.(2)，采用固定描述子上的可训练表示网络与投影头、同商品不同干净图片作正例、保留表示网络作余弦匹配。是项目应用适配，不是原论文端到端分类复现。
-- 入口整理前的Windows CPU合成验证覆盖 01 筛选、LR/SVM/SupCon 两层折流程、五种测试条件、512 维输入、模型重载和断点复用。此次只做入口/文档整理与Python语法解析，未重跑合成测试；真实 SOP 十折、真实官方 holdout、预训练 ResNet 与 GPU 性能仍未验证。
+- 入口整理前的Windows CPU合成验证覆盖 01 筛选、LR/SVM/SupCon 两层折流程、五种测试条件、512 维输入、模型重载和断点复用。`231f2d6`整理时仅做Python语法解析，后续本轮Mac完整合成/CLI复测见上方记录；真实 SOP 十折、真实官方 holdout、预训练 ResNet 与 GPU 性能仍未验证。
 - 使用方式见[英文说明](PythonCode/Readme.txt)和[中文说明](PythonCode/Readme_zh.txt)，配置见 [experiment_config.json](PythonCode/experiment_config.json)，验证边界见 [VALIDATION.txt](PythonCode/VALIDATION.txt)，历史评审回应见 [本轮交接](docs/reviews/2026-10-11-configurable-pipeline-response.md)。下方旧记录中的“SupCon尚缺/CNN尚未接入”仅描述此前版本；旧开发数值没有被重算或提升为正式结果。
 
 
@@ -55,6 +59,8 @@
 - 本次补充环境配置和验收入口；已保留诊断结果文档/CSV和测试安排，未改实验实现、重跑试验或启动监控。早期互评保留为历史快照，开发诊断不等于正式实验完成。
 
 ## 现在开始运行
+
+02入口已通过命令行帮助及两种方法的合成smoke检查；正式运行仍需使用完整依赖环境和合格真实数据，不能只凭正常退出判断完成。
 
 纯 Python 入口：在 `PythonCode/` 中使用同一个 Python 3.11+ 环境，运行 `python 01_SOP_Preprocessing.py`，再运行 `python 02_SOP_Experiments.py --method baselines` 或 `python 02_SOP_Experiments.py --method supcon`。已有完整处理结果时，设置 `data_dir` 后可跳过01。更换已有特征时修改 `experiment_config.json` 的 `feature_profile`，再运行所需方法。输出默认位于 `PythonCode/results_v3/`，按运行名、特征和算法分开保存。开发检查可加 `--smoke-test`；传统和SupCon使用相同的共同配置进行比较。
 

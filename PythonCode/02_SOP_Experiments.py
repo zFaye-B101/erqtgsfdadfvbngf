@@ -47,3 +47,7 @@ def main():
     directory = run_experiment(experiment)
     print_tables(directory)
     combine_results(experiment)
+
+
+if __name__ == "__main__":
+    main()

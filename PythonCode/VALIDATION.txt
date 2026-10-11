@@ -1,6 +1,42 @@
 IMPLEMENTATION VALIDATION - VERSION 3 - 2026-10-11
 
-This record predates the entry-point consolidation. The consolidation did not alter model or protocol modules; automated checks were not rerun as part of that file-only refactor.
+POST-CONSOLIDATION ENTRY-POINT FIX
+
+The unified CLI was missing its __main__ call. A real subprocess --help test
+failed before the fix because stdout was empty. The standard guarded main()
+call now fixes the entry point without changing model or protocol modules.
+
+Independent rerun in an existing macOS arm64 Python 3.11.15 CPU environment:
+torch 2.14.1, torchvision 0.29.1, numpy 2.4.6, pandas 3.0.6,
+scikit-learn 1.9.1, OpenCV 4.14.0, Pillow 12.3.0, matplotlib 3.11.2.
+No packages or shared environments were installed or modified.
+
+Command from repository root:
+  python -m unittest discover -s PythonCode/tests -v
+Ten tests passed in 46.429 seconds: the seven original checks below plus
+three CLI regressions in tests/test_cli.py. These verify actual help output,
+rejection of a missing required --method, and real subprocess execution of
+both baselines and supcon with --smoke-test --skip-official-test.
+
+The CLI fixture contains 480 synthetic 224x224 images from 120 products in
+three categories. Both methods produce two-outer-fold summaries under all
+five configured conditions and a combined LR/SVM/SupCon summary. This uses
+handcrafted features and CPU; it downloads no weights and does not evaluate
+the real SOP dataset, pretrained CNN performance, Windows, or a GPU.
+Some synthetic tuning grids report boundary-selection warnings; these are
+expected diagnostic output, not evidence of a suitable formal search range.
+The runner's default user font/cache directories were not writable; plotting
+used a temporary Matplotlib cache and the reporting tests passed.
+
+The root data suite also passed: python -m unittest discover -s tests -v,
+eight tests in 1.365 seconds, using the same Python 3.11 environment. An initial
+attempt with system Python 3.9 could not import Pillow; no source change was
+needed, and the suite was rerun with the complete verification environment.
+
+HISTORICAL WINDOWS CHECKS (BEFORE ENTRY-POINT CONSOLIDATION)
+
+The following record predates entry-point consolidation. The later refactor
+was syntax-checked only; the missing invocation was found and fixed above.
 
 Windows Python 3.11.15, CPU, isolated local verification environment.
 torch 2.14.1+cpu, torchvision 0.29.1+cpu, numpy 2.4.6,
