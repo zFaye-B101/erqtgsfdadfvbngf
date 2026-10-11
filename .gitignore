@@ -241,3 +241,5 @@ feature_cache/
 *.key
 *.p12
 .idea/
+config.local.json
+outputs/

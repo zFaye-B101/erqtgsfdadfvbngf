@@ -1,0 +1,3 @@
+# Data-reading and notebook setup only; training dependencies will be set later.
+Pillow>=10,<13
+ipykernel>=6,<8

@@ -15,10 +15,10 @@
 4. 提交前清除 Notebook 图片输出，检查是否误加入原图、压缩包、缓存或模型权重。
 5. 合并时注明改动及运行验证状态；仅写好代码不能记为测试通过。
 
-当前没有自动安装脚本或已验证的实验依赖版本。`tools/requirements-docs.txt` 仅供文档转换，不是模型运行环境。
+当前基础环境入口见 [quickstart.md](quickstart.md)，`requirements-base.txt` 仅包含图片读取和 Notebook 依赖；模型训练依赖版本仍待验证。`tools/requirements-docs.txt` 仅供文档转换。
 
 ## 现有 Notebook
 
-`materials/sop_data_check.ipynb` 按单元格从上往下运行。使用 Python、Pillow、IPython；依赖版本在 Windows 主机尚未验证。运行后会从本机 ZIP 读取并显示图片，但仓库中的上传副本不携带数据集图片。
+新的共享入口是 `notebooks/00_setup_and_data.ipynb`，支持 ZIP 和解压目录，按单元格从上往下运行。`materials/sop_data_check.ipynb` 保留为早期数据核验记录。Windows 依赖仍待验证；运行后显示的本机原图不能随 Notebook 输出提交到 GitHub。
 
 仓库仍为私有；添加新成员或公开仓库需要单独确认。不要将课程模板或第三方资料再公开分发。
