@@ -8,6 +8,7 @@
 
 ### 最近更新：2026-10-11
 
+- 新增 [PythonCode/](PythonCode/)：上传本机 `Code/` 中全部五个英文文件，提供独立 Python 脚本入口。先运行 `01_SOP_Preprocessing.py`，再运行 `02_SOP_Traditional_Baselines.py`；无需 Notebook，详见 [英文运行说明](PythonCode/Readme.txt)。第二步包含 LR/SVM、48/192维对照、手写10×3嵌套验证和遮挡/噪声/模糊/旋转测试；尚未执行真实训练，也未实现 SupCon。原 Notebook 与组员文件保留，已有填边和JPEG缓存一致性评审仍待处理，不能将上传等同于正式实验完成。
 - 新增 [预处理填边与特征缓存互评](docs/reviews/2026-10-11_3054cd3_preprocessing-features_claude.md)：R1 `resize_for_model` 的白色填边进入HSV/HOG特征，使特征携带长宽比（合成探针复现），已归档的传统特征AUC可能因此偏低；R2 `.npz` 特征按未压缩图计算，与保存的JPEG不一致。待负责人回应，未改代码；同步互评索引、诊断说明与当前方案，并在当前状态注明仍处于特征选择阶段。
 - 新增 [环境配置与验收](docs/environment.md) 和 `requirements-experiments.txt`：提供Mac/Linux、Windows CPU、Windows CUDA选择流程、Notebook内核及验收代码；区分Mac实测和待验证新环境，避免混装OpenCV。未改实验实现或自动安装依赖。
 - 归档 [已测特征开发诊断](docs/experiments/2026-10-11-feature-diagnostics.md)、[CNN三种子CSV](docs/experiments/2026-10-11-resnet18-seed-results.csv)、[平均/最大池化CSV](docs/experiments/2026-10-11-pooling-seed-results.csv)和[layer3/layer4 CSV](docs/experiments/2026-10-11-layer-seed-results.csv)：平均池化本轮较高；层级比较无稳定赢家。各轮独立开发抽样，不混算；不是正式模型实验。
@@ -26,6 +27,8 @@
 - 本次补充环境配置和验收入口；已保留诊断结果文档/CSV和测试安排，未改实验实现、重跑试验或启动监控。早期互评保留为历史快照，开发诊断不等于正式实验完成。
 
 ## 现在开始运行
+
+纯 Python 入口：在 `PythonCode/` 中使用 `Unimelb_SML_A2` 环境，依次执行 `python 01_SOP_Preprocessing.py` 和 `python 02_SOP_Traditional_Baselines.py`。若已有完整 `processed_sop/`，直接运行02；默认结果存入 `PythonCode/results_traditional_py_v1/`，图表保存为PNG。可通过脚本参数指定其他数据路径，完整命令见 [Readme.txt](PythonCode/Readme.txt)。本入口是传统基线试跑，现有预处理评审问题仍未修复。
 
 先看 [拉取与运行说明](docs/quickstart.md)，按 [环境配置与验收](docs/environment.md) 配置后端与内核。可选运行 [00_setup_and_data.ipynb](notebooks/00_setup_and_data.ipynb) 预览少量图片；确定需要全量导出后才运行 [01_SOP_Preprocessing.ipynb](notebooks/01_SOP_Preprocessing.ipynb)。SOP ZIP 和生成的 `processed_sop/` 都留在本机，不上传。
 
@@ -65,6 +68,7 @@
 | `tools/` | 文档提取工具，不是实验代码 |
 | `sop_project/` | 可复用的环境诊断、SOP 数据读取和核验 |
 | `notebooks/` | 环境/预览入口与全量数据预处理；不含模型训练 |
+| `PythonCode/` | 五个英文脚本/说明：全量预处理、传统基线训练与鲁棒性测试；无需Notebook，尚无真实训练结果 |
 | `tests/` | 使用合成数据的数据读取测试 |
 
 最终提交需单独整理四页 PDF 报告，以及包含代码、`Readme.txt` 和必要自动化脚本的 ZIP；不含数据。具体格式以官方原件为准。本仓库不配置公共许可证，也不自动向 Canvas 提交。

@@ -1,4 +1,5 @@
-# Development diagnostics and plotting; not a final reproducibility lock.
+# Development diagnostics, PythonCode LR/SVM baselines and plotting.
+# Not a final reproducibility lock; the baseline training has not been run.
 # Install torch/torchvision separately for the selected hardware backend.
 -r requirements-base.txt
 scikit-learn>=1.5,<2

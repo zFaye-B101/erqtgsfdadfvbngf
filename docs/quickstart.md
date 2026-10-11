@@ -1,6 +1,23 @@
 # 从 GitHub 拉取并运行
 
-当前可检查环境、全量清理数据并构造初步图像特征；三模型、正式划分和嵌套评估尚未实现，不要把预处理完成当成实验完成。
+当前提供环境检查、全量预处理，以及新增的纯 Python 传统基线试跑入口。LR/SVM 的嵌套验证代码已上传但尚未执行真实训练；SupCon 与正式三模型实验仍未完成。
+
+## 纯 Python 入口（无需 Notebook）
+
+在仓库根目录的终端运行：
+
+```powershell
+conda activate Unimelb_SML_A2
+cd PythonCode
+python 01_SOP_Preprocessing.py
+python 02_SOP_Traditional_Baselines.py
+```
+
+环境已配置时无需重新安装。新的 pip 环境可使用仓库根目录 `requirements-experiments.txt` 中的传统基线依赖；不要在现有 conda 环境重复混装OpenCV。
+
+把 SOP ZIP 放在 `PythonCode/` 或其父目录，或用 `--zip-path` 指定路径。01默认输出到脚本旁的 `processed_sop/`。已有完整输出时跳过01，非空目录不会被覆盖。02可用 `--data-dir` 指向另一位置，默认结果写入 `results_traditional_py_v1/`，在终端打印表格并保存PNG。两个辅助模块无需单独运行。
+
+本轮对比 LR/SVM 的HSV48与HSV＋区域梯度192，测试干净、遮挡、噪声、模糊和旋转；不包含ResNet/SupCon。代码尚未执行正式训练，预处理填边及JPEG缓存一致性问题仍待回应。参数、恢复规则、采样范围与已知限制见 [PythonCode/Readme.txt](../PythonCode/Readme.txt)。以下 Notebook 入口保留用于历史流程和可选预览。
 
 ## 1. 获取仓库
 

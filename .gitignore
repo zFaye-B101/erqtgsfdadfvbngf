@@ -244,3 +244,6 @@ processed_sop/
 .idea/
 config.local.json
 outputs/
+# Local outputs from the standalone PythonCode workflow
+PythonCode/results_traditional*/
+PythonCode/processed_sop*/

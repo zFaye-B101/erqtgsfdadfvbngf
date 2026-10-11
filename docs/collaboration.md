@@ -4,6 +4,7 @@
 
 ## 同步范围
 
+- 新增 `PythonCode/` 作为纯Python运行入口；先01再02，两个模块和英文Readme一起保留。脚本默认数据/结果路径相对自身目录，也可通过命令行参数指定；本机数据和运行产物不共享。传统基线尚无真实训练结果，现有预处理互评问题仍待处理。
 - 当前仓库地址为 [zFaye-B101/erqtgsfdadfvbngf](https://github.com/zFaye-B101/erqtgsfdadfvbngf)，2026-10-11 核验为 Public，任何人都可下载；推送仍需要相应写入权限。
 - Canvas 链接仅供来源追溯，可能需要学校登录；已归档原件不依赖 Canvas 登录。
 - SOP 数据另从作者渠道下载。每台机器通过 Notebook 提示输入自己的 ZIP 路径，不把本机绝对路径写入共享代码。
