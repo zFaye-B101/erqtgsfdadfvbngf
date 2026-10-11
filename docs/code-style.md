@@ -4,31 +4,26 @@
 
 ## 适用范围
 
-- 适用于最终提交的 `.ipynb`、`.py`、运行脚本，以及随代码包交付的功能说明和 `Readme.txt`。准备进入提交包的代码在开发时就按此格式编写，不拖到打包时统一补写。
-- 不要求翻译 `materials/`、`papers/`、官方 PDF/DOCX、历史资料、仓库管理 README/规则/规划文档或聊天。非提交工具也不自动纳入。按最终用途判断，不仅看扩展名；归档 Notebook 若要用于提交，应另建提交版本，不覆盖原件。
+- 用户于 2026-10-11 确定最终运行电脑更适合 `.py`：最终提交代码以 `PythonCode/` 中的 `.py` 脚本为主，不再以 `.ipynb` 为正式入口。
+- 适用于最终提交的 `.py`、运行脚本，以及随代码包交付的功能说明和 `Readme.txt`。准备进入提交包的代码在开发时就按此格式编写，不拖到打包时统一补写。
+- 不要求翻译 `materials/`、`papers/`、官方 PDF/DOCX、历史资料、仓库管理 README/规则/规划文档或聊天。非提交工具也不自动纳入。按最终用途判断，不仅看扩展名；历史 Notebook 的功能若要进入提交包，应在 `.py` 中实现，不覆盖原件。
 - 本规则仅限定代码语言与讲解范围；全部共享文件仍遵守根目录 AGENTS 的 README 同步约定。
 
 ## 英文提交版本
 
-1. **功能大块前写 Markdown。** Notebook 在环境配置、数据读取/筛选、商品级划分、配对/遮挡、特征、各模型、调参/评估、结果等实际存在的大块前设置英文标题和简短说明。解释该块做什么、关键输入/输出和重要约束。不要为尚未实现的步骤写成已实现状态，也不必每一行代码前都插 Markdown。
+1. **功能大块前写说明。** `.py` 用模块 docstring 概述脚本做什么、输入/输出和运行顺序，并在环境配置、数据读取/筛选、商品级划分、配对/遮挡、特征、各模型、调参/评估、结果等实际存在的大块前写英文分块注释（如 `# ---- Step 2: Audit original images ----`）或函数 docstring。解释该块做什么、关键输入/输出和重要约束。不要为尚未实现的步骤写成已实现状态，也不必每一行代码前都写说明。
 2. **源码内有必要注释。** 使用英文注释和 docstring 说明非显然逻辑、数据形状、标签含义、随机性、阈值选择、防泄漏等。简单赋值无需逐行复述；注释解释原因和约束，不掩盖未实现内容。
 3. **输出使用英文。** 自己编写的 `print`、日志、输入提示、异常消息、表格显示标题、图标题/轴标签/图例使用英文。保留真实数据、路径、库名和机器读取字段，不为翻译改变接口或数据。第三方库和系统原始输出不伪造、不强行改写。
-4. **纯 Python 保持可运行。** 在脚本/模块中用英文 docstring 和分块注释；详细功能块说明放在配套英文 Markdown 或调用它的 Notebook 中，不把 Markdown 语法直接写入 `.py`。
+4. **纯 Python 保持可运行。** 运行顺序、命令、参数和输出位置写在英文 `Readme.txt`；不把 Markdown 语法直接写入 `.py`。
 5. **命名保持一致。** 函数、变量、文件与公共接口使用清楚且一致的英文名称，沿用既有可用接口；不为了换语言或显得不同而无必要重命名。
 
-例如，Notebook 的 Markdown 格可写：
-
-```markdown
-## Load and check the dataset
-Read the SOP image index from the local ZIP or extracted folder.
-Check a small image sample before starting the full audit.
-This sample check does not establish eligibility for the entire dataset.
-```
-
-对应代码中的必要注释可写：
+例如，`.py` 脚本中的分块注释和必要注释可写：
 
 ```python
-# A prefix sample checks image access, not full-dataset eligibility.
+# ---- Step 1: Load and check the dataset ----
+# Read the SOP image index from the local ZIP or extracted folder, then check
+# a small image sample before the full audit. The sample check does not
+# establish eligibility for the entire dataset.
 report, eligible = dataset.audit(images, limit=20)
 print("Checked images:", report["checked_images"])
 ```
@@ -37,7 +32,7 @@ print("Checked images:", report["checked_images"])
 
 ## 可选中文学习副本
 
-- 另存于 `learning/zh/`，使用与英文文件对应的相对路径；例如 `notebooks/example.ipynb` 对应 `learning/zh/notebooks/example.ipynb`。该路径是约定，只有实际创建副本后才在 README 目录中列为已有文件。
+- 另存于 `learning/zh/`，使用与英文文件对应的相对路径；例如 `PythonCode/02_SOP_Traditional_Baselines.py` 对应 `learning/zh/PythonCode/02_SOP_Traditional_Baselines.py`；逐块中文详解可写在源码注释中，或另附同名 `.md`。该路径是约定，只有实际创建副本后才在 README 目录中列为已有文件。
 - 副本开头标注“中文学习副本，非提交版本”、英文源文件路径及对应提交号或版本。英文版本是唯一实现依据，副本不能独立改变算法、数据、超参数、种子、划分或指标。
 - **包含对应源码，不只是翻译提纲。** 按英文版的功能块顺序保留源码；英文版每条注释/docstring 都提供对应中文译文。可自行控制的提示和展示输出改为中文。
 - 每个功能块增加中文详解：这块解决什么问题、输入是什么、执行过程、输出交给谁、为什么这样做。必要时用带数字的小例子解释形状、标签或计算，不把示例值写成真实实验结果。
@@ -48,7 +43,7 @@ print("Checked images:", report["checked_images"])
 
 ## 完成检查
 
-- [ ] 提交 Notebook 每个主要功能块都有英文 Markdown；纯 `.py` 有对应英文说明。
+- [ ] 提交的 `.py` 有英文模块 docstring，每个主要功能块有英文分块注释；运行方式写在英文 `Readme.txt`。
 - [ ] 非显然的源码逻辑有必要英文注释/docstring，自定义输出和图表文字为英文。
 - [ ] 未翻译或改写资料原件、非提交文件和机器接口。
 - [ ] 若已有中文学习副本，源码、对应注释译文、逐块详解和源版本已同步；验证范围明确。

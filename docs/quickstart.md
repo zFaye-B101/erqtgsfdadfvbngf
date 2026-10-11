@@ -37,7 +37,7 @@ git pull --ff-only
 
 若提示本地修改冲突，先提交自己的修改或保留备份再处理，不使用强制覆盖命令。如果没有 Git，也可在仓库网页使用 Code > Download ZIP；但 ZIP 下载不是可持续拉取的 Git 克隆。修改前先读 [AGENTS.md](../AGENTS.md)，每次变更同时更新 README 与相关文件。
 
-本组当前直接更新 `main`，不要求个人分支或 PR。各人负责不同文件，避免同时编辑一个 Notebook。自己提交完成且工作区干净后，先 `git pull --rebase origin main` 再 `git push origin main`；发生冲突先处理，不强制推送。详见 [协作规范](../CONTRIBUTING.md)。
+本组当前直接更新 `main`，不要求个人分支或 PR。各人负责不同文件，避免同时编辑同一个脚本或模块。自己提交完成且工作区干净后，先 `git pull --rebase origin main` 再 `git push origin main`；发生冲突先处理，不强制推送。详见 [协作规范](../CONTRIBUTING.md)。
 
 ## 2. 在 PyCharm 打开整个仓库目录
 
@@ -93,7 +93,7 @@ python -m sop_project.data --full
 
 - 组内确认环境报告、数据图片/商品总数、是否成功显示图片。
 - 然后再确认 PyTorch 安装版本、公共特征提取与正式商品级划分。
-- 提交 Notebook 前清除输出，尤其是显示的原图；数据、配置和缓存仍保存在本机。
+- 共享代码以 `PythonCode/` 的 `.py` 为准；若改动 Notebook，提交前清除输出，尤其是显示的原图；数据、配置和缓存仍保存在本机。
 - `processed_sop/`、ZIP 和缓存由 `.gitignore` 排除；提交前仍检查 Git 状态，确认没有数据或生成结果进入提交。
 - 运行 `python -m unittest discover -s tests -v` 可检查数据工具。测试只临时生成合成图片，不需要真实数据集。
 

@@ -1,6 +1,6 @@
 # 预处理填边与特征缓存一致性互评
 
-- 被评审提交：`3054cd37ccaa1dbd66304a8cba7ad47f08c35c91`（xingyuqiong）；截至 `f55859f`，被评审的两个文件未再改动。
+- 被评审提交：`3054cd37ccaa1dbd66304a8cba7ad47f08c35c91`（xingyuqiong）；截至 `f55859f`，被评审的两个文件未再改动。`94c9c2e` 新增的 `PythonCode/` 版本见文末复查。
 - 评审者：本会话 Claude AI（由 zyFaye 使用）；不代表其他组员或独立评审者同意。
 - 日期：2026-10-11（Australia/Melbourne）。
 - 文件与范围：`notebooks/sop_features.py` 的 `resize_for_model`（18–32 行）与 `image_feature_vector`（35–77 行）；`notebooks/01_SOP_Preprocessing.ipynb` 单元格“5. 生成处理后的图片文件夹和逐图特征”（Notebook 单元格没有 ID，按标题定位）。
@@ -43,10 +43,18 @@
 - 实施者/提交：尚未实施
 - 复查结果：尚未验证
 
+## 复查：`94c9c2e` 的 PythonCode 版本（2026-10-11）
+
+小组已改为以 `PythonCode/` 中的 `.py` 脚本为正式入口。复查方式：静态阅读与 `diff`，未运行 02 或真实训练。
+
+- R1 仍然存在：`PythonCode/sop_features.py` 与原文件的差别只在 docstring；`resize_for_model`（19–33 行）仍贴到白色画布，`image_feature_vector`（36 行起）仍对整张画布计算。`01_SOP_Preprocessing.py` 第 219–229 行仍对填边后的图片算特征。改进：`sop_baselines.py` 的 `content_box`/`corrupt_image`（134–177 行）只在内容区域内加遮挡/噪声/模糊/旋转，遮挡面积不再随填边变化；但特征本身仍含填边，02 的 HSV48 与 HSV+梯度192 对照会继承这一偏差。
+- R2 已从潜在风险变为实际触发：`sop_baselines.py` 的 `prepare_features` 中，干净条件直接使用 `.npz` 特征（187 行，来自未压缩图），四种干扰条件则从保存的 JPEG 读回（218 行）、加干扰后重新提取（224 行）。因此 02 报告的“干净 vs 干扰”差异中混有 JPEG 压缩差异。建议在解读 02 的鲁棒性结果前采用方案 A（01 保存后读回再算），或让 02 的干净条件也从同一 JPEG 重新提取。
+- 两项状态仍为待回应；负责人（xingyuqiong）尚未回应，未实施修复。
+
 ## 结论
 
 - 两项都不影响 01 Notebook 的数据审计与排除逻辑；合成测试中该部分结果正确。
 - R1 直接关系到当前的特征选择：在修正或统一几何处理之前，不宜用现有 HSV/HOG AUC 与 CNN AUC 排名，也不宜据此淘汰传统特征。
-- R2 应在任何遮挡实验复用 `processed_sop/` 之前修正。
+- R2 应在任何遮挡实验复用 `processed_sop/` 之前修正；PythonCode 的 02 已在复用，见上方复查。
 - 本次未纳入的较小观察（未展开，供负责人参考）：01 未复用 `sop_project/data.py`，只识别名为 `Stanford_Online_Products.zip` 的文件，不读取 `config.local.json`/`SOP_PATH`；192 维与特征名写死，未引用 `FEATURE_DIM`；SIFT 中位距离在完全匹配与零匹配时都返回 0；`sop_features.py` 尚无单元测试；Notebook 文字和输出尚未按 [英文提交代码规范](../code-style.md) 整改。
 - 本记录只评价，不修改被评审代码；实施前由负责人回应并协调。

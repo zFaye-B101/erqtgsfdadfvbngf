@@ -1,6 +1,6 @@
 # 环境配置与验收
 
-适用：当前SOP读取、HSV/HOG/SIFT、Notebook及冻结ResNet18开发诊断。特征和训练实现仍在讨论；这不是SupCon训练验收，也不是最终提交的英文Readme.txt。
+适用：当前SOP读取、HSV/HOG/SIFT、Notebook及冻结ResNet18开发诊断。特征和训练实现仍在讨论；这不是SupCon训练验收，也不是最终提交的英文Readme.txt。正式运行入口为 `PythonCode/` 的 `.py` 脚本，只需本环境的解释器；下文Notebook内核一节仅在使用历史/预览Notebook时需要。
 
 ## 1. 依赖与边界
 

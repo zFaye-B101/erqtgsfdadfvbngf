@@ -8,6 +8,8 @@
 
 ### 最近更新：2026-10-11
 
+- **规范更新：以 `.py` 为正式格式。** 最终运行电脑更适合 `.py`，共享运行代码和最终提交代码以 [PythonCode/](PythonCode/) 的编号脚本为准；Notebook 保留为历史流程/可选预览，不删除。同步 AGENTS、CONTRIBUTING、[代码规范](docs/code-style.md)、[提交说明](docs/submission.md)、协作/运行/环境/互评说明。
+- 复查 [预处理互评](docs/reviews/2026-10-11_3054cd3_preprocessing-features_claude.md) 在 PythonCode 中的状态：R1 填边仍在；R2 已实际触发——02 的干净条件用 `.npz` 特征、干扰条件从 JPEG 重新提取，鲁棒性差异混有压缩差异。待负责人回应，未改代码。
 - 新增 [PythonCode/](PythonCode/)：上传本机 `Code/` 中全部五个英文文件，提供独立 Python 脚本入口。先运行 `01_SOP_Preprocessing.py`，再运行 `02_SOP_Traditional_Baselines.py`；无需 Notebook，详见 [英文运行说明](PythonCode/Readme.txt)。第二步包含 LR/SVM、48/192维对照、手写10×3嵌套验证和遮挡/噪声/模糊/旋转测试；尚未执行真实训练，也未实现 SupCon。原 Notebook 与组员文件保留，已有填边和JPEG缓存一致性评审仍待处理，不能将上传等同于正式实验完成。
 - 新增 [预处理填边与特征缓存互评](docs/reviews/2026-10-11_3054cd3_preprocessing-features_claude.md)：R1 `resize_for_model` 的白色填边进入HSV/HOG特征，使特征携带长宽比（合成探针复现），已归档的传统特征AUC可能因此偏低；R2 `.npz` 特征按未压缩图计算，与保存的JPEG不一致。待负责人回应，未改代码；同步互评索引、诊断说明与当前方案，并在当前状态注明仍处于特征选择阶段。
 - 新增 [环境配置与验收](docs/environment.md) 和 `requirements-experiments.txt`：提供Mac/Linux、Windows CPU、Windows CUDA选择流程、Notebook内核及验收代码；区分Mac实测和待验证新环境，避免混装OpenCV。未改实验实现或自动安装依赖。
@@ -30,7 +32,7 @@
 
 纯 Python 入口：在 `PythonCode/` 中使用 `Unimelb_SML_A2` 环境，依次执行 `python 01_SOP_Preprocessing.py` 和 `python 02_SOP_Traditional_Baselines.py`。若已有完整 `processed_sop/`，直接运行02；默认结果存入 `PythonCode/results_traditional_py_v1/`，图表保存为PNG。可通过脚本参数指定其他数据路径，完整命令见 [Readme.txt](PythonCode/Readme.txt)。本入口是传统基线试跑，现有预处理评审问题仍未修复。
 
-先看 [拉取与运行说明](docs/quickstart.md)，按 [环境配置与验收](docs/environment.md) 配置后端与内核。可选运行 [00_setup_and_data.ipynb](notebooks/00_setup_and_data.ipynb) 预览少量图片；确定需要全量导出后才运行 [01_SOP_Preprocessing.ipynb](notebooks/01_SOP_Preprocessing.ipynb)。SOP ZIP 和生成的 `processed_sop/` 都留在本机，不上传。
+先看 [拉取与运行说明](docs/quickstart.md)，按 [环境配置与验收](docs/environment.md) 配置后端与内核。正式入口是 [PythonCode/](PythonCode/)：按 [Readme.txt](PythonCode/Readme.txt) 先运行 `01_SOP_Preprocessing.py`，再运行 `02_SOP_Traditional_Baselines.py`。`notebooks/` 中的 Notebook 仅为历史流程/可选预览。SOP ZIP 和生成的 `processed_sop/` 都留在本机，不上传。
 
 ## 先读这些
 
@@ -47,7 +49,8 @@
 - 研究问题：面对训练时未见过的商品，局部视觉特征是否能减少部分遮挡下相似商品的误匹配，同时维持同商品匹配率？
 - 当前阶段：仍在做特征选择（CNN池化/层级与传统特征的开发诊断），并核对几何处理一致性；尚未进入正式三模型实验或嵌套评估。
 - 当前算法方向：Logistic Regression、RBF SVM、SupCon-based matching。不是旧草稿中的 LightGBM 或 TabM。
-- SOP 数据资格检查已完成；`01_SOP_Preprocessing.ipynb` 已提供全量预处理代码，但 Windows 全量运行尚未验证，也不是已完成的模型或实验。
+- 代码格式：共享与最终提交代码以 `PythonCode/` 的 `.py` 为准，Notebook 不再作为正式入口。
+- SOP 数据资格检查已完成；`PythonCode/01_SOP_Preprocessing.py`（及历史 Notebook 版本）已提供全量预处理代码，但 Windows 全量运行尚未验证，也不是已完成的模型或实验。
 - 用户确认 Windows/PyCharm 主机已下载数据；新公共读取代码在 Mac 上通过测试，Windows 依赖与 GPU 尚待运行检查。
 - 官方 DOCX 是空白模板，不是已提交版本。历史文件中的提交状态只代表当时的记录。
 - 资料归档不代表代码可复现、实验完成或作业提交。
@@ -67,7 +70,7 @@
 | `docs/experiments/` | 用户回传的开发诊断与证据边界；不含数据、缓存或正式训练结果 |
 | `tools/` | 文档提取工具，不是实验代码 |
 | `sop_project/` | 可复用的环境诊断、SOP 数据读取和核验 |
-| `notebooks/` | 环境/预览入口与全量数据预处理；不含模型训练 |
+| `notebooks/` | 历史流程/可选预览，非正式入口：环境预览与全量预处理的 Notebook 版本；不含模型训练 |
 | `PythonCode/` | 五个英文脚本/说明：全量预处理、传统基线训练与鲁棒性测试；无需Notebook，尚无真实训练结果 |
 | `tests/` | 使用合成数据的数据读取测试 |
 
