@@ -1,0 +1,13 @@
+seed,condition,pooling,products,positive_pairs,negative_pairs,roc_auc
+42,Clean,Average,100,100,100,0.8480
+42,Clean,Max,100,100,100,0.8240
+42,Occluded25%,Average,100,100,100,0.8352
+42,Occluded25%,Max,100,100,100,0.7959
+43,Clean,Average,100,100,100,0.8172
+43,Clean,Max,100,100,100,0.7953
+43,Occluded25%,Average,100,100,100,0.7910
+43,Occluded25%,Max,100,100,100,0.7716
+44,Clean,Average,100,100,100,0.7913
+44,Clean,Max,100,100,100,0.7884
+44,Occluded25%,Average,100,100,100,0.7911
+44,Occluded25%,Max,100,100,100,0.7795

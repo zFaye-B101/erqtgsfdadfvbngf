@@ -32,7 +32,7 @@
 
 已记录的互评：
 
-- [2026-10-11 SML课内特征与测试安排](reviews/2026-10-11_ae5a1d6_feature-options_codex.md)：当前池化/中间层/训练成本三条线，DINOv2已暂缓；关联[已测诊断结果](experiments/2026-10-11-feature-diagnostics.md)，新增比较仍未运行。
+- [2026-10-11 SML课内特征与测试安排](reviews/2026-10-11_ae5a1d6_feature-options_codex.md)：平均/最大池化初试已完成，当前样本平均池化较高；后续优先中间层/训练成本，DINOv2已暂缓；关联[已测诊断结果](experiments/2026-10-11-feature-diagnostics.md)。
 - [2026-10-11 课程要求与staff反馈](reviews/2026-10-11_9291720_course-requirements_codex.md)：官方特征/评价限制、课程依据及Canvas真实反馈；鲁棒性扩展待讨论，TabM反馈不代表SupCon批准；只更新文档。
 - [2026-10-11 商品匹配特征方案](reviews/2026-10-11_8990473_features_codex.md)：静态检查与方案比较；全局/区域CNN为待讨论建议，未采纳、未改代码、未完成特征效果测试。各项回应与最新状态以记录正文为准。
 

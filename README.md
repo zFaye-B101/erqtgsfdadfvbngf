@@ -9,8 +9,8 @@
 ### 最近更新：2026-10-11
 
 - 新增 [环境配置与验收](docs/environment.md) 和 `requirements-experiments.txt`：提供Mac/Linux、Windows CPU、Windows CUDA选择流程、Notebook内核及验收代码；区分Mac实测和待验证新环境，避免混装OpenCV。未改实验实现或自动安装依赖。
-- 归档 [已测特征开发诊断](docs/experiments/2026-10-11-feature-diagnostics.md)及[CNN三种子CSV](docs/experiments/2026-10-11-resnet18-seed-results.csv)：用户回传结果与工作台汇总分开标注，缺失原始日志/配置不补造；非正式模型实验。
-- 更新 [SML课内测试安排](docs/reviews/2026-10-11_ae5a1d6_feature-options_codex.md)：池化、中间层及现有表示的训练/成本验证；暂缓DINOv2，不增加其代码或依赖，继续使用SupCon论文。
+- 归档 [已测特征开发诊断](docs/experiments/2026-10-11-feature-diagnostics.md)、[CNN三种子CSV](docs/experiments/2026-10-11-resnet18-seed-results.csv)和[平均/最大池化三种子CSV](docs/experiments/2026-10-11-pooling-seed-results.csv)：本轮平均池化AUC在各条件均高于最大池化；它是独立开发抽样，与此前多特征结果不混算；非正式模型实验。
+- 更新 [SML课内测试安排](docs/reviews/2026-10-11_ae5a1d6_feature-options_codex.md)：池化初试完成，后续优先中间层及现有表示的训练/成本验证；暂缓DINOv2，不增加其代码或依赖，继续使用SupCon论文。
 - 澄清 [文献综述要求](docs/reviews/2026-10-11_9291720_course-requirements_codex.md)：解释新方法与课堂内容的区别，不是禁止引用课堂论文；需数据集引用加至少两篇额外研究论文。
 - 新增 [课程要求与staff反馈互评](docs/reviews/2026-10-11_9291720_course-requirements_codex.md)：区分官方要求、课件依据及待讨论方案；记录老师建议扩展噪声/模糊/旋转、TabM反馈适用边界，以及正式指标/CV/调参须自行实现。只改文档，未实施或批准最终方案。
 - 新增 [特征方案互评](docs/reviews/2026-10-11_8990473_features_codex.md)，供组员及其AI讨论：建议小样本比较冻结ResNet18全局与2x2区域表示，HSV/HOG作为轻量对照、SIFT可选。当前仅建议，尚未定案或修改实现。
