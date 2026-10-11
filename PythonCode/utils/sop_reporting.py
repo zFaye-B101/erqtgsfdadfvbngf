@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from sop_protocol import manual_metrics, write_json
+from .sop_protocol import manual_metrics, write_json
 
 
 def evaluate_scores(pairs, score_by_condition, threshold, output_dir, fold, algorithm, feature_name):
@@ -135,3 +135,64 @@ def combine_results(experiment):
         raise ValueError("Cannot combine results produced by different code versions.")
     pd.concat(summaries, ignore_index=True).to_csv(base / "combined_summary_mean_sd.csv", index=False)
     print("Combined LR/SVM/SupCon summary:", base / "combined_summary_mean_sd.csv")
+
+
+def update_comparisons(run_directory):
+    """Compare completed groups only when protocol, code and common settings agree."""
+    from itertools import combinations
+    root = Path(run_directory)
+    output = root / 'comparisons'
+    output.mkdir(parents=True, exist_ok=True)
+    records, summaries, skipped = [], [], []
+    for family in ('baselines', 'supcon'):
+        runs = []
+        for path in sorted(root.glob('*/' + family + '/outer_fold_metrics.csv')):
+            identity_path = path.parent / 'protocol.json'
+            if not identity_path.exists():
+                continue
+            identity = json.loads(identity_path.read_text(encoding='utf-8'))
+            table = pd.read_csv(path)
+            count = identity['config']['outer_folds']
+            if not table.groupby(['algorithm', 'features', 'condition', 'negative_subset']).fold.nunique().eq(count).all():
+                continue
+            group = path.parent.parent.name
+            for key, frame in table.groupby(['algorithm', 'features', 'condition', 'negative_subset']):
+                for metric in ('FPR', 'TPR', 'F1', 'ROC_AUC'):
+                    summaries.append(dict(zip(['algorithm', 'features', 'condition', 'negative_subset'], key),
+                                          group=group, metric=metric, mean=float(frame[metric].mean()),
+                                          sd_across_outer_folds=float(frame[metric].std(ddof=1))))
+            runs.append((group, identity, table))
+        for (left, left_id, left_table), (right, right_id, right_table) in combinations(runs, 2):
+            def common(identity):
+                config = {key: value for key, value in identity['config'].items()
+                          if key not in {'feature_profile', 'feature_sets', 'comparisons'}}
+                return (identity['shared_protocol_id'], identity['code_fingerprint'], config)
+            if common(left_id) != common(right_id):
+                skipped.append({'baseline_group': left, 'added_group': right, 'family': family,
+                                'reason': 'Protocol, code or common configuration differs.'})
+                continue
+            keys = ['algorithm', 'condition', 'negative_subset', 'fold']
+            for left_feature in left_table.features.unique():
+                for right_feature in right_table.features.unique():
+                    paired = left_table[left_table.features == left_feature].merge(
+                        right_table[right_table.features == right_feature], on=keys,
+                        suffixes=('_baseline', '_added'), validate='one_to_one')
+                    if len(paired) != len(left_table[left_table.features == left_feature]) or len(paired) != len(right_table[right_table.features == right_feature]):
+                        raise ValueError('Incomplete matched comparison: ' + left + ' / ' + right)
+                    for row in paired.to_dict('records'):
+                        for metric in ('FPR', 'TPR', 'F1', 'ROC_AUC'):
+                            records.append({**{key: row[key] for key in keys}, 'baseline_group': left,
+                                            'added_group': right, 'baseline_features': left_feature,
+                                            'added_features': right_feature, 'metric': metric,
+                                            'delta_added_minus_baseline': row[metric + '_added'] - row[metric + '_baseline']})
+    pd.DataFrame(summaries, columns=['group', 'algorithm', 'features', 'condition', 'negative_subset',
+                                    'metric', 'mean', 'sd_across_outer_folds']).to_csv(output / 'all_group_summary.csv', index=False)
+    columns = ['algorithm', 'condition', 'negative_subset', 'fold', 'baseline_group', 'added_group',
+               'baseline_features', 'added_features', 'metric', 'delta_added_minus_baseline']
+    deltas = pd.DataFrame(records, columns=columns)
+    deltas.to_csv(output / 'paired_group_deltas.csv', index=False)
+    grouping = [key for key in columns if key not in {'fold', 'delta_added_minus_baseline'}]
+    stats = deltas.groupby(grouping).delta_added_minus_baseline.agg(['mean', 'std', 'count']).reset_index()
+    stats.to_csv(output / 'paired_group_delta_mean_sd.csv', index=False)
+    write_json(output / 'skipped_incompatible_comparisons.json', skipped)
+    print('Updated saved comparisons:', output)

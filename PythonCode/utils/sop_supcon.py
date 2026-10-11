@@ -24,11 +24,11 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from sop_feature_bank import choose_device
-from sop_protocol import manual_metrics, manual_roc_auc, recall_threshold, write_json
-from sop_reporting import evaluate_scores, report_results
-from sop_calibration import calibrate
-from sop_tuning import search_temperatures
+from .sop_feature_bank import choose_device
+from .sop_protocol import manual_metrics, manual_roc_auc, recall_threshold, write_json
+from .sop_reporting import evaluate_scores, report_results
+from .sop_calibration import calibrate
+from .sop_tuning import search_temperatures
 
 
 class SupConLoss(nn.Module):

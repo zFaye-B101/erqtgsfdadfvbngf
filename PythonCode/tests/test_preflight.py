@@ -15,7 +15,7 @@ SCRIPT = ROOT / "00_Check_Environment.py"
 
 class PreflightTests(unittest.TestCase):
     def run_check(self, root, data_dir, *arguments):
-        config = json.loads((ROOT / "experiment_config.json").read_text(encoding="utf-8"))
+        config = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))
         config.update(data_dir=str(data_dir), protocol_dir=str(root / "protocol"),
                       cache_dir=str(root / "cache"), results_dir=str(root / "results"))
         config_path = root / "config.json"

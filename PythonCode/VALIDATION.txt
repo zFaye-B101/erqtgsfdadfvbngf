@@ -1,3 +1,15 @@
+LAYOUT UPDATE - 2026-10-12
+Dynamic JSON feature groups, config.json, utils package and cross-group reporting.
+01 only changed utility paths and default config filename; image operations unchanged.
+Local Windows CPU: 7 existing + 4 new synthetic checks passed before upload.
+Remote 00 preflight and CLI/PyCharm checks retained and adapted.
+Final uploaded-tree check on Windows Python 3.11 CPU:
+PythonCode/tests: 16 passed in 63.198 seconds (including real CLI subprocesses).
+Root tests: 9 passed in 0.164 seconds (data tools and run XML consistency).
+Initial sandbox execution failed due to temporary-folder permissions; the same
+checks passed when rerun with approved access. No model code fix was required.
+No full SOP experiment, pretrained-weight download or GUI run is claimed.
+
 IMPLEMENTATION VALIDATION - VERSION 3 - 2026-10-11
 
 WINDOWS/PYCHARM PREFLIGHT PREPARATION - 2026-10-12

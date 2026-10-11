@@ -28,12 +28,12 @@ class CLITests(unittest.TestCase):
         result = self.run_cli("--help")
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("usage:", result.stdout)
-        self.assertIn("--method {baselines,supcon}", result.stdout)
+        self.assertIn("--method {baselines,supcon,all}", result.stdout)
 
-    def test_method_is_required(self):
-        result = self.run_cli()
+    def test_unknown_group_is_rejected(self):
+        result = self.run_cli("--group", "UNKNOWN", "--method", "baselines")
         self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
-        self.assertIn("--method", result.stderr)
+        self.assertIn("Unknown or ambiguous group", result.stderr)
 
     def test_both_methods_produce_smoke_results(self):
         import numpy as np
@@ -67,8 +67,8 @@ class CLITests(unittest.TestCase):
                 json.dumps({"clean_images": len(rows), "complete": True}), encoding="utf-8",
             )
 
-            config = json.loads((ROOT / "experiment_config.json").read_text(encoding="utf-8"))
-            config.update(run_name="cli_test", feature_profile="handcrafted", run_official_test=False)
+            config = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))
+            config.update(run_name="cli_test", experiment_dir=str(ROOT / "experiment_configs"), run_official_test=False)
             for key, name in (("data_dir", "data"), ("protocol_dir", "protocol"),
                               ("cache_dir", "cache"), ("results_dir", "results")):
                 config[key] = str(root / name)
@@ -79,18 +79,18 @@ class CLITests(unittest.TestCase):
             for method in ("baselines", "supcon"):
                 with self.subTest(method=method):
                     result = self.run_cli(
-                        "--config", config_path, "--method", method,
+                        "--config", config_path, "--group", "F1", "--method", method,
                         "--smoke-test", "--skip-official-test",
                     )
                     self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-                    self.assertIn("Run mode: SMOKE", result.stdout)
-                    output = root / "results_smoke" / "cli_test" / "handcrafted" / method
+                    self.assertIn("/ smoke", result.stdout)
+                    output = root / "results_smoke" / "cli_test" / "F1_Traditional_HSV48" / method
                     summary = pd.read_csv(output / "summary_mean_sd.csv")
                     self.assertTrue(summary["mode"].eq("smoke").all())
                     self.assertTrue(summary.outer_fold_count.eq(2).all())
                     self.assertEqual(set(summary.condition), set(config["conditions"]))
                     self.assertEqual(set(summary.algorithm), {"LR", "SVM"} if method == "baselines" else {"SupCon"})
-            combined = root / "results_smoke" / "cli_test" / "handcrafted" / "combined_summary_mean_sd.csv"
+            combined = root / "results_smoke" / "cli_test" / "F1_Traditional_HSV48" / "combined_summary_mean_sd.csv"
             self.assertEqual(set(pd.read_csv(combined).algorithm), {"LR", "SVM", "SupCon"})
 
 

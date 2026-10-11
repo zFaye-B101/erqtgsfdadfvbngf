@@ -1,0 +1,13 @@
+{
+  "group": "F2_Traditional_HSV_Gradient192",
+  "description": "F2 Traditional HSV Gradient192",
+  "features": {
+    "HSV_HOG192": {
+      "extractor": "hsv_hog",
+      "columns": [
+        0,
+        192
+      ]
+    }
+  }
+}

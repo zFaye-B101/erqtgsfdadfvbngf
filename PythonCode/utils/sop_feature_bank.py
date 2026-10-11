@@ -11,8 +11,8 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-from sop_features import image_feature_vector
-from sop_protocol import content_box, corrupt_image, write_json
+from .sop_features import image_feature_vector
+from .sop_protocol import content_box, corrupt_image, write_json
 
 
 def choose_device(requested, torch):
@@ -178,13 +178,25 @@ def build_banks(frame, data_dir, config, dataset_id, query_mask):
     extracted = {}
     banks = {}
     for name, spec in config["feature_sets"].items():
-        extractor_name = spec["extractor"]
-        if extractor_name not in extracted:
-            extracted[extractor_name] = {condition: extract_cached(
-                frame, data_dir, config, dataset_id, extractor_name, condition, query_mask)
-                for condition in config["conditions"]}
-        start, end = spec["columns"]
-        if end > EXTRACTORS[extractor_name].dimension:
-            raise ValueError("Feature columns exceed extractor dimension: " + name)
-        banks[name] = {condition: values[:, start:end] for condition, values in extracted[extractor_name].items()}
+        blocks = []
+        for component in spec.get('components', [spec]):
+            extractor_name = component['extractor']
+            if extractor_name not in EXTRACTORS:
+                raise ValueError('Unknown extractor: ' + extractor_name)
+            if extractor_name not in extracted:
+                extracted[extractor_name] = {condition: extract_cached(
+                    frame, data_dir, config, dataset_id, extractor_name, condition, query_mask)
+                    for condition in config['conditions']}
+            start, end = component['columns']
+            if end > EXTRACTORS[extractor_name].dimension:
+                raise ValueError('Feature columns exceed extractor dimension: ' + name)
+            block = {}
+            for condition, values in extracted[extractor_name].items():
+                selected = values[:, start:end]
+                if component.get('normalization', 'none') == 'l2':
+                    selected = selected / np.maximum(np.linalg.norm(selected, axis=1, keepdims=True), 1e-12)
+                block[condition] = selected
+            blocks.append(block)
+        banks[name] = {condition: np.concatenate([block[condition] for block in blocks], axis=1)
+                       for condition in config['conditions']}
     return banks

@@ -1,4 +1,7 @@
-"""Load the one editable configuration shared by the three fixed entry points."""
+"""Load a saved experiment configuration for the shared numbered entry point.
+
+Groups inherit common settings; paths are relative to the common JSON file.
+"""
 
 import copy
 import json
@@ -6,16 +9,33 @@ import math
 from pathlib import Path
 
 
-def load_config(path, smoke=False):
+def discover_experiments(directory):
+    """Discover arbitrary groups without a hardcoded menu."""
+    groups = {}
+    for path in sorted(Path(directory).glob('*.json')):
+        data = json.loads(path.read_text(encoding='utf-8'))
+        name = data['group']
+        if name in groups:
+            raise ValueError('Duplicate experiment group: ' + name)
+        groups[name] = (path, data)
+    return groups
+
+
+def load_config(path, smoke=False, experiment_path=None):
     path = Path(path).expanduser().resolve()
     config = json.loads(path.read_text(encoding="utf-8"))
     for field in ("data_dir", "protocol_dir", "cache_dir", "results_dir"):
         value = Path(config[field]).expanduser()
         config[field] = str((value if value.is_absolute() else path.parent / value).resolve())
-    profile = config["feature_profiles"][config["feature_profile"]]
+    if experiment_path is not None:
+        profile = json.loads(Path(experiment_path).read_text(encoding='utf-8'))
+        config['feature_profile'] = profile['group']
+    else:
+        profile = config["feature_profiles"][config["feature_profile"]]
     config["feature_sets"] = copy.deepcopy(profile["features"])
     config["comparisons"] = copy.deepcopy(profile.get("comparisons", []))
-    config.pop("feature_profiles")
+    config.pop("feature_profiles", None)
+    config.pop('experiment_dir', None)
     config.update(copy.deepcopy(config["baselines"]))
     if smoke:
         config.update(mode="smoke", minimum_train_images=384, outer_folds=2,
@@ -53,9 +73,12 @@ def validate_config(config):
     for name, spec in config["feature_sets"].items():
         if not name.replace("_", "").isalnum():
             raise ValueError("Feature names must contain letters, numbers or underscores.")
-        start, end = spec["columns"]
-        if start < 0 or end <= start:
-            raise ValueError("Invalid feature column range: " + name)
+        for component in spec.get('components', [spec]):
+            start, end = component['columns']
+            if start < 0 or end <= start:
+                raise ValueError('Invalid feature column range: ' + name)
+            if component.get('normalization', 'none') not in {'none', 'l2'}:
+                raise ValueError('Component normalization must be none or l2.')
     for base, added in config["comparisons"]:
         if base not in config["feature_sets"] or added not in config["feature_sets"]:
             raise ValueError("Comparison references an unselected feature.")

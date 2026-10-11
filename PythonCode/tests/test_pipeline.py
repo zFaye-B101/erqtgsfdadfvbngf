@@ -13,10 +13,10 @@ import pandas as pd
 from PIL import Image
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import torch
-from sop_config import load_config
-from sop_experiment import Experiment
-from sop_protocol import write_json
-from sop_supcon import SupConLoss, product_batches, fit_representation, save_model, load_model, matching_scores
+from utils.sop_config import load_config
+from utils.sop_experiment import Experiment
+from utils.sop_protocol import write_json
+from utils.sop_supcon import SupConLoss, product_batches, fit_representation, save_model, load_model, matching_scores
 ROOT = Path(__file__).resolve().parents[1]
 ARTIFACTS = ROOT / '.verification_artifacts'
 ARTIFACTS.mkdir(exist_ok=True)
@@ -77,7 +77,7 @@ class PipelineTests(unittest.TestCase):
 
     def test_tail_scaling_and_reload_512_dimensions(self):
         frame = pd.DataFrame({'class_id': np.repeat(np.arange(6), 2)})
-        settings = copy.deepcopy(load_config(ROOT / 'experiment_config.json', smoke=True)['supcon'])
+        settings = copy.deepcopy(load_config(ROOT / 'config.json', smoke=True)['supcon'])
         settings.update(products_per_batch=2, hidden_dim=12, representation_dim=8, projection_dim=8, device='cpu')
         batches = list(product_batches(frame, list(range(5)), settings, np.random.default_rng(1)))
         self.assertEqual(sorted(np.concatenate([x for x, _ in batches]).tolist()), list(range(10)))
@@ -97,14 +97,14 @@ class PipelineTests(unittest.TestCase):
             for p in fitted['model'].projector.parameters():
                 p.fill_(100)
         np.testing.assert_array_equal(before, matching_scores(fitted, pairs, bank))
-        from sop_baselines import fit_classifier, scores
+        from utils.sop_baselines import fit_classifier, scores
         for algorithm in ('LR', 'SVM'):
             model = fit_classifier(features[:10], np.tile([0, 1], 5), algorithm, 1, 1)
             self.assertTrue(np.isfinite(scores(model, features[10:])).all())
 
     def test_resnet_geometry(self):
         import torchvision.models as models
-        from sop_feature_bank import ResNet18Extractor
+        from utils.sop_feature_bank import ResNet18Extractor
         torch.set_num_threads(2)
         with patch('torchvision.models.resnet18', return_value=models.resnet18(weights=None)):
             extractor = ResNet18Extractor({'device': 'cpu'})
@@ -116,9 +116,9 @@ class PipelineTests(unittest.TestCase):
         np.testing.assert_array_equal(values, extractor(images))
 
     def test_shared_protocol_end_to_end_resume(self):
-        from sop_baselines import run_experiment as baselines
-        from sop_supcon import run_experiment as supcon
-        from sop_reporting import combine_results
+        from utils.sop_baselines import run_experiment as baselines
+        from utils.sop_supcon import run_experiment as supcon
+        from utils.sop_reporting import combine_results
         with tempfile.TemporaryDirectory(dir=ARTIFACTS) as folder:
             root = Path(folder)
             rows = []
@@ -135,7 +135,7 @@ class PipelineTests(unittest.TestCase):
                         rows.append(dict(image_id=image_id, class_id=sku, super_class_id=category, source_split='train', original_width=224, original_height=224, processed_relative_path=relative))
             pd.DataFrame(rows).to_csv(root / 'data' / 'clean_manifest.csv', index=False)
             write_json(root / 'data' / 'audit_summary.json', {'clean_images': len(rows), 'complete': True})
-            config = load_config(ROOT / 'experiment_config.json', smoke=True)
+            config = load_config(ROOT / 'config.json', smoke=True)
             config.update(minimum_train_images=96, run_name='synthetic', train_anchor_cap=8, evaluation_anchor_cap=6)
             for key, name in [('data_dir', 'data'), ('protocol_dir', 'protocol'), ('cache_dir', 'cache'), ('results_dir', 'results')]:
                 config[key] = str(root / name)
@@ -169,7 +169,7 @@ class PipelineTests(unittest.TestCase):
                         actual = matching_scores(fitted, predictions, experiment.banks[name])
                     else:
                         import pickle
-                        from sop_baselines import matrix, scores
+                        from utils.sop_baselines import matrix, scores
                         with path.with_name('model.pkl').open('rb') as stream:
                             fitted = pickle.load(stream)
                         self.assertEqual(fitted['fitting_products'], record['fitting_products'])
@@ -195,7 +195,7 @@ class PipelineTests(unittest.TestCase):
             content_experiment = Experiment(content)
             self.assertEqual(content_experiment.protocol_id, experiment.protocol_id)
             pd.testing.assert_frame_equal(content_experiment.context(1)['test_pairs'], experiment.context(1)['test_pairs'])
-            from sop_reporting import report_results
+            from utils.sop_reporting import report_results
             synthetic_rows = pd.read_csv(first / 'outer_fold_metrics.csv')
             synthetic_rows = synthetic_rows[synthetic_rows.features.eq('HSV48')].copy()
             synthetic_rows['features'] = 'Alternative64'
@@ -208,9 +208,9 @@ class PipelineTests(unittest.TestCase):
 
     def test_content_padding_and_temperature_expansion(self):
         from types import SimpleNamespace
-        from sop_features import resize_for_model, image_feature_vector
-        from sop_protocol import content_box
-        from sop_tuning import search_temperatures
+        from utils.sop_features import resize_for_model, image_feature_vector
+        from utils.sop_protocol import content_box
+        from utils.sop_tuning import search_temperatures
         images, content = [], []
         for size in [(300, 300), (600, 150)]:
             image = resize_for_model(Image.new('RGB', size, (200, 30, 30)))
@@ -233,13 +233,13 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(len(history), 1)
 
     def test_pair_features_and_official_query_coverage(self):
-        from sop_protocol import pair_matrix
+        from utils.sop_protocol import pair_matrix
         pairs = pd.DataFrame({'query_row': [0], 'reference_row': [1]})
         bank = {'clean': np.array([[1., 2., 3.], [3., 5., 7.]])}
         np.testing.assert_array_equal(pair_matrix(pairs, bank, [0, 3]), [[2., 3., 4.]])
         with tempfile.TemporaryDirectory(dir=ARTIFACTS) as folder:
             experiment = object.__new__(Experiment)
-            experiment.config = load_config(ROOT / 'experiment_config.json', smoke=True)
+            experiment.config = load_config(ROOT / 'config.json', smoke=True)
             experiment.config['run_official_test'] = True
             records = []
             for category in range(2):

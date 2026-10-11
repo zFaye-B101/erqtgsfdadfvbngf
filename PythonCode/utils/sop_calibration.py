@@ -1,6 +1,6 @@
 """Calibrate a fixed final model on held-out training products only."""
 import numpy as np
-from sop_protocol import manual_metrics, recall_threshold, write_json
+from .sop_protocol import manual_metrics, recall_threshold, write_json
 
 
 def split_calibration_products(frame, products, fraction, inner_folds, seed):

@@ -1,0 +1,13 @@
+{
+  "group": "F1_Traditional_HSV48",
+  "description": "F1 Traditional HSV48",
+  "features": {
+    "HSV48": {
+      "extractor": "hsv_hog",
+      "columns": [
+        0,
+        48
+      ]
+    }
+  }
+}

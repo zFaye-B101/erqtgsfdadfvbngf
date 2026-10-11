@@ -11,15 +11,15 @@ import pandas as pd
 from PIL import Image
 
 cwd = Path(__file__).resolve().parent
-if not (cwd / "sop_features.py").is_file():
-    raise FileNotFoundError("Place sop_features.py in the same directory as this script.")
+if not (cwd / "utils" / "sop_features.py").is_file():
+    raise FileNotFoundError("Place utils/sop_features.py beside this script.")
 
-from sop_features import resize_for_model
+from utils.sop_features import resize_for_model
 
 
 def main():
     parser = argparse.ArgumentParser(description="Clean and export SOP images once.")
-    parser.add_argument("--config", type=Path, default=cwd / "experiment_config.json")
+    parser.add_argument("--config", type=Path, default=cwd / "config.json")
     parser.add_argument("--zip-path", type=Path, default=None,
                         help="Input SOP ZIP; otherwise search beside the script and its parents.")
     parser.add_argument("--output-dir", type=Path, default=None,
@@ -42,7 +42,7 @@ def main():
     ZIP_PATH = args.zip_path.expanduser().resolve() if args.zip_path else find_sop_zip()
     if not ZIP_PATH.is_file():
         raise FileNotFoundError("SOP ZIP not found: " + str(ZIP_PATH))
-    from sop_config import load_config
+    from utils.sop_config import load_config
     settings = load_config(args.config)
     OUTPUT_DIR = args.output_dir.expanduser().resolve() if args.output_dir else Path(settings["data_dir"])
     MIN_ORIGINAL_SIDE = 100

@@ -11,9 +11,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 from sklearn.exceptions import ConvergenceWarning
 
-from sop_protocol import manual_metrics, manual_roc_auc, pair_matrix, recall_threshold, write_json
-from sop_reporting import evaluate_scores, report_results
-from sop_calibration import calibrate
+from .sop_protocol import manual_metrics, manual_roc_auc, pair_matrix, recall_threshold, write_json
+from .sop_reporting import evaluate_scores, report_results
+from .sop_calibration import calibrate
 
 def fit_classifier(X, y, algorithm, c, seed):
     # Fit scaling on THIS training fold only; never fit on validation/test.

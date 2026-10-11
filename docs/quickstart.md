@@ -1,6 +1,19 @@
 # 从 GitHub 拉取并运行
 
-## 当前 v3 实验流程
+## 当前入口与目录更新（2026-10-12）
+
+- 正式入口保持 01 → 02；已有处理数据无需重跑 01。01 仅改工具导入路径和默认配置文件名。
+- 总配置为 `PythonCode/config.json`；各组配置为 `PythonCode/experiment_configs/*.json`；工具在 `PythonCode/utils/`。
+- 直接运行 02 会显示实验/模型菜单；命令行示例：`python 02_SOP_Experiments.py --group F1,F2 --method baselines`。
+- JSON 自动发现任意新增组；已有提取器可通过 components 组合，全新方法还需实现并注册。
+- 默认四组为 HSV48、HSV+分区域梯度192、ResNet全局512、ResNet全局+区域2560，均带填边。
+- 结果保存至 `results/<run_name>/<group>/`；`comparisons/`读取兼容已完成结果生成逐折比较，不重复训练。
+- 移动代码改变指纹，新协议目录为 `protocols/Main_Experiments_Organized`；旧输出保留，不强行混用。
+- 保留组员 00 预检、共享 PyCharm 配置及历史 Notebook；运行配置默认选 F1。
+- 不改变三模型、10/3商品折、校准和扰动规则；正式SOP结果及预训练ResNet运行仍未验证。
+
+
+## 当前实验流程
 
 ### Windows + PyCharm（最终运行机）
 
@@ -21,23 +34,23 @@
 conda activate Unimelb_SML_A2
 cd PythonCode
 python 01_SOP_Preprocessing.py
-python 02_SOP_Experiments.py --method baselines
-python 02_SOP_Experiments.py --method supcon
+python 02_SOP_Experiments.py --group F1 --method baselines
+python 02_SOP_Experiments.py --group F1 --method supcon
 ```
 
-02 的 `--method` 选择传统 LR/SVM 基线或 SupCon。已有完整处理目录时，在配置中设置 `data_dir` 后可跳过 01。更换特征时修改 `experiment_config.json` 的 `feature_profile`，再运行需要的方法。
+02 的 `--method` 选择传统 LR/SVM 基线或 SupCon。已有完整处理目录时，在配置中设置 `data_dir` 后可跳过 01。更换特征时选择 experiment_configs 下对应组；使用 --group 或交互菜单。
 
-当前方案包含 `handcrafted`、`handcrafted_content`、`handcrafted_padding_audit`、`resnet18_global` 和 `resnet18` 配置。传统与 SupCon 使用同一套商品折分、图片对和扰动条件。ResNet18 特征提取器已经实现，但真实预训练权重实验仍需单独运行验证。
+当前菜单自动读取 `experiment_configs/` 下的 F1～F4 配置，并支持后续新增组。旧 `handcrafted` 等 profile 保留在公共配置中作为内部兼容设置，不再是菜单入口。传统与 SupCon 使用同一套商品折分、图片对和扰动条件。ResNet18 特征提取器已经实现，但真实预训练权重实验仍需单独运行验证。
 
 基础依赖见 [requirements-base.txt](../PythonCode/requirements-base.txt)。已有 Conda OpenCV 无需再安装 pip OpenCV。SupCon 和 ResNet 特征需要兼容的 torch/torchvision，CPU 安装命令见[英文说明](../PythonCode/Readme.txt)，中文说明见[中文版](../PythonCode/Readme_zh.txt)。
 
-01 默认在脚本目录及其父目录查找 SOP ZIP，也支持 `--zip-path`；输出默认为 `processed_sop/`，不会覆盖非空输出目录。实验输出默认按运行名、特征方案和方法保存在 `results_v3/`。02 可通过 `--data-dir`、`--results-dir`、`--protocol-dir` 指定目录，也支持 `--all-train`、`--skip-official-test` 和 `--smoke-test`。
+01 默认在脚本目录及其父目录查找 SOP ZIP，也支持 `--zip-path`；输出默认为 `processed_sop/`，不会覆盖非空输出目录。实验输出默认按运行名、实验组和方法保存在 `results/`。02 可通过 `--data-dir`、`--results-dir`、`--protocol-dir` 指定目录，也支持 `--all-train`、`--skip-official-test` 和 `--smoke-test`。
 
 开发检查可分别运行：
 
 ```powershell
-python 02_SOP_Experiments.py --method baselines --smoke-test
-python 02_SOP_Experiments.py --method supcon --smoke-test
+python 02_SOP_Experiments.py --group F1 --method baselines --smoke-test
+python 02_SOP_Experiments.py --group F1 --method supcon --smoke-test
 ```
 
 `--smoke-test` 只检查程序执行，不构成正式实验结果。测试命令为 `python -m unittest discover -s tests -v`；本次入口合并没有重跑测试，既有验证边界见 [VALIDATION.txt](../PythonCode/VALIDATION.txt)。

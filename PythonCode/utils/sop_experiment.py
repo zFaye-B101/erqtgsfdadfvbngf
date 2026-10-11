@@ -11,10 +11,10 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from sop_config import validate_config
-from sop_calibration import split_calibration_products
-from sop_feature_bank import build_banks, dataset_digest, extract_cached, file_digest
-from sop_protocol import make_pairs, product_folds, select_train_products, write_json
+from .sop_config import validate_config
+from .sop_calibration import split_calibration_products
+from .sop_feature_bank import build_banks, dataset_digest, extract_cached, file_digest
+from .sop_protocol import make_pairs, product_folds, select_train_products, write_json
 
 
 def load_manifest(data_dir):
@@ -173,7 +173,7 @@ class Experiment:
         import platform
         import sklearn
         import PIL
-        from sop_feature_bank import _INSTANCES
+        from .sop_feature_bank import _INSTANCES
         files = [Path(__file__).with_name(name) for name in
                  ("sop_baselines.py", "sop_supcon.py", "sop_reporting.py", "sop_config.py",
                   "sop_feature_bank.py", "sop_features.py", "sop_protocol.py", "sop_experiment.py", "sop_calibration.py", "sop_tuning.py")]
@@ -182,7 +182,8 @@ class Experiment:
                     "python": platform.python_version(), "numpy": np.__version__,
                     "pandas": pd.__version__, "sklearn": sklearn.__version__, "Pillow": PIL.__version__,
                     "extractors": [value.metadata for key, value in _INSTANCES.items()
-                                   if key[0] in {"hsv_hog_content"} | {s["extractor"] for s in self.config["feature_sets"].values()}
+                                   if key[0] in {"hsv_hog_content"} | {c['extractor'] for s in self.config['feature_sets'].values()
+                                       for c in s.get('components', [s])}
                                    and key[1] == json.dumps(self.config["extraction"], sort_keys=True)]}
         if algorithm == "supcon":
             import torch

@@ -1,53 +1,103 @@
-"""Unified CLI for LR/SVM baselines and SupCon experiments."""
-
+"""Run any saved feature experiment through one interactive or CLI entry."""
 import argparse
+import json
 from pathlib import Path
-import sys
 
-from sop_config import load_config
-from sop_experiment import Experiment
-from sop_reporting import combine_results, print_tables
+from utils.sop_config import discover_experiments, load_config, validate_config
+from utils.sop_reporting import update_comparisons
 
-
-def main():
-    parser = argparse.ArgumentParser(description="Run SOP experiments using the shared configuration.")
-    parser.add_argument("--config", type=Path, default=Path(__file__).with_name("experiment_config.json"))
-    parser.add_argument("--method", choices=("baselines", "supcon"), required=True)
-    parser.add_argument("--data-dir", type=Path)
-    parser.add_argument("--results-dir", type=Path)
-    parser.add_argument("--protocol-dir", type=Path)
-    parser.add_argument("--all-train", action="store_true")
-    parser.add_argument("--skip-official-test", action="store_true")
-    parser.add_argument("--smoke-test", action="store_true", help="Explicit 2/2-fold, 384-image, 1-epoch check; never formal evidence.")
-    args = parser.parse_args()
-    family = args.method
-    config = load_config(args.config, args.smoke_test)
-    for field in ("data_dir", "results_dir", "protocol_dir"):
-        override = getattr(args, field)
-        if override is not None:
-            config[field] = str(override.expanduser().resolve())
-    if args.all_train:
-        config["use_all_official_train"] = True
-    if args.skip_official_test:
-        config["run_official_test"] = False
-    print("Python:", sys.executable)
-    print("Feature profile:", config["feature_profile"])
-    print("Run mode:", config["mode"].upper())
-    print("Input:", config["data_dir"])
-    print("Public evaluation protocol:", config["protocol_dir"])
-    if config["mode"] == "smoke":
-        print("SMOKE TEST ONLY: reduced folds, images and epochs do not satisfy formal evaluation.")
-    if family == "baselines":
-        from sop_baselines import run_experiment
-    elif family == "supcon":
-        from sop_supcon import run_experiment
-    else:
-        raise ValueError("Unknown experiment family.")
-    experiment = Experiment(config)
-    directory = run_experiment(experiment)
-    print_tables(directory)
-    combine_results(experiment)
+ROOT = Path(__file__).resolve().parent
 
 
-if __name__ == "__main__":
+def select_groups(groups, selection):
+    names = list(groups)
+    if selection.lower() == 'all':
+        return names
+    chosen = []
+    for token in selection.split(','):
+        token = token.strip()
+        if token.isdigit() and 1 <= int(token) <= len(names):
+            matches = [names[int(token) - 1]]
+        else:
+            matches = [name for name in names if name == token or name.split('_')[0] == token]
+        if len(matches) != 1:
+            raise ValueError('Unknown or ambiguous group: ' + token)
+        if matches[0] not in chosen:
+            chosen.append(matches[0])
+    return chosen
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--config', type=Path, default=ROOT / 'config.json')
+    parser.add_argument('--group', help='Group name, F1,F2, menu numbers, or all.')
+    parser.add_argument('--method', choices=('baselines', 'supcon', 'all'))
+    parser.add_argument('--run-name')
+    parser.add_argument('--list', action='store_true', help='List groups without running.')
+    parser.add_argument('--compare-only', action='store_true', help='Update comparisons without training.')
+    parser.add_argument('--smoke-test', action='store_true')
+    parser.add_argument('--all-train', action='store_true')
+    parser.add_argument('--skip-official-test', action='store_true')
+    for name in ('data-dir', 'results-dir', 'protocol-dir'):
+        parser.add_argument('--' + name, type=Path)
+    args = parser.parse_args(argv)
+    common = json.loads(args.config.read_text(encoding='utf-8'))
+    directory = Path(common.get('experiment_dir', 'experiment_configs'))
+    if not directory.is_absolute():
+        directory = args.config.resolve().parent / directory
+    groups = discover_experiments(directory)
+    if not groups:
+        parser.error('No experiment configurations found in ' + str(directory))
+    for number, (name, (_, group)) in enumerate(groups.items(), 1):
+        print(f'{number}. {name}: {group.get("description", name)}')
+    if args.list:
+        return
+    if args.compare_only:
+        config = load_config(args.config, args.smoke_test, next(iter(groups.values()))[0])
+        config['run_name'] = args.run_name or config['run_name']
+        if args.results_dir:
+            config['results_dir'] = str(args.results_dir.resolve())
+        update_comparisons(Path(config['results_dir']) / config['run_name'])
+        return
+    try:
+        selected = select_groups(groups, args.group or input('Select groups (comma separated) or all: '))
+    except ValueError as error:
+        parser.error(str(error))
+    method = args.method
+    if method is None:
+        print('1. Logistic Regression + SVM\n2. SupCon\n3. All three models')
+        method = {'1': 'baselines', '2': 'supcon', '3': 'all'}.get(input('Select models: ').strip())
+        if method is None:
+            parser.error('Select 1, 2 or 3.')
+    run_name = args.run_name
+    if run_name is None and args.group is None:
+        run_name = input(f'Run name [{common["run_name"]}]: ').strip() or common['run_name']
+    from utils.sop_experiment import Experiment
+    from utils.sop_reporting import combine_results, print_tables
+    for name in selected:
+        config = load_config(args.config, args.smoke_test, groups[name][0])
+        if run_name:
+            config['run_name'] = run_name
+        for field in ('data_dir', 'results_dir', 'protocol_dir'):
+            if getattr(args, field):
+                config[field] = str(getattr(args, field).resolve())
+        if args.all_train:
+            config['use_all_official_train'] = True
+        if args.skip_official_test:
+            config['run_official_test'] = False
+        validate_config(config)
+        print('Running:', name, '/', method, '/', config['mode'])
+        experiment = Experiment(config)
+        for family in (('baselines', 'supcon') if method == 'all' else (method,)):
+            if family == 'baselines':
+                from utils.sop_baselines import run_experiment
+            else:
+                from utils.sop_supcon import run_experiment
+            output = run_experiment(experiment)
+            print_tables(output)
+            combine_results(experiment)
+        update_comparisons(Path(config['results_dir']) / config['run_name'])
+
+
+if __name__ == '__main__':
     main()

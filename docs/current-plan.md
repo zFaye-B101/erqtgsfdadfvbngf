@@ -1,5 +1,18 @@
 # 当前方向与待定事项
 
+## 当前入口与目录更新（2026-10-12）
+
+- 正式入口保持 01 → 02；已有处理数据无需重跑 01。01 仅改工具导入路径和默认配置文件名。
+- 总配置为 `PythonCode/config.json`；各组配置为 `PythonCode/experiment_configs/*.json`；工具在 `PythonCode/utils/`。
+- 直接运行 02 会显示实验/模型菜单；命令行示例：`python 02_SOP_Experiments.py --group F1,F2 --method baselines`。
+- JSON 自动发现任意新增组；已有提取器可通过 components 组合，全新方法还需实现并注册。
+- 默认四组为 HSV48、HSV+分区域梯度192、ResNet全局512、ResNet全局+区域2560，均带填边。
+- 结果保存至 `results/<run_name>/<group>/`；`comparisons/`读取兼容已完成结果生成逐折比较，不重复训练。
+- 移动代码改变指纹，新协议目录为 `protocols/Main_Experiments_Organized`；旧输出保留，不强行混用。
+- 保留组员 00 预检、共享 PyCharm 配置及历史 Notebook；运行配置默认选 F1。
+- 不改变三模型、10/3商品折、校准和扰动规则；正式SOP结果及预训练ResNet运行仍未验证。
+
+
 ## 当前执行边界（基于 231f2d6 的入口修复）
 
 - 实现已有：共同特征与配对接口、LR/RBF SVM/SupCon、独立校准集、受限超参数搜索和结果导出。

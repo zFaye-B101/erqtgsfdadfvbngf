@@ -1,5 +1,18 @@
 # 协作与运行路径
 
+## 当前入口与目录更新（2026-10-12）
+
+- 正式入口保持 01 → 02；已有处理数据无需重跑 01。01 仅改工具导入路径和默认配置文件名。
+- 总配置为 `PythonCode/config.json`；各组配置为 `PythonCode/experiment_configs/*.json`；工具在 `PythonCode/utils/`。
+- 直接运行 02 会显示实验/模型菜单；命令行示例：`python 02_SOP_Experiments.py --group F1,F2 --method baselines`。
+- JSON 自动发现任意新增组；已有提取器可通过 components 组合，全新方法还需实现并注册。
+- 默认四组为 HSV48、HSV+分区域梯度192、ResNet全局512、ResNet全局+区域2560，均带填边。
+- 结果保存至 `results/<run_name>/<group>/`；`comparisons/`读取兼容已完成结果生成逐折比较，不重复训练。
+- 移动代码改变指纹，新协议目录为 `protocols/Main_Experiments_Organized`；旧输出保留，不强行混用。
+- 保留组员 00 预检、共享 PyCharm 配置及历史 Notebook；运行配置默认选 F1。
+- 不改变三模型、10/3商品折、校准和扰动规则；正式SOP结果及预训练ResNet运行仍未验证。
+
+
 ## 最新 v3 修复（2026-10-11，覆盖此前 v2 的对应状态）
 
 - 新增 handcrafted_content 和 handcrafted_padding_audit，支持排除填边的HSV/HOG以及与原填边版本的配对对照；原handcrafted保持为对照，ResNet仍使用明确记录的填边输入。真实SOP收益未量化。
@@ -11,7 +24,7 @@
 
 ## 最新共享运行接口（2026-10-11）
 
-PythonCode现包含01预处理入口、02统一实验入口、experiment_config.json和共同辅助模块。通过02的--method选择基线或SupCon；切换特征改配置。新固定提取器注册于sop_feature_bank.py。两种方法共享商品折/配对和像素输入。依赖、缓存、模型、路径与续跑规则见[英文说明](../PythonCode/Readme.txt)和[中文说明](../PythonCode/Readme_zh.txt)。根目录原有Notebook、数据工具和已归档开发结果保持原状。不要将机器环境、生成配对/缓存、模型权重或原图推送。
+PythonCode现包含01预处理入口、02统一实验入口、config.json和共同辅助模块。通过02的--method选择基线或SupCon；切换特征改配置。新固定提取器注册于sop_feature_bank.py。两种方法共享商品折/配对和像素输入。依赖、缓存、模型、路径与续跑规则见[英文说明](../PythonCode/Readme.txt)和[中文说明](../PythonCode/Readme_zh.txt)。根目录原有Notebook、数据工具和已归档开发结果保持原状。不要将机器环境、生成配对/缓存、模型权重或原图推送。
 
 
 每次开始前读 [AGENTS.md](../AGENTS.md) 和 [CONTRIBUTING.md](../CONTRIBUTING.md)。每次更新共享文件，必须在同一提交/PR内同步根目录 README 及受影响的相关文件；交接时说明验证结果和未完成项。

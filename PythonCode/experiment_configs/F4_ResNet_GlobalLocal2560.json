@@ -1,0 +1,13 @@
+{
+  "group": "F4_ResNet_GlobalLocal2560",
+  "description": "F4 ResNet GlobalLocal2560",
+  "features": {
+    "ResNet18_GlobalLocal2560": {
+      "extractor": "resnet18",
+      "columns": [
+        0,
+        2560
+      ]
+    }
+  }
+}

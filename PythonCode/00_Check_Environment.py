@@ -6,7 +6,7 @@ nothing and does not modify data. The only file operation is a temporary write
 test in the results location, which is deleted immediately.
 
 Exit code 0 means no FAIL items were found; WARN items should still be read.
-See Readme.txt, section "Windows and PyCharm".
+See Readme.txt for the current numbered entry points and environment notes.
 """
 
 import argparse
@@ -130,7 +130,7 @@ def check_torch(report, settings):
 def load_settings(report, config_path):
     sys.path.insert(0, str(SCRIPT_DIR))
     try:
-        from sop_config import load_config
+        from utils.sop_config import load_config
         settings = load_config(config_path)
     except Exception as exc:
         report.add("FAIL", "Configuration", f"{config_path}: {exc}")
@@ -239,7 +239,7 @@ def check_windows(report, settings):
 
 def main():
     parser = argparse.ArgumentParser(description="Read-only environment and data preflight for 01/02.")
-    parser.add_argument("--config", type=Path, default=SCRIPT_DIR / "experiment_config.json")
+    parser.add_argument("--config", type=Path, default=SCRIPT_DIR / "config.json")
     parser.add_argument("--zip-path", type=Path, help="SOP ZIP to check when data is not yet preprocessed.")
     args = parser.parse_args()
     report = Report()

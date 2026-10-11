@@ -1,0 +1,13 @@
+{
+  "group": "F3_ResNet_Global512",
+  "description": "F3 ResNet Global512",
+  "features": {
+    "ResNet18_Global512": {
+      "extractor": "resnet18",
+      "columns": [
+        0,
+        512
+      ]
+    }
+  }
+}
