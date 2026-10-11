@@ -2,6 +2,19 @@
 
 ## 当前 v3 实验流程
 
+### Windows + PyCharm（最终运行机）
+
+真实测试将在一台 Windows 电脑的 PyCharm 中运行，仓库已预置：
+
+1. 用 PyCharm 打开**仓库根目录**（含 `.run/` 与 `PythonCode/`），在 Settings > Project > Python Interpreter 选择已装依赖的 Python 3.11 解释器。建议把项目放在较短路径（如 `D:\sml\`），结果目录层级较深。
+2. Run 下拉框会出现 `.run/` 中共享的配置：`00 Check environment` → `01 Preprocess SOP` → `02 Smoke baselines` / `02 Smoke SupCon` → `02 Baselines` / `02 SupCon`，另有 `Tests PythonCode`。工作目录都是 `PythonCode/`，并设置 `PYTHONUTF8=1`。
+3. 先运行 `00 Check environment`（只读，不安装不下载）。它报告解释器、依赖、PyTorch 是否为 CPU 版、数据或 ZIP 位置、磁盘空间、写权限、Windows 路径长度与控制台编码；有 FAIL 时先处理。
+4. 若 PyCharm 提示找不到模块或解释器（如项目文件夹改名），在 Run > Edit Configurations 里重新选择解释器。ZIP 不在仓库旁时，在 `01 Preprocess SOP` 的参数中加 `--zip-path "D:/data/Stanford_Online_Products.zip"`。
+
+这些配置只在 Mac 上做了文件与入口一致性检查，尚未在 Windows PyCharm 中实际加载或运行。
+
+### 命令行
+
 在 `PythonCode/` 中使用同一 Python 3.11+ 解释器。先运行一次预处理，再按需运行一种或两种实验方法：
 
 ```powershell

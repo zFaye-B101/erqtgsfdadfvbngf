@@ -1,6 +1,6 @@
 # 预处理填边与特征缓存一致性互评
 
-- 被评审提交：`3054cd37ccaa1dbd66304a8cba7ad47f08c35c91`（xingyuqiong）；截至 `f55859f`，被评审的两个文件未再改动。`94c9c2e` 与 `88e1760` 的 PythonCode 版本见文末两次复查。
+- 被评审提交：`3054cd37ccaa1dbd66304a8cba7ad47f08c35c91`（xingyuqiong）；截至 `f55859f`，被评审的两个文件未再改动。`94c9c2e`、`88e1760` 与 `0aa5893` 的 PythonCode 版本见文末复查。
 - 评审者：本会话 Claude AI（由 zyFaye 使用）；不代表其他组员或独立评审者同意。
 - 日期：2026-10-11（Australia/Melbourne）。
 - 文件与范围：`notebooks/sop_features.py` 的 `resize_for_model`（18–32 行）与 `image_feature_vector`（35–77 行）；`notebooks/01_SOP_Preprocessing.ipynb` 单元格“5. 生成处理后的图片文件夹和逐图特征”（Notebook 单元格没有 ID，按标题定位）。
@@ -14,7 +14,7 @@
 ## R1：白色填边进入 HSV/HOG 特征，使特征携带图片长宽比
 
 - 类型/优先级：确认问题（合成数据复现）；对特征选择影响较高，真实数据上的幅度待验证。
-- 状态：暂缓（负责人保留现状，2026-10-11）
+- 状态：部分实施，待真实数据对照（`0aa5893`，2026-10-12）
 - 位置与触发条件：`resize_for_model` 先保比例缩放，再贴到白色 224×224 画布（29–31 行）；Notebook 第 5 节随后对填边后的 `processed_image` 计算特征。任何非正方形原图都会触发，长宽比越极端，填边占比越大。
 - 证据：同一纯红色（RGB 200,30,30）分别做成 300×300 与 600×150 两张图，经现有函数处理后：
   - HSV 三通道直方图 L1 距离 = 3.0（三个通道各自归一化，最大可能为 6）；V 通道最高一档占比 0.0 对 0.75，即宽图 75% 的像素是白色填边。
@@ -25,8 +25,8 @@
 - 方案 B：手工特征与 CNN 采用同一几何处理（如短边缩放后中心裁剪）。两条管线可以直接比较，代价是极端长宽比的商品会被裁掉边缘。
 - 建议与验证方法：特征选择尚未定案，建议先采用方案 A 或 B 之一，再在共同开发配对清单上重跑 HSV/HOG 诊断，与现有结果并列记录（不覆盖旧数）。用上面的纯色探针做单元测试：修复后两种长宽比的 HSV 距离应接近 0。
 - 负责人回应：xingyuqiong 在 [可配置流程回应](2026-10-11-configurable-pipeline-response.md) 第 2 条中选择保留填边，HSV/HOG 与 ResNet 统一使用同一填边画布；明确“尚未解决或量化”。
-- 实施者/提交：尚未实施
-- 复查结果：尚未验证
+- 实施者/提交：xingyuqiong，`0aa5893`：新增内容区域提取器 `hsv_hog_content` 及配置 `handcrafted_content`、`handcrafted_padding_audit`（带白边与仅内容的配对对照）；困难负例统一改用内容区域 HSV48。默认配置 `handcrafted` 与 ResNet 仍使用带白边画布。
+- 复查结果：合成检查通过（同色、不同长宽比的图片在内容区域特征上相同），见文末第三次复查；真实 SOP 上白边影响的大小尚未测量。
 
 ## R2：`.npz` 特征与磁盘上的 JPEG 不对应
 
@@ -59,10 +59,16 @@
 - R1：代码仍对整张填边画布提取特征（`PythonCode/sop_features.py` 19–33、36 行起）；负责人选择保留，状态改为暂缓。解读 HSV48 与 HSV_HOG192、手工特征与 ResNet 的差异时，仍需说明长宽比和白边可能混入特征。
 - 未覆盖：真实 SOP 数据、Windows、GPU、预训练 ResNet 权重。`88e1760` 中与本记录范围无关的新发现另见 [可配置流程互评](2026-10-11_88e1760_pipeline_claude.md)。
 
+## 第三次复查：`0aa5893` 内容区域特征（2026-10-12）
+
+- 方式：静态阅读 `sop_feature_bank.ContentHandcraftedExtractor` 与 `extract_cached` 的裁剪逻辑；本会话 Mac/Python 3.11 CPU 临时环境运行 PythonCode 测试 10 项通过，其中 `test_content_padding_and_temperature_expansion` 验证纯色、不同长宽比的图片在带白边特征上不同、在内容区域特征上相同。
+- 内容矩形由原图宽高恢复，与 01 的缩放取整公式一致；扰动先作用于内容区域，再裁剪提取。HOG 把内容矩形缩放为 128×128 正方形，不保持长宽比。
+- 仍需：用 `handcrafted_padding_audit` 在真实 SOP 上量化白边影响，再决定正式手工特征用哪一种；ResNet 仍使用带白边输入，报告中需说明。
+
 ## 结论
 
 - 两项都不影响 01 Notebook 的数据审计与排除逻辑；合成测试中该部分结果正确。
 - R1 直接关系到当前的特征选择：在修正或统一几何处理之前，不宜用现有 HSV/HOG AUC 与 CNN AUC 排名，也不宜据此淘汰传统特征。
-- R2 已在 `88e1760` 修复并验证；R1 由负责人暂缓，报告中需说明其可能影响。
+- R2 已在 `88e1760` 修复并验证；R1 已提供仅内容区域的特征与对照配置，待真实数据量化后决定默认选择。
 - 本次未纳入的较小观察（未展开，供负责人参考）：01 未复用 `sop_project/data.py`，只识别名为 `Stanford_Online_Products.zip` 的文件，不读取 `config.local.json`/`SOP_PATH`；192 维与特征名写死，未引用 `FEATURE_DIM`；SIFT 中位距离在完全匹配与零匹配时都返回 0；`sop_features.py` 尚无单元测试；Notebook 文字和输出尚未按 [英文提交代码规范](../code-style.md) 整改。
 - 本记录只评价，不修改被评审代码；实施前由负责人回应并协调。

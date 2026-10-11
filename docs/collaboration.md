@@ -45,7 +45,7 @@ PythonCode现包含01预处理入口、02统一实验入口、experiment_config.
 
 ## 运行入口
 
-正式入口是 [PythonCode/](../PythonCode/) 的两个脚本：先运行 `01_SOP_Preprocessing.py`，再按需运行 `02_SOP_Experiments.py --method baselines` 或 `--method supcon`。详见[英文说明](../PythonCode/Readme.txt)和[中文说明](../PythonCode/Readme_zh.txt)。以下 Notebook 保留为历史流程/可选预览：
+正式入口是 [PythonCode/](../PythonCode/) 的编号脚本：新机器先运行只读预检 `00_Check_Environment.py`，再运行 `01_SOP_Preprocessing.py`，再按需运行 `02_SOP_Experiments.py --method baselines` 或 `--method supcon`。详见[英文说明](../PythonCode/Readme.txt)和[中文说明](../PythonCode/Readme_zh.txt)。Windows PyCharm 可直接使用仓库 `.run/` 中共享的运行配置（见 [quickstart](quickstart.md)）；修改这些配置时同步 `tests/test_pycharm_run_configs.py`。以下 Notebook 保留为历史流程/可选预览：
 
 `notebooks/00_setup_and_data.ipynb` 用于环境检查和前 20 张图片预览，可选运行。`notebooks/01_SOP_Preprocessing.ipynb` 才执行全量 ZIP 图片审计、筛选、224×224 导出和 HSV/HOG 特征缓存；需与 `notebooks/sop_features.py` 一起使用。输出位于本机 `processed_sop/`，已由 `.gitignore` 排除。`materials/sop_data_check.ipynb` 保留为早期核验记录。Windows 全量预处理仍待运行验证；目前没有模型训练 Notebook。
 

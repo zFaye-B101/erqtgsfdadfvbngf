@@ -108,6 +108,6 @@ For unseen products, can adding local visual features reduce false matches betwe
 ## 下一步
 
 1. 本轮已获用户提交/推送批准，入口修复及10项回归检查通过；组员拉取后先读新版说明，在最终机器确认`--help`和环境，不把Mac合成测试替代Windows验证。
-2. 在最终运行机核验真实SOP小样本，保持官方holdout关闭，记录环境、用时与输出；确定主特征profile、像素处理、配对、目标TPR和缓存版本。
+2. 真实测试暂缓；届时在Windows PyCharm中先运行 `00 Check environment` 预检（`.run/` 已预置配置，见[quickstart](quickstart.md)），再在最终运行机核验真实SOP小样本，保持官方holdout关闭，记录环境、用时与输出；确定主特征profile、像素处理、配对、目标TPR和缓存版本。
 3. 锁定正式配置和共同商品折后运行三个算法的至少10外/3内评估；先完成主线，再判断是否有预算补填边或多强度对照。
 4. 按[报告与提交核对](submission.md)组织正式结果、配对差异和失败情况。文献综述需数据集引用加至少两篇额外相关论文，说明SupCon相对课堂方法的新意，不要求排除课堂论文；见[原要求澄清](reviews/2026-10-11_9291720_course-requirements_codex.md)。尚无正式三模型结果或staff批准凭证。

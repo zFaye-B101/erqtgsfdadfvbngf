@@ -1,6 +1,10 @@
 SOP MATCHING EXPERIMENT PIPELINE
 
 Fixed entry points
+00_Check_Environment.py: read-only preflight. Checks the interpreter, packages,
+PyTorch/CUDA, configuration, data or ZIP location, free disk space, write access
+and, on Windows, path length and console encoding. Installs and downloads nothing.
+Exit code 1 means at least one FAIL item must be fixed first.
 01_SOP_Preprocessing.py: audits the original ZIP images, excludes unreadable/missing
 images, originals with either side below 100 pixels, and products with only
 one eligible image. It exports padded 224x224 RGB JPEGs and audit tables while
@@ -8,6 +12,7 @@ preserving official train/test labels. Run once per dataset.
 02_SOP_Experiments.py: runs nested product-fold LR/SVM baselines or SupCon.
 
 From the PythonCode directory, using your activated Python 3.11 environment:
+python 00_Check_Environment.py
 python 01_SOP_Preprocessing.py
 python 02_SOP_Experiments.py --method baselines
 python 02_SOP_Experiments.py --method supcon
@@ -19,6 +24,28 @@ Nonempty preprocessing outputs are never overwritten. If the original 01
 already finished and clean_manifest.csv, audit_summary.json and images/ exist,
 set data_dir to that folder and run either experiment method directly. Old feature NPZs are ignored;
 the new feature bank builds reusable caches on the first experiment run.
+
+Windows and PyCharm
+Open the repository root (the folder containing .run and PythonCode) as the
+PyCharm project, then select the Python 3.11 interpreter that has the packages
+above: Settings > Project > Python Interpreter. Shared run configurations in
+.run appear in the Run widget:
+  00 Check environment       python 00_Check_Environment.py
+  01 Preprocess SOP          python 01_SOP_Preprocessing.py
+  02 Smoke baselines         --method baselines --smoke-test --skip-official-test
+  02 Smoke SupCon            --method supcon --smoke-test --skip-official-test
+  02 Baselines / 02 SupCon   formal runs with experiment_config.json
+  Tests PythonCode           python -m unittest discover -s tests -v
+All use PythonCode as the working directory and set PYTHONUNBUFFERED=1 and
+PYTHONUTF8=1. They use the project interpreter; if PyCharm reports a missing
+module or interpreter (for example after renaming the project folder), choose
+the interpreter in Run > Edit Configurations.
+Recommended order on a new machine: 00, then 01 (once; place the ZIP beside the
+repository or add --zip-path in the 01 configuration), then the two smoke runs,
+and only then the formal runs. Keep the project in a short folder such as
+D:\sml\ because nested result paths are long; 00 warns when the estimated
+path length exceeds the Windows limit without long-path support. A CPU-only
+PyTorch build cannot use an NVIDIA GPU; 00 reports this case.
 
 Dependencies
 Use the same Python interpreter for installation and IDE execution.
@@ -156,6 +183,7 @@ folds or thresholds. Existing processed_sop images remain compatible, so 01
 does not need to be rerun. Switching feature profiles shares the v3 pair lists.
 
 Execution checks
+python 00_Check_Environment.py
 python 02_SOP_Experiments.py --method baselines --smoke-test
 python 02_SOP_Experiments.py --method supcon --smoke-test
 These select at least 384 images (more if product counts require it), 2 outer/2 inner folds, smaller pair caps and one SupCon
@@ -167,6 +195,7 @@ Synthetic checks cover loss, gradients, train-only scaling, checkpoint reload,
 uses random weights for dimensions/frozen inference, not pretrained accuracy.
 
 File layout
+00_Check_Environment.py is the read-only preflight check.
 01_SOP_Preprocessing.py is the preprocessing command and implementation.
 02_SOP_Experiments.py selects LR/SVM or SupCon with --method.
 sop_features.py contains image resizing, HSV/HOG and SIFT helpers.

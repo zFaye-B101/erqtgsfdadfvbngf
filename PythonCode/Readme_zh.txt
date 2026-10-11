@@ -1,10 +1,12 @@
 SOP 商品匹配实验流程
 
 一、运行入口
+00_Check_Environment.py：只读预检。检查解释器、依赖、PyTorch/CUDA、配置、数据或 ZIP 位置、磁盘空间、写权限；在 Windows 上另查路径长度和控制台编码。不安装、不下载任何内容。退出码为 1 表示有 FAIL 项需要先处理。
 01_SOP_Preprocessing.py：检查原始 ZIP 图片，排除无法读取或缺失的图片、任一边小于 100 像素的图片，以及合格图片少于两张的商品。导出带白色填边的 224×224 RGB JPEG 和审计表，并保留官方 train/test 标记。每个数据集运行一次。
 02_SOP_Experiments.py：运行嵌套商品级交叉验证实验。通过 --method 选择传统基线或 SupCon。
 
 在 PythonCode 目录、激活 Python 3.11 环境后运行：
+python 00_Check_Environment.py
 python 01_SOP_Preprocessing.py
 python 02_SOP_Experiments.py --method baselines
 python 02_SOP_Experiments.py --method supcon
@@ -13,6 +15,16 @@ python 02_SOP_Experiments.py --method supcon
 python 01_SOP_Preprocessing.py --zip-path "D:/data/Stanford_Online_Products.zip"
 
 预处理输出目录非空时不会覆盖。如果 01 已运行完成，且输出目录中已有 clean_manifest.csv、audit_summary.json 和 images/，可以直接设置 data_dir 并运行实验。旧版特征 NPZ 缓存不会复用；首次运行实验时会建立新的特征缓存。
+
+Windows 与 PyCharm
+在 PyCharm 中把仓库根目录（包含 .run 和 PythonCode 的文件夹）作为项目打开，并在 Settings > Project > Python Interpreter 选择已安装上述依赖的 Python 3.11 解释器。.run 中共享的运行配置会出现在 Run 下拉框：
+  00 Check environment：运行 00 预检
+  01 Preprocess SOP：运行 01 预处理
+  02 Smoke baselines / 02 Smoke SupCon：--smoke-test --skip-official-test 执行检查
+  02 Baselines / 02 SupCon：按 experiment_config.json 正式运行
+  Tests PythonCode：python -m unittest discover -s tests -v
+所有配置的工作目录均为 PythonCode，并设置 PYTHONUNBUFFERED=1 和 PYTHONUTF8=1，使用项目解释器。若 PyCharm 提示找不到模块或解释器（例如项目文件夹改名后），在 Run > Edit Configurations 中重新选择解释器。
+新机器建议顺序：先 00，再运行一次 01（把 ZIP 放在仓库旁，或在 01 配置中加 --zip-path），再跑两个 smoke，最后才正式运行。结果路径层级较深，建议把项目放在较短的目录如 D:\sml\；未开启长路径时 00 会在预计路径超过 Windows 限制时提示。仅 CPU 版 PyTorch 不能使用 NVIDIA 显卡，00 会报告这种情况。
 
 二、依赖
 基础依赖包括 numpy、pandas、Pillow、OpenCV、scikit-learn 和 matplotlib。requirements-base.txt 提供可选的 pip 安装列表。已通过 Conda 安装 OpenCV 时无需重复安装其他 OpenCV 版本。
@@ -77,6 +89,7 @@ results_dir/run_name/feature_profile/baselines 或 supcon：调参记录、逐�
 版本 3 默认使用 experiment_v3、protocols/shared_v3、feature_cache_v3 和 results_v3。v2 输出属于历史实验记录；不要复用其已完成折或阈值。现有 processed_sop 图片仍兼容，无需重跑 01。更换特征方案时可共享 v3 图片对清单。
 
 七、执行检查
+新机器上先运行 python 00_Check_Environment.py。
 以下 smoke test 使用至少 384 张图片（商品数要求更多时会增加）、2 个外层折、2 个内层折、较小图片对上限和 1 个 SupCon epoch，结果写入独立目录。它们仅检查程序能否执行，不构成正式实验结果。
 python 02_SOP_Experiments.py --method baselines --smoke-test
 python 02_SOP_Experiments.py --method supcon --smoke-test
@@ -86,6 +99,7 @@ python 02_SOP_Experiments.py --method supcon --smoke-test
 历史 notebook 不作为当前配置的运行入口。
 
 八、文件结构
+00_Check_Environment.py 是只读预检。
 01_SOP_Preprocessing.py 是预处理入口，并直接包含预处理实现。
 02_SOP_Experiments.py 通过 --method 选择传统基线或 SupCon。
 sop_features.py 包含缩放、HSV/HOG 和 SIFT 辅助函数。

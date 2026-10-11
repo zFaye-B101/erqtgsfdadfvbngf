@@ -2,6 +2,8 @@
 
 ## 最新依赖入口（v3）
 
+在最终运行机上，先用将要运行实验的同一解释器执行 `python PythonCode/00_Check_Environment.py`（或 PyCharm 的 `00 Check environment` 配置）。它只读检查依赖、PyTorch/CUDA 构建、数据位置、磁盘空间和 Windows 路径长度，不安装、不下载。Windows PyCharm 预置见 [quickstart](quickstart.md)。
+
 PythonCode正式流程使用Python3.11+，Windows CPU合成检查的实际版本见[VALIDATION](../PythonCode/VALIDATION.txt)。基础依赖以PythonCode/requirements-base.txt为唯一共同清单，包含LR/SVM和绘图；根requirements-base.txt通过-r引用该清单并追加历史Notebook内核，requirements-experiments.txt再引用根清单。torch/torchvision仍按设备单独安装，既有OpenCV不要重复叠装。下方历史开发环境说明不替代v3的验证记录，真实数据和GPU仍待验收。
 
 适用：当前SOP读取、HSV/HOG/SIFT、Notebook及冻结ResNet18开发诊断。特征和训练实现仍在讨论；这不是SupCon训练验收，也不是最终提交的英文Readme.txt。正式运行入口为 `PythonCode/` 的 `.py` 脚本，只需本环境的解释器；下文Notebook内核一节仅在使用历史/预览Notebook时需要。
