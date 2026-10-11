@@ -15,7 +15,7 @@
 
 ## 最新 v3 修复（2026-10-11，覆盖此前 v2 的对应状态）
 
-- 新增 handcrafted_content 和 handcrafted_padding_audit，支持排除填边的HSV/HOG以及与原填边版本的配对对照；原handcrafted保持为对照，ResNet仍使用明确记录的填边输入。真实SOP收益未量化。
+- 新增仅内容区域的 HSV/HOG 提取器 `hsv_hog_content`。2026-10-12 目录重构后，旧的 handcrafted_content / handcrafted_padding_audit 配置不再是 02 入口；白边对照改用组 `F5_Traditional_Content_HSV_Gradient`（ContentHSV48、ContentHSV_HOG192），与 F1/F2 按外层折配对比较。ResNet 仍使用明确记录的填边输入。真实SOP收益未量化。
 - 每个外层训练商品集合再独立预留20%校准商品（每大类至少2个，保留足够拟合商品）。校准商品不参与内层选参、归一化或训练；最终模型在其上定阈值后不再重训，直接评估外层测试。有限样本校准不保证测试召回率达到95%。
 - SupCon温度边界胜出时按内层验证扩展三点窗口，最多两次、因子2、温度限制0.005至1.0；复用已评估候选、保存搜索历史并保留未解决的边界警告。
 - 官方holdout默认关闭。新协议/缓存/结果使用v3目录，不能复用v2阈值或断点；已有01处理图片可继续使用。入口整理为01预处理和02统一实验命令（--method baselines|supcon），选特征和参数仍改配置。

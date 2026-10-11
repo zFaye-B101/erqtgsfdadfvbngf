@@ -8,6 +8,7 @@
 
 ### 最近更新：2026-10-12
 
+- **预检与白边对照（Claude）：** `00_Check_Environment.py` 改为读取 `experiment_configs/` 中的组（`--group`，默认全部）：选中 ResNet 组而缺 torch 时报 FAIL，并按实际运行名、组名、特征名估算最长输出路径（原固定估计偏短）。新增 F5 组（仅内容区域的 HSV48 与 HSV_HOG192），用于和 F1/F2 做白边对照。Mac/Python 3.11 CPU 上 `PythonCode/tests` 18 项、根 `tests` 9 项通过；F2、F5 两组合成 smoke 实测最长路径与估算一致。Windows 与真实 SOP 未验证。`.run` 正式配置仍只跑 F1、`config.json` 旧 profile 未改动，待决定。
 - **本次同步验证：** Windows Python 3.11 CPU 上，更新后 `PythonCode/tests` 16 项及根目录 `tests` 9 项全部通过，包含真实子进程 F1 LR/SVM 与 SupCon 合成 smoke、预检、续跑、动态组和跨组比较；`git diff --check` 通过。没有运行正式 SOP 或 PyCharm GUI，详见 [验证记录](PythonCode/VALIDATION.txt)。
 
 ## 当前入口与目录更新（2026-10-12）
@@ -16,7 +17,7 @@
 - 总配置为 `PythonCode/config.json`；各组配置为 `PythonCode/experiment_configs/*.json`；工具在 `PythonCode/utils/`。
 - 直接运行 02 会显示实验/模型菜单；命令行示例：`python 02_SOP_Experiments.py --group F1,F2 --method baselines`。
 - JSON 自动发现任意新增组；已有提取器可通过 components 组合，全新方法还需实现并注册。
-- 默认四组为 HSV48、HSV+分区域梯度192、ResNet全局512、ResNet全局+区域2560，均带填边。
+- 默认五组：F1 HSV48、F2 HSV+分区域梯度192、F3 ResNet全局512、F4 ResNet全局+区域2560（均带填边），F5 仅内容区域的 HSV48 与 HSV+梯度192（白边对照）。
 - 结果保存至 `results/<run_name>/<group>/`；`comparisons/`读取兼容已完成结果生成逐折比较，不重复训练。
 - 移动代码改变指纹，新协议目录为 `protocols/Main_Experiments_Organized`；旧输出保留，不强行混用。
 - 保留组员 00 预检、共享 PyCharm 配置及历史 Notebook；运行配置默认选 F1。

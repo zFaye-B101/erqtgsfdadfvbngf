@@ -6,7 +6,11 @@ specifies a unique `group`, optional `description`, and `features` mapping.
 Complete merged settings are recorded in each result family's protocol.json.
 
 Current groups: F1 HSV48; F2 HSV plus spatial gradient192; F3 ResNet global512;
-F4 ResNet global plus four regions2560. All use padded images.
+F4 ResNet global plus four regions2560; F5 content-only HSV48 and HSV plus
+spatial gradient192. F1-F4 use padded images. F5 uses hsv_hog_content, which
+excludes the white padding; compare F5 with F1/F2 to measure the padding effect.
+Its gradient cells resize the content rectangle to 128x128 without keeping the
+aspect ratio.
 The gradient descriptor is a simplified cell histogram, not full standard HOG.
 
 ## Add an existing-feature combination

@@ -17,7 +17,8 @@ class PreflightTests(unittest.TestCase):
     def run_check(self, root, data_dir, *arguments):
         config = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))
         config.update(data_dir=str(data_dir), protocol_dir=str(root / "protocol"),
-                      cache_dir=str(root / "cache"), results_dir=str(root / "results"))
+                      cache_dir=str(root / "cache"), results_dir=str(root / "results"),
+                      experiment_dir=str(ROOT / "experiment_configs"))
         config_path = root / "config.json"
         config_path.write_text(json.dumps(config), encoding="utf-8")
         environment = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
@@ -52,6 +53,30 @@ class PreflightTests(unittest.TestCase):
             result, _ = self.run_check(root, partial)
             self.assertEqual(result.returncode, 1)
             self.assertIn("nonempty but has no audit_summary.json", result.stdout)
+
+    def test_unknown_group_fails(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            result, _ = self.run_check(root, root / "absent", "--group", "UNKNOWN")
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("Unknown or ambiguous group", result.stdout)
+
+    def test_groups_reported_and_path_estimate_uses_names(self):
+        import importlib.util
+        sys.path.insert(0, str(ROOT))
+        from utils.sop_config import discover_experiments, load_config
+        spec = importlib.util.spec_from_file_location("preflight", SCRIPT)
+        preflight = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(preflight)
+        found = discover_experiments(ROOT / "experiment_configs")
+        self.assertEqual(preflight.select_groups(list(found), "F5"), ["F5_Traditional_Content_HSV_Gradient"])
+        content = load_config(ROOT / "config.json", experiment_path=found["F5_Traditional_Content_HSV_Gradient"][0])
+        self.assertEqual(preflight.extractors_of(content), {"hsv_hog_content"})
+        name = preflight.select_groups(list(found), "F4")[0]
+        config = load_config(ROOT / "config.json", experiment_path=found[name][0])
+        expected = (Path(config["results_dir"]) / config["run_name"] / name / "supcon" / "outer_10"
+                    / "SupCon_ResNet18_GlobalLocal2560" / "tau_0.0125" / "inner_9" / "training_loss.json")
+        self.assertGreaterEqual(preflight.estimate_longest_output_path({name: config}), len(str(expected)))
 
 
 if __name__ == "__main__":

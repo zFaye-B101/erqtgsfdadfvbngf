@@ -21,7 +21,7 @@
 
 1. 用 PyCharm 打开**仓库根目录**（含 `.run/` 与 `PythonCode/`），在 Settings > Project > Python Interpreter 选择已装依赖的 Python 3.11 解释器。建议把项目放在较短路径（如 `D:\sml\`），结果目录层级较深。
 2. Run 下拉框会出现 `.run/` 中共享的配置：`00 Check environment` → `01 Preprocess SOP` → `02 Smoke baselines` / `02 Smoke SupCon` → `02 Baselines` / `02 SupCon`，另有 `Tests PythonCode`。工作目录都是 `PythonCode/`，并设置 `PYTHONUTF8=1`。
-3. 先运行 `00 Check environment`（只读，不安装不下载）。它报告解释器、依赖、PyTorch 是否为 CPU 版、数据或 ZIP 位置、磁盘空间、写权限、Windows 路径长度与控制台编码；有 FAIL 时先处理。
+3. 先运行 `00 Check environment`（只读，不安装不下载）；默认检查全部组，也可加 `--group F1,F2` 只检查计划要跑的组。它报告解释器、依赖、PyTorch 是否为 CPU 版、数据或 ZIP 位置、磁盘空间、写权限、Windows 路径长度与控制台编码；有 FAIL 时先处理。
 4. 若 PyCharm 提示找不到模块或解释器（如项目文件夹改名），在 Run > Edit Configurations 里重新选择解释器。ZIP 不在仓库旁时，在 `01 Preprocess SOP` 的参数中加 `--zip-path "D:/data/Stanford_Online_Products.zip"`。
 
 这些配置只在 Mac 上做了文件与入口一致性检查，尚未在 Windows PyCharm 中实际加载或运行。
@@ -40,7 +40,7 @@ python 02_SOP_Experiments.py --group F1 --method supcon
 
 02 的 `--method` 选择传统 LR/SVM 基线或 SupCon。已有完整处理目录时，在配置中设置 `data_dir` 后可跳过 01。更换特征时选择 experiment_configs 下对应组；使用 --group 或交互菜单。
 
-当前菜单自动读取 `experiment_configs/` 下的 F1～F4 配置，并支持后续新增组。旧 `handcrafted` 等 profile 保留在公共配置中作为内部兼容设置，不再是菜单入口。传统与 SupCon 使用同一套商品折分、图片对和扰动条件。ResNet18 特征提取器已经实现，但真实预训练权重实验仍需单独运行验证。
+当前菜单自动读取 `experiment_configs/` 下的 F1～F5 配置（F5 为仅内容区域的 HSV/HOG，用于与 F1/F2 做白边对照），并支持后续新增组。旧 `handcrafted` 等 profile 保留在公共配置中作为内部兼容设置，不再是菜单入口。传统与 SupCon 使用同一套商品折分、图片对和扰动条件。ResNet18 特征提取器已经实现，但真实预训练权重实验仍需单独运行验证。
 
 基础依赖见 [requirements-base.txt](../PythonCode/requirements-base.txt)。已有 Conda OpenCV 无需再安装 pip OpenCV。SupCon 和 ResNet 特征需要兼容的 torch/torchvision，CPU 安装命令见[英文说明](../PythonCode/Readme.txt)，中文说明见[中文版](../PythonCode/Readme_zh.txt)。
 

@@ -1,3 +1,15 @@
+PREFLIGHT AND F5 UPDATE - 2026-10-12
+00_Check_Environment.py now loads the experiment_configs groups (--group, default
+all) instead of the legacy feature_profile, fails when selected ResNet groups lack
+torch, and estimates the longest output path from the actual run, group and
+feature names (replacing a fixed 125-character suffix). Added group F5 (content-only
+HSV48 and HSV_Gradient192) for the padding comparison. No model/protocol change.
+macOS arm64, Python 3.11.15 CPU temporary environment:
+  PythonCode/tests 18 passed (47.5 s); root tests 9 passed.
+  Real smoke runs of 02 --group F2 and --group F5 --method all on synthetic data:
+  longest written path equals the 00 estimate (264 and 276 characters).
+NOT verified: Windows-only branches, PyCharm GUI, real SOP data, F5 on real data.
+
 LAYOUT UPDATE - 2026-10-12
 Dynamic JSON feature groups, config.json, utils package and cross-group reporting.
 01 only changed utility paths and default config filename; image operations unchanged.

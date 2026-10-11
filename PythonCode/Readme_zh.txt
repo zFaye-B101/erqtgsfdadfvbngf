@@ -1,4 +1,4 @@
-可先运行 00_Check_Environment.py 做只读环境检查。共享 .run 配置默认选择 F1，可修改 --group。
+可先运行 00_Check_Environment.py 做只读环境检查；默认检查全部组，也可用 --group F1,F2（与 02 相同写法）只检查计划要跑的组。共享 .run 配置默认选择 F1，可修改 --group。
 
 只需运行 01 和 02
 
@@ -12,6 +12,7 @@
 Terminal 示例：
 python 02_SOP_Experiments.py --group F1,F2 --method baselines
 python 02_SOP_Experiments.py --group F3,F4 --method baselines
+python 02_SOP_Experiments.py --group F2,F5 --method baselines   （白边对照：F5 只用商品内容区域）
 python 02_SOP_Experiments.py --group all --method supcon
 
 utils 都是内部工具，01 直接从 utils 导入。根目录兼容文件和旧入口备份已删除。

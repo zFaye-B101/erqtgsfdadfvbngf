@@ -1,6 +1,6 @@
 # 预处理填边与特征缓存一致性互评
 
-- 被评审提交：`3054cd37ccaa1dbd66304a8cba7ad47f08c35c91`（xingyuqiong）；截至 `f55859f`，被评审的两个文件未再改动。`94c9c2e`、`88e1760` 与 `0aa5893` 的 PythonCode 版本见文末复查。
+- 被评审提交：`3054cd37ccaa1dbd66304a8cba7ad47f08c35c91`（xingyuqiong）；截至 `f55859f`，被评审的两个文件未再改动。`94c9c2e`、`88e1760`、`0aa5893` 与 `869378b` 的 PythonCode 版本见文末复查。
 - 评审者：本会话 Claude AI（由 zyFaye 使用）；不代表其他组员或独立评审者同意。
 - 日期：2026-10-11（Australia/Melbourne）。
 - 文件与范围：`notebooks/sop_features.py` 的 `resize_for_model`（18–32 行）与 `image_feature_vector`（35–77 行）；`notebooks/01_SOP_Preprocessing.ipynb` 单元格“5. 生成处理后的图片文件夹和逐图特征”（Notebook 单元格没有 ID，按标题定位）。
@@ -25,7 +25,7 @@
 - 方案 B：手工特征与 CNN 采用同一几何处理（如短边缩放后中心裁剪）。两条管线可以直接比较，代价是极端长宽比的商品会被裁掉边缘。
 - 建议与验证方法：特征选择尚未定案，建议先采用方案 A 或 B 之一，再在共同开发配对清单上重跑 HSV/HOG 诊断，与现有结果并列记录（不覆盖旧数）。用上面的纯色探针做单元测试：修复后两种长宽比的 HSV 距离应接近 0。
 - 负责人回应：xingyuqiong 在 [可配置流程回应](2026-10-11-configurable-pipeline-response.md) 第 2 条中选择保留填边，HSV/HOG 与 ResNet 统一使用同一填边画布；明确“尚未解决或量化”。
-- 实施者/提交：xingyuqiong，`0aa5893`：新增内容区域提取器 `hsv_hog_content` 及配置 `handcrafted_content`、`handcrafted_padding_audit`（带白边与仅内容的配对对照）；困难负例统一改用内容区域 HSV48。默认配置 `handcrafted` 与 ResNet 仍使用带白边画布。
+- 实施者/提交：xingyuqiong，`0aa5893`：新增内容区域提取器 `hsv_hog_content` 及配置 `handcrafted_content`、`handcrafted_padding_audit`（带白边与仅内容的配对对照）；困难负例统一改用内容区域 HSV48。默认配置 `handcrafted` 与 ResNet 仍使用带白边画布。`869378b` 目录重构后这两个配置不再是 02 入口；2026-10-12 新增组 `F5_Traditional_Content_HSV_Gradient`（本记录评审者实施，用户批准）承担白边对照，与 F1/F2 按外层折配对比较。
 - 复查结果：合成检查通过（同色、不同长宽比的图片在内容区域特征上相同），见文末第三次复查；真实 SOP 上白边影响的大小尚未测量。
 
 ## R2：`.npz` 特征与磁盘上的 JPEG 不对应
@@ -63,7 +63,13 @@
 
 - 方式：静态阅读 `sop_feature_bank.ContentHandcraftedExtractor` 与 `extract_cached` 的裁剪逻辑；本会话 Mac/Python 3.11 CPU 临时环境运行 PythonCode 测试 10 项通过，其中 `test_content_padding_and_temperature_expansion` 验证纯色、不同长宽比的图片在带白边特征上不同、在内容区域特征上相同。
 - 内容矩形由原图宽高恢复，与 01 的缩放取整公式一致；扰动先作用于内容区域，再裁剪提取。HOG 把内容矩形缩放为 128×128 正方形，不保持长宽比。
-- 仍需：用 `handcrafted_padding_audit` 在真实 SOP 上量化白边影响，再决定正式手工特征用哪一种；ResNet 仍使用带白边输入，报告中需说明。
+- 仍需：在真实 SOP 上量化白边影响，再决定正式手工特征用哪一种；ResNet 仍使用带白边输入，报告中需说明。
+
+## 第四次复查：`869378b` 目录重构后（2026-10-12）
+
+- `869378b` 把特征改为 `experiment_configs/` 下的组（F1–F4，均带白边），旧的 `handcrafted_padding_audit` 只留在 `config.json`，02 不再使用，白边对照因此没有现成入口。
+- 本次新增 `F5_Traditional_Content_HSV_Gradient`（ContentHSV48、ContentHSV_HOG192，提取器 `hsv_hog_content`）。Mac/Python 3.11 CPU 上用合成数据实际运行 `02 --group F5 --method all --smoke-test` 通过；`update_comparisons` 会在协议、代码与公共配置一致时生成 F5 与 F1/F2 的逐折配对差值。
+- 运行方式：`python 02_SOP_Experiments.py --group F1,F2,F5 --method baselines`（或加 SupCon）。真实 SOP 上的白边影响仍未测量。
 
 ## 结论
 

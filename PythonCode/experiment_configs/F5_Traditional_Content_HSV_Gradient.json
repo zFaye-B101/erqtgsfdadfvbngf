@@ -1,0 +1,20 @@
+{
+  "group": "F5_Traditional_Content_HSV_Gradient",
+  "description": "F5 Traditional content-only HSV48 and HSV_Gradient192 (padding excluded; compare with F1/F2)",
+  "features": {
+    "ContentHSV48": {
+      "extractor": "hsv_hog_content",
+      "columns": [
+        0,
+        48
+      ]
+    },
+    "ContentHSV_HOG192": {
+      "extractor": "hsv_hog_content",
+      "columns": [
+        0,
+        192
+      ]
+    }
+  }
+}

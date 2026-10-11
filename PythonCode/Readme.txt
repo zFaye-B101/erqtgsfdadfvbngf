@@ -1,4 +1,6 @@
 Optional: run python 00_Check_Environment.py first for a read-only environment check.
+It checks all groups by default; use --group F1,F2 (same syntax as 02) to check
+only the planned groups, for example whether ResNet groups have torch available.
 Shared .run configurations select F1 by default; edit --group to select another group.
 
 SOP EXPERIMENTS: TWO ENTRY POINTS
@@ -17,6 +19,7 @@ CLI commands from this directory:
 python 02_SOP_Experiments.py --list
 python 02_SOP_Experiments.py --group F1,F2 --method baselines
 python 02_SOP_Experiments.py --group F3,F4 --method baselines
+python 02_SOP_Experiments.py --group F2,F5 --method baselines   (padding comparison)
 python 02_SOP_Experiments.py --group all --method supcon
 python 02_SOP_Experiments.py --group F1 --method all --run-name HSV48_repeat1
 python 02_SOP_Experiments.py --compare-only

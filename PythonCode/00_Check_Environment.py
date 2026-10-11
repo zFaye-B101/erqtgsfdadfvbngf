@@ -27,10 +27,6 @@ REQUIRED = (("numpy", "numpy"), ("pandas", "pandas"), ("PIL", "Pillow"), ("cv2",
 OPENCV_DISTRIBUTIONS = ("opencv-python", "opencv-python-headless",
                         "opencv-contrib-python", "opencv-contrib-python-headless")
 RESNET18_WEIGHTS = "resnet18-f37072fd.pth"
-# Longest path below results_dir measured in a handcrafted_padding_audit smoke run
-# was 117 characters (.../SupCon_ContentHSV_HOG192/tau_0.05/inner_2/training_loss.json);
-# extended temperatures such as tau_0.0125 add a few more.
-LONGEST_RESULT_SUFFIX = 125
 WINDOWS_PATH_LIMIT = 260
 MINIMUM_FREE_GB_BEFORE_PREPROCESSING = 10.0
 MINIMUM_FREE_GB_AFTER_PREPROCESSING = 3.0
@@ -91,17 +87,25 @@ def nvidia_gpu_name():
         return None
 
 
-def check_torch(report, settings):
-    extractors = {spec["extractor"] for spec in settings["feature_sets"].values()} if settings else set()
-    needs_torch_for_features = "resnet18" in extractors
+def extractors_of(config):
+    return {component["extractor"] for spec in config["feature_sets"].values()
+            for component in spec.get("components", [spec])}
+
+
+def check_torch(report, settings, groups):
+    torch_groups = [name for name, config in groups.items() if "resnet18" in extractors_of(config)]
+    needs_torch_for_features = bool(torch_groups)
     gpu = nvidia_gpu_name()
     try:
         import torch
         import torchvision
     except Exception as exc:
-        status = "FAIL" if needs_torch_for_features else "WARN"
-        report.add(status, "PyTorch", f"cannot import torch/torchvision: {exc}. "
-                   "Required for --method supcon and ResNet feature profiles.")
+        if needs_torch_for_features:
+            report.add("FAIL", "PyTorch", f"cannot import torch/torchvision: {exc}. Selected groups "
+                       f"{', '.join(torch_groups)} use ResNet features; --method supcon also needs torch.")
+        else:
+            report.add("WARN", "PyTorch", f"cannot import torch/torchvision: {exc}. The selected groups "
+                       "can run --method baselines only; --method supcon needs torch.")
         return
     report.add("PASS", "PyTorch", f"torch {torch.__version__}, torchvision {torchvision.__version__}")
     cuda_build = torch.version.cuda
@@ -127,17 +131,46 @@ def check_torch(report, settings):
                        "on the first ResNet run, so internet access is needed once.")
 
 
-def load_settings(report, config_path):
+def select_groups(names, selection):
+    """Same selection syntax as 02: all, menu numbers, full names or prefixes such as F1."""
+    if selection.lower() == "all":
+        return list(names)
+    chosen = []
+    for token in (part.strip() for part in selection.split(",")):
+        if token.isdigit() and 1 <= int(token) <= len(names):
+            matches = [names[int(token) - 1]]
+        else:
+            matches = [name for name in names if name == token or name.split("_")[0] == token]
+        if len(matches) != 1:
+            raise ValueError("Unknown or ambiguous group: " + token)
+        if matches[0] not in chosen:
+            chosen.append(matches[0])
+    return chosen
+
+
+def load_settings(report, config_path, selection):
+    """Return common settings plus the merged configuration of each selected group."""
     sys.path.insert(0, str(SCRIPT_DIR))
     try:
-        from utils.sop_config import load_config
-        settings = load_config(config_path)
+        from utils.sop_config import discover_experiments, load_config
+        common = json.loads(config_path.read_text(encoding="utf-8"))
+        directory = Path(common.get("experiment_dir", "experiment_configs"))
+        directory = directory if directory.is_absolute() else config_path.parent / directory
+        found = discover_experiments(directory)
+        if not found:
+            raise ValueError("no experiment group JSON files in " + str(directory))
+        chosen = select_groups(list(found), selection)
+        groups = {name: load_config(config_path, experiment_path=found[name][0]) for name in chosen}
     except Exception as exc:
         report.add("FAIL", "Configuration", f"{config_path}: {exc}")
-        return None
-    report.add("PASS", "Configuration", f"{config_path.name}: profile={settings['feature_profile']}, "
-               f"run_name={settings['run_name']}, official_test={settings['run_official_test']}")
-    return settings
+        return None, {}
+    settings = next(iter(groups.values()))
+    report.add("PASS", "Configuration", f"{config_path.name}: run_name={settings['run_name']}, "
+               f"official_test={settings['run_official_test']}")
+    for name, config in groups.items():
+        report.add("INFO", "Group " + name, "features " + ", ".join(config["feature_sets"])
+                   + "; extractors " + ", ".join(sorted(extractors_of(config))))
+    return settings, groups
 
 
 def find_zip(zip_path):
@@ -216,12 +249,47 @@ def windows_long_paths_enabled():
         return False
 
 
-def check_windows(report, settings):
+def temperature_labels(supcon):
+    """Directory labels tau_<value> for the initial grid and every bounded extension."""
+    grid = sorted(float(value) for value in supcon["temperature_grid"])
+    lower, upper = supcon["temperature_bounds"]
+    factor = supcon["temperature_extension_factor"]
+    values = set(grid)
+    for step in range(1, supcon["maximum_grid_extensions"] + 1):
+        values.add(max(lower, grid[0] / factor ** step))
+        values.add(min(upper, grid[-1] * factor ** step))
+    return [f"tau_{value:g}" for value in values]
+
+
+def estimate_longest_output_path(groups):
+    """Longest path the 02 runs can write, mirroring the result/cache/protocol layouts."""
+    longest = 0
+    for group, config in groups.items():
+        fold_dirs = ["outer_%02d" % config["outer_folds"]] + (["official_holdout"] if config["run_official_test"] else [])
+        fold = max(fold_dirs, key=len)
+        files = ["calibration_predictions.csv.gz", "training_partitions.json"]
+        files += ["predictions_" + condition + ".csv.gz" for condition in config["conditions"]]
+        leaf = max(files, key=len)
+        tau = max(temperature_labels(config["supcon"]), key=len)
+        run = Path(config["results_dir"]) / config["run_name"] / group
+        for feature in config["feature_sets"]:
+            candidates = [
+                run / "baselines" / fold / ("SVM_" + feature) / leaf,
+                run / "supcon" / fold / ("SupCon_" + feature) / leaf,
+                run / "supcon" / fold / ("SupCon_" + feature) / tau / "inner_9" / "training_loss.json",
+            ]
+            longest = max([longest] + [len(str(path)) for path in candidates])
+        cache = Path(config["cache_dir"]) / "hsv_hog_content" / ("0" * 24) / "features.tmp.npy"
+        protocol = Path(config["protocol_dir"]) / fold / "inner9_validation_pairs.sha256"
+        longest = max(longest, len(str(cache)), len(str(protocol)))
+    return longest
+
+
+def check_windows(report, groups):
     if os.name != "nt":
         report.add("INFO", "Windows checks", "skipped on this operating system")
         return
-    longest = max(len(str(Path(settings[field]))) for field in ("results_dir", "cache_dir", "protocol_dir"))
-    estimated = longest + LONGEST_RESULT_SUFFIX
+    estimated = estimate_longest_output_path(groups)
     if estimated < WINDOWS_PATH_LIMIT:
         report.add("PASS", "Path length", f"longest expected output path about {estimated} characters")
     elif windows_long_paths_enabled():
@@ -241,17 +309,19 @@ def main():
     parser = argparse.ArgumentParser(description="Read-only environment and data preflight for 01/02.")
     parser.add_argument("--config", type=Path, default=SCRIPT_DIR / "config.json")
     parser.add_argument("--zip-path", type=Path, help="SOP ZIP to check when data is not yet preprocessed.")
+    parser.add_argument("--group", default="all",
+                        help="Groups planned for 02 (same syntax as 02: all, F1,F2, menu numbers). Default: all.")
     args = parser.parse_args()
     report = Report()
     print("SOP preflight check (read-only; installs and downloads nothing)", flush=True)
     check_python(report)
     check_packages(report)
-    settings = load_settings(report, args.config.expanduser().resolve())
-    check_torch(report, settings)
+    settings, groups = load_settings(report, args.config.expanduser().resolve(), args.group)
+    check_torch(report, settings, groups)
     if settings:
         preprocessed = check_data(report, settings, args.zip_path.expanduser().resolve() if args.zip_path else None)
         check_storage(report, settings, preprocessed)
-        check_windows(report, settings)
+        check_windows(report, groups)
     failures, warnings = report.count("FAIL"), report.count("WARN")
     print(f"\nSummary: {failures} FAIL, {warnings} WARN. "
           + ("Fix FAIL items before running 01/02." if failures else "Ready to run the next step."), flush=True)

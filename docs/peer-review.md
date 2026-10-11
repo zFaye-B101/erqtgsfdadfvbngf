@@ -39,7 +39,7 @@
 - [009a241历史进度与CNN交接](reviews/2026-10-11_009a241_python-progress_codex.md) 及 [LR开发结果](experiments/2026-10-11-lr-feature-pilot.md)：保留当时传统/CNN实现差异与开发数值；“CNN尚未合入”不是最新状态，JPEG/校准等后续变化见v3回应。
 
 - [2026-10-11 可配置流程（01/02/03 与 SupCon）](reviews/2026-10-11_88e1760_pipeline_claude.md)：R1 图片对特征说明、R2 holdout 查询覆盖断言、R3 SupCon 温度扩展已在 `0aa5893` 实施，2026-10-12 Mac/Python 3.11 复查 10 项测试通过，状态为已验证；R4 大部分已实施。新增复查记录独立校准集与内容区域 HOG 不保持长宽比。
-- [2026-10-11 预处理填边与特征缓存](reviews/2026-10-11_3054cd3_preprocessing-features_claude.md)：R2 已验证；R1 在 `0aa5893` 部分实施（新增仅内容区域特征及白边对照配置，默认与 ResNet 仍带白边），待真实数据量化。
+- [2026-10-11 预处理填边与特征缓存](reviews/2026-10-11_3054cd3_preprocessing-features_claude.md)：R2 已验证；R1 在 `0aa5893` 部分实施（新增仅内容区域特征）；`869378b` 重构后白边对照改由 F5 组承担（2026-10-12 新增），默认与 ResNet 仍带白边，待真实数据量化。
 - [2026-10-11 SML课内特征与测试安排](reviews/2026-10-11_ae5a1d6_feature-options_codex.md)：池化及layer3/layer4初试已完成，层级比较无稳定胜者；先处理预处理互评，再做训练/成本验证；DINOv2已暂缓；关联[已测诊断结果](experiments/2026-10-11-feature-diagnostics.md)。
 - [2026-10-11 课程要求与staff反馈](reviews/2026-10-11_9291720_course-requirements_codex.md)：官方特征/评价限制、课程依据及Canvas真实反馈；鲁棒性扩展待讨论，TabM反馈不代表SupCon批准；只更新文档。
 - [2026-10-11 商品匹配特征方案](reviews/2026-10-11_8990473_features_codex.md)：静态检查与方案比较；全局/区域CNN为待讨论建议，未采纳、未改代码、未完成特征效果测试。各项回应与最新状态以记录正文为准。
