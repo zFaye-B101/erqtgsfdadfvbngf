@@ -1,4 +1,4 @@
-"""Stable CLI used by both classifier and contrastive experiment entry points."""
+"""Unified CLI for LR/SVM baselines and SupCon experiments."""
 
 import argparse
 from pathlib import Path
@@ -9,9 +9,10 @@ from sop_experiment import Experiment
 from sop_reporting import combine_results, print_tables
 
 
-def main(family):
-    parser = argparse.ArgumentParser(description="Run SOP " + family + " using the shared configuration.")
+def main():
+    parser = argparse.ArgumentParser(description="Run SOP experiments using the shared configuration.")
     parser.add_argument("--config", type=Path, default=Path(__file__).with_name("experiment_config.json"))
+    parser.add_argument("--method", choices=("baselines", "supcon"), required=True)
     parser.add_argument("--data-dir", type=Path)
     parser.add_argument("--results-dir", type=Path)
     parser.add_argument("--protocol-dir", type=Path)
@@ -19,6 +20,7 @@ def main(family):
     parser.add_argument("--skip-official-test", action="store_true")
     parser.add_argument("--smoke-test", action="store_true", help="Explicit 2/2-fold, 384-image, 1-epoch check; never formal evidence.")
     args = parser.parse_args()
+    family = args.method
     config = load_config(args.config, args.smoke_test)
     for field in ("data_dir", "results_dir", "protocol_dir"):
         override = getattr(args, field)

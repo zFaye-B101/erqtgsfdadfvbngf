@@ -1,5 +1,7 @@
 IMPLEMENTATION VALIDATION - VERSION 3 - 2026-10-11
 
+This record predates the entry-point consolidation. The consolidation did not alter model or protocol modules; automated checks were not rerun as part of that file-only refactor.
+
 Windows Python 3.11.15, CPU, isolated local verification environment.
 torch 2.14.1+cpu, torchvision 0.29.1+cpu, numpy 2.4.6,
 pandas 3.0.6, scikit-learn 1.9.1, OpenCV 4.14.0, Pillow 12.3.0.

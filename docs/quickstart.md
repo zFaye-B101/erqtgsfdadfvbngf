@@ -1,42 +1,37 @@
 # 从 GitHub 拉取并运行
 
-## 最新 v3 修复（2026-10-11，覆盖此前 v2 的对应状态）
+## 当前 v3 实验流程
 
-- 新增 handcrafted_content 和 handcrafted_padding_audit，支持排除填边的HSV/HOG以及与原填边版本的配对对照；原handcrafted保持为对照，ResNet仍使用明确记录的填边输入。真实SOP收益未量化。
-- 每个外层训练商品集合再独立预留20%校准商品（每大类至少2个，保留足够拟合商品）。校准商品不参与内层选参、归一化或训练；最终模型在其上定阈值后不再重训，直接评估外层测试。有限样本校准不保证测试召回率达到95%。
-- SupCon温度边界胜出时按内层验证扩展三点窗口，最多两次、因子2、温度限制0.005至1.0；复用已评估候选、保存搜索历史并保留未解决的边界警告。
-- 官方holdout默认关闭。新协议/缓存/结果使用v3目录，不能复用v2阈值或断点；已有01处理图片可继续使用。01/02/03编号入口不变，选特征和参数仍改配置。
-- Windows CPU合成检查覆盖填边探针、阈值校准隔离、温度扩展和端到端流程，验证边界见[VALIDATION](../PythonCode/VALIDATION.txt)。真实SOP十折、正式holdout、预训练ResNet及GPU仍未验证。下方此前状态保留为历史记录。
-
-
-## 当前 PythonCode 三步流程（2026-10-11）
-
-在 PythonCode 中使用同一 Python 3.11+ 解释器：先运行01清理图片，再运行02的LR/SVM和03的SupCon。已有完整处理目录可配置 data_dir 后跳过01。修改 experiment_config.json 的 feature_profile 可选择 handcrafted、resnet18_global（512维）或 resnet18（512/2560维对照），只重跑02/03。
-
-基础依赖见 [PythonCode/requirements-base.txt](../PythonCode/requirements-base.txt)；既有 Conda OpenCV 无需再叠装 pip OpenCV。03及ResNet需另装匹配的torch/torchvision，CPU命令见 [Readme.txt](../PythonCode/Readme.txt)。新01不再提取模型特征；02/03从统一保存JPEG构建干净/扰动缓存。默认结果为 results_v2/run_name/feature_profile/算法目录。
-
-开发可运行02/03的 --smoke-test；两者均使用 --skip-official-test 可暂缓官方holdout。合成检查：在 PythonCode 下执行 python -m unittest discover -s tests -v，与根目录原有数据工具测试不同。历史Notebook保持独立，后文Notebook操作仅适用于历史入口。Windows CPU合成检查已通过，真实SOP完整实验与GPU未验证。
-
-
-当前提供环境检查、全量预处理，以及新增的纯 Python 传统基线试跑入口。LR/SVM 的嵌套验证代码已上传但尚未执行真实训练；SupCon 与正式三模型实验仍未完成。
-
-## 纯 Python 入口（无需 Notebook）
-
-在仓库根目录的终端运行：
+在 `PythonCode/` 中使用同一 Python 3.11+ 解释器。先运行一次预处理，再按需运行一种或两种实验方法：
 
 ```powershell
 conda activate Unimelb_SML_A2
 cd PythonCode
 python 01_SOP_Preprocessing.py
-python 02_SOP_Traditional_Baselines.py
+python 02_SOP_Experiments.py --method baselines
+python 02_SOP_Experiments.py --method supcon
 ```
 
-环境已配置时无需重新安装。新的 pip 环境可使用仓库根目录 `requirements-experiments.txt` 中的传统基线依赖；不要在现有 conda 环境重复混装OpenCV。
+02 的 `--method` 选择传统 LR/SVM 基线或 SupCon。已有完整处理目录时，在配置中设置 `data_dir` 后可跳过 01。更换特征时修改 `experiment_config.json` 的 `feature_profile`，再运行需要的方法。
 
-把 SOP ZIP 放在 `PythonCode/` 或其父目录，或用 `--zip-path` 指定路径。01默认输出到脚本旁的 `processed_sop/`。已有完整输出时跳过01，非空目录不会被覆盖。02可用 `--data-dir` 指向另一位置，默认结果写入 `results_traditional_py_v1/`，在终端打印表格并保存PNG。两个辅助模块无需单独运行。
+当前方案包含 `handcrafted`、`handcrafted_content`、`handcrafted_padding_audit`、`resnet18_global` 和 `resnet18` 配置。传统与 SupCon 使用同一套商品折分、图片对和扰动条件。ResNet18 特征提取器已经实现，但真实预训练权重实验仍需单独运行验证。
 
-本轮对比 LR/SVM 的HSV48与HSV＋区域梯度192，测试干净、遮挡、噪声、模糊和旋转；不包含ResNet/SupCon。代码尚未执行正式训练，预处理填边及JPEG缓存一致性问题仍待回应。参数、恢复规则、采样范围与已知限制见 [PythonCode/Readme.txt](../PythonCode/Readme.txt)。以下 Notebook 入口保留用于历史流程和可选预览。
+基础依赖见 [requirements-base.txt](../PythonCode/requirements-base.txt)。已有 Conda OpenCV 无需再安装 pip OpenCV。SupCon 和 ResNet 特征需要兼容的 torch/torchvision，CPU 安装命令见[英文说明](../PythonCode/Readme.txt)，中文说明见[中文版](../PythonCode/Readme_zh.txt)。
 
+01 默认在脚本目录及其父目录查找 SOP ZIP，也支持 `--zip-path`；输出默认为 `processed_sop/`，不会覆盖非空输出目录。实验输出默认按运行名、特征方案和方法保存在 `results_v3/`。02 可通过 `--data-dir`、`--results-dir`、`--protocol-dir` 指定目录，也支持 `--all-train`、`--skip-official-test` 和 `--smoke-test`。
+
+开发检查可分别运行：
+
+```powershell
+python 02_SOP_Experiments.py --method baselines --smoke-test
+python 02_SOP_Experiments.py --method supcon --smoke-test
+```
+
+`--smoke-test` 只检查程序执行，不构成正式实验结果。测试命令为 `python -m unittest discover -s tests -v`；本次入口合并没有重跑测试，既有验证边界见 [VALIDATION.txt](../PythonCode/VALIDATION.txt)。
+
+## 历史 Notebook 流程
+
+以下 Notebook 操作仅适用于历史或可选预览入口，不是当前 `.py` 实验的依赖。
 ## 1. 获取仓库
 
 原版 [02_SOP_Traditional_Baselines.ipynb](../notebooks/02_SOP_Traditional_Baselines.ipynb) 也已上传，保留用户的中文学习说明；01与已有版本完全相同。完整 `sop_baselines.py` 与 `sop_features.py` 位于同一 `notebooks/` 目录，不依赖 `PythonCode/`。用户明确要求两套目录独立运行；未来改动应注明更新哪套入口，不能假设自动同步。

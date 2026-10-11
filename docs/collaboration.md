@@ -5,13 +5,13 @@
 - 新增 handcrafted_content 和 handcrafted_padding_audit，支持排除填边的HSV/HOG以及与原填边版本的配对对照；原handcrafted保持为对照，ResNet仍使用明确记录的填边输入。真实SOP收益未量化。
 - 每个外层训练商品集合再独立预留20%校准商品（每大类至少2个，保留足够拟合商品）。校准商品不参与内层选参、归一化或训练；最终模型在其上定阈值后不再重训，直接评估外层测试。有限样本校准不保证测试召回率达到95%。
 - SupCon温度边界胜出时按内层验证扩展三点窗口，最多两次、因子2、温度限制0.005至1.0；复用已评估候选、保存搜索历史并保留未解决的边界警告。
-- 官方holdout默认关闭。新协议/缓存/结果使用v3目录，不能复用v2阈值或断点；已有01处理图片可继续使用。01/02/03编号入口不变，选特征和参数仍改配置。
+- 官方holdout默认关闭。新协议/缓存/结果使用v3目录，不能复用v2阈值或断点；已有01处理图片可继续使用。入口整理为01预处理和02统一实验命令（--method baselines|supcon），选特征和参数仍改配置。
 - Windows CPU合成检查覆盖填边探针、阈值校准隔离、温度扩展和端到端流程，验证边界见[VALIDATION](../PythonCode/VALIDATION.txt)。真实SOP十折、正式holdout、预训练ResNet及GPU仍未验证。下方此前状态保留为历史记录。
 
 
 ## 最新共享运行接口（2026-10-11）
 
-PythonCode现包含固定01/02/03、experiment_config.json和共同辅助模块。切换特征改配置，不改编号入口；新固定提取器注册于sop_feature_bank.py。01独立清理，02/03共享商品折/配对和像素输入。依赖、缓存、模型、路径与断点规则见[Readme.txt](../PythonCode/Readme.txt)。根目录原有Notebook、数据工具和已归档开发结果保持原状。不要将机器环境、生成配对/缓存、模型权重或原图推送。
+PythonCode现包含01预处理入口、02统一实验入口、experiment_config.json和共同辅助模块。通过02的--method选择基线或SupCon；切换特征改配置。新固定提取器注册于sop_feature_bank.py。两种方法共享商品折/配对和像素输入。依赖、缓存、模型、路径与续跑规则见[英文说明](../PythonCode/Readme.txt)和[中文说明](../PythonCode/Readme_zh.txt)。根目录原有Notebook、数据工具和已归档开发结果保持原状。不要将机器环境、生成配对/缓存、模型权重或原图推送。
 
 
 每次开始前读 [AGENTS.md](../AGENTS.md) 和 [CONTRIBUTING.md](../CONTRIBUTING.md)。每次更新共享文件，必须在同一提交/PR内同步根目录 README 及受影响的相关文件；交接时说明验证结果和未完成项。
@@ -45,7 +45,7 @@ PythonCode现包含固定01/02/03、experiment_config.json和共同辅助模块�
 
 ## 运行入口
 
-正式入口是 [PythonCode/](../PythonCode/) 的编号脚本，按其 [Readme.txt](../PythonCode/Readme.txt) 先运行 `01_SOP_Preprocessing.py` 再运行 `02_SOP_Traditional_Baselines.py`。以下 Notebook 保留为历史流程/可选预览：
+正式入口是 [PythonCode/](../PythonCode/) 的两个脚本：先运行 `01_SOP_Preprocessing.py`，再按需运行 `02_SOP_Experiments.py --method baselines` 或 `--method supcon`。详见[英文说明](../PythonCode/Readme.txt)和[中文说明](../PythonCode/Readme_zh.txt)。以下 Notebook 保留为历史流程/可选预览：
 
 `notebooks/00_setup_and_data.ipynb` 用于环境检查和前 20 张图片预览，可选运行。`notebooks/01_SOP_Preprocessing.ipynb` 才执行全量 ZIP 图片审计、筛选、224×224 导出和 HSV/HOG 特征缓存；需与 `notebooks/sop_features.py` 一起使用。输出位于本机 `processed_sop/`，已由 `.gitignore` 排除。`materials/sop_data_check.ipynb` 保留为早期核验记录。Windows 全量预处理仍待运行验证；目前没有模型训练 Notebook。
 

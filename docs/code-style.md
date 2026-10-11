@@ -32,7 +32,7 @@ print("Checked images:", report["checked_images"])
 
 ## 可选中文学习副本
 
-- 另存于 `learning/zh/`，使用与英文文件对应的相对路径；例如 `PythonCode/02_SOP_Traditional_Baselines.py` 对应 `learning/zh/PythonCode/02_SOP_Traditional_Baselines.py`；逐块中文详解可写在源码注释中，或另附同名 `.md`。该路径是约定，只有实际创建副本后才在 README 目录中列为已有文件。
+- 另存于 `learning/zh/`，使用与英文文件对应的相对路径；例如 `PythonCode/02_SOP_Experiments.py` 对应 `learning/zh/PythonCode/02_SOP_Experiments.py`；逐块中文详解可写在源码注释中，或另附同名 `.md`。该路径是约定，只有实际创建副本后才在 README 目录中列为已有文件。
 - 副本开头标注“中文学习副本，非提交版本”、英文源文件路径及对应提交号或版本。英文版本是唯一实现依据，副本不能独立改变算法、数据、超参数、种子、划分或指标。
 - **包含对应源码，不只是翻译提纲。** 按英文版的功能块顺序保留源码；英文版每条注释/docstring 都提供对应中文译文。可自行控制的提示和展示输出改为中文。
 - 每个功能块增加中文详解：这块解决什么问题、输入是什么、执行过程、输出交给谁、为什么这样做。必要时用带数字的小例子解释形状、标签或计算，不把示例值写成真实实验结果。

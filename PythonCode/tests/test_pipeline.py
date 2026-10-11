@@ -4,6 +4,7 @@ import io
 from pathlib import Path
 import sys
 import tempfile
+import runpy
 import unittest
 from unittest.mock import patch
 from zipfile import ZipFile
@@ -22,7 +23,7 @@ ARTIFACTS.mkdir(exist_ok=True)
 
 class PipelineTests(unittest.TestCase):
     def test_preprocessing_zip_audit(self):
-        from sop_preprocessing import main
+        main = runpy.run_path(str(ROOT / "01_SOP_Preprocessing.py"))["main"]
         with tempfile.TemporaryDirectory(dir=ARTIFACTS) as folder:
             root = Path(folder)
             archive = root / 'input.zip'

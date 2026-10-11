@@ -1,25 +1,23 @@
 SOP MATCHING EXPERIMENT PIPELINE
 
 Fixed entry points
-01_SOP_Preprocessing.py: audit original ZIP images, exclude unreadable/missing
+01_SOP_Preprocessing.py: audits the original ZIP images, excludes unreadable/missing
 images, originals with either side below 100 pixels, and products with only
-one eligible image. Export padded 224x224 RGB JPEGs and audit tables. Preserve
-official train/test labels. Run once per dataset.
-02_SOP_Traditional_Baselines.py: nested product-fold LR and RBF SVM experiments.
-03_SOP_SupCon.py: nested supervised contrastive representation learning and
-cosine matching on unseen products.
+one eligible image. It exports padded 224x224 RGB JPEGs and audit tables while
+preserving official train/test labels. Run once per dataset.
+02_SOP_Experiments.py: runs nested product-fold LR/SVM baselines or SupCon.
 
 From the PythonCode directory, using your activated Python 3.11 environment:
 python 01_SOP_Preprocessing.py
-python 02_SOP_Traditional_Baselines.py
-python 03_SOP_SupCon.py
+python 02_SOP_Experiments.py --method baselines
+python 02_SOP_Experiments.py --method supcon
 
-01 searches beside PythonCode and its parents for Stanford_Online_Products.zip.
+01 searches beside the script and its parent directories for Stanford_Online_Products.zip.
 An explicit input is supported:
 python 01_SOP_Preprocessing.py --zip-path "D:/data/Stanford_Online_Products.zip"
 Nonempty preprocessing outputs are never overwritten. If the original 01
 already finished and clean_manifest.csv, audit_summary.json and images/ exist,
-set data_dir to that folder and run 02/03 directly. Old feature NPZs are ignored;
+set data_dir to that folder and run either experiment method directly. Old feature NPZs are ignored;
 the new feature bank builds reusable caches on the first experiment run.
 
 Dependencies
@@ -27,14 +25,14 @@ Use the same Python interpreter for installation and IDE execution.
 Base libraries: numpy, pandas, Pillow, OpenCV, scikit-learn and matplotlib.
 requirements-base.txt provides an optional pip installation list. Existing
 Conda OpenCV also works; do not install another OpenCV build unnecessarily.
-03 and ResNet features additionally need compatible torch/torchvision.
+SupCon and ResNet features additionally need compatible torch/torchvision.
 For CPU:
 python -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 Device settings accept auto, cpu, cuda or mps. Auto selects an available
 accelerator then CPU. CPU-only PyTorch cannot use an NVIDIA GPU.
 
 Changing features
-Edit feature_profile in experiment_config.json; keep 01/02/03 unchanged:
+Edit feature_profile in experiment_config.json; no preprocessing or experiment code changes are needed:
 handcrafted: original padded HSV48 versus HSV_HOG192 (retained baseline).
 handcrafted_content: ContentHSV48 versus ContentHSV_HOG192, excluding padding.
 handcrafted_padding_audit: all four padded/content variants, paired comparisons
@@ -53,8 +51,8 @@ padded 224x224 images used by other features, without an extra center crop.
 
 Example configuration change:
 "feature_profile": "resnet18_global"
-Rerun only 02 and 03. No preprocessing rerun is needed. Outputs are separated
-by profile; 02 and 03 reuse the same extracted features and corruption caches.
+Rerun 02 with each desired --method. No preprocessing rerun is needed. Outputs are separated
+by profile; both methods reuse the same extracted features and corruption caches.
 
 For a new fixed extractor, implement dimension, metadata and __call__(images)
 returning an N x D float array in sop_feature_bank.py. Register it in EXTRACTORS
@@ -133,14 +131,15 @@ is a configurable starting budget, not the original paper training schedule.
 
 Configuration, outputs and resuming
 Paths resolve relative to experiment_config.json. --config selects another file.
-02/03 accept --data-dir, --results-dir, --protocol-dir, --all-train and
---skip-official-test. Both must use identical common settings for comparisons.
+02 accepts --method baselines|supcon, --data-dir, --results-dir, --protocol-dir,
+--all-train, --skip-official-test and --smoke-test. Use identical common settings
+for comparisons.
 data_dir: reusable images and clean manifest.
 cache_dir: extractor-specific feature arrays and metadata.
 protocol_dir: common folds, pairs and integrity checks.
 results_dir/run_name/feature_profile/baselines or supcon: tuning, per-pair
 predictions, checkpoints, fold metrics, summary CSVs and figures.
-After both 02 and 03 finish, combined_summary_mean_sd.csv combines all methods.
+After both experiment methods finish, combined_summary_mean_sd.csv combines all methods.
 paired_feature_deltas.csv and paired_delta_mean_sd.csv contain ablations.
 grid_requirement_audit.json flags hyperparameter boundary choices; review these
 using inner validation only.
@@ -157,8 +156,8 @@ folds or thresholds. Existing processed_sop images remain compatible, so 01
 does not need to be rerun. Switching feature profiles shares the v3 pair lists.
 
 Execution checks
-python 02_SOP_Traditional_Baselines.py --smoke-test
-python 03_SOP_SupCon.py --smoke-test
+python 02_SOP_Experiments.py --method baselines --smoke-test
+python 02_SOP_Experiments.py --method supcon --smoke-test
 These select at least 384 images (more if product counts require it), 2 outer/2 inner folds, smaller pair caps and one SupCon
 epoch, writing to separate folders. They are execution checks, not formal
 experimental evidence. Full nested runs can take substantial time.
@@ -167,5 +166,15 @@ Synthetic checks cover loss, gradients, train-only scaling, checkpoint reload,
 512-dimensional input, shared folds/pairs, metrics and resume. The ResNet check
 uses random weights for dimensions/frozen inference, not pretrained accuracy.
 
-Original Python files remain available in Git history. Historical notebooks are
-not active entry points for the new configuration.
+File layout
+01_SOP_Preprocessing.py is the preprocessing command and implementation.
+02_SOP_Experiments.py selects LR/SVM or SupCon with --method.
+sop_features.py contains image resizing, HSV/HOG and SIFT helpers.
+sop_feature_bank.py contains fixed extractors and feature-cache logic.
+sop_protocol.py contains product splits, pairs and protocol checks.
+sop_experiment.py coordinates shared experiment state.
+sop_baselines.py and sop_supcon.py contain the model families.
+sop_calibration.py, sop_tuning.py and sop_reporting.py contain separate evaluation utilities.
+sop_config.py loads and validates configuration.
+
+Historical notebooks are not active entry points for the new configuration.
