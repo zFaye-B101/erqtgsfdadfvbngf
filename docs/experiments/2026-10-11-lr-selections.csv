@@ -1,0 +1,13 @@
+stage,seed,features,selected_C,threshold
+initial_C,45,Global,0.01,0.409214
+initial_C,45,Global+local,0.01,0.55211
+initial_C,46,Global,0.01,0.371222
+initial_C,46,Global+local,0.01,0.311309
+initial_C,47,Global,0.01,0.540861
+initial_C,47,Global+local,0.01,0.55218
+expanded_C,45,Global,0.001,0.413087
+expanded_C,45,Global+local,0.0001,0.452321
+expanded_C,46,Global,0.001,0.399093
+expanded_C,46,Global+local,0.001,0.377821
+expanded_C,47,Global,0.01,0.540861
+expanded_C,47,Global+local,0.001,0.495189

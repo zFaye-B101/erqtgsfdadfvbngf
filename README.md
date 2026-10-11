@@ -8,6 +8,12 @@
 
 ### 最近更新：2026-10-11
 
+**本轮交接必读：拉取后先读更新文档，再运行或修改代码。** 请组员及各自AI依次读取 [当前方案](docs/current-plan.md)、[CNN+LR三轮结果](docs/experiments/2026-10-11-lr-feature-pilot.md)、[PythonCode进度与互评](docs/reviews/2026-10-11_009a241_python-progress_codex.md)，记录所读提交和负责事项。`git fetch`不更新本地工作树；有未提交改动时先保留，不强制覆盖。本条是提醒，不表示成员已读或已同意。
+
+- 已对齐最新PythonCode传统流程与用户CNN小试：传统LR/SVM及10x3验证代码已上传但无完整运行凭证；CNN的Global512/G+L2560已跑LR开发测试，尚未接入正式.py。SupCon尚缺。新增24行两轮选参结果、48行调参记录和12行参数/阈值；未改组员代码。
+- 同配对扩大C范围后，遮挡条件G+L的平均FPR为0.2639（Global 0.3194），平均TPR均为0.7583，AUC差仅+0.0059；是三种子开发信号，不是局部稳定胜出或正式结果。具体边界见上方记录。
+- 复查JPEG缓存混用和填边问题，补充内层阈值移植风险；开发传统流程建议先跳过官方holdout。CNN原图小试不必等待传统预处理修复。4个.py语法、100组指标探针及8项数据测试通过，不等于完整基线/Windows验证。
+
 - **规范更新：以 `.py` 为正式格式。** 最终运行电脑更适合 `.py`，共享运行代码和最终提交代码以 [PythonCode/](PythonCode/) 的编号脚本为准；Notebook 保留为历史流程/可选预览，不删除。同步 AGENTS、CONTRIBUTING、[代码规范](docs/code-style.md)、[提交说明](docs/submission.md)、协作/运行/环境/互评说明。
 - 复查 [预处理互评](docs/reviews/2026-10-11_3054cd3_preprocessing-features_claude.md) 在 PythonCode 中的状态：R1 填边仍在；R2 已实际触发——02 的干净条件用 `.npz` 特征、干扰条件从 JPEG 重新提取，鲁棒性差异混有压缩差异。待负责人回应，未改代码。
 - 上传本机原版 [02传统基线Notebook](notebooks/02_SOP_Traditional_Baselines.ipynb) 与完整 `notebooks/sop_baselines.py`，无执行输出；本机01与已有01逐字节一致，未重复更新。按用户要求，`notebooks/` 和 `PythonCode/` 独立运行，Notebook使用同目录辅助模块，不跨目录调用。原版Notebook保留中文学习说明，不视为最终英文提交版；仅上传，未执行实验。
@@ -48,7 +54,7 @@
 ## 当前状态：2026-10-11
 
 - 研究问题：面对训练时未见过的商品，局部视觉特征是否能减少部分遮挡下相似商品的误匹配，同时维持同商品匹配率？
-- 当前阶段：仍在做特征选择（CNN池化/层级与传统特征的开发诊断），并核对几何处理一致性；尚未进入正式三模型实验或嵌套评估。
+- 当前阶段：CNN特征LR开发选参已完成三轮，Global512与G+L2560均保留；传统特征LR/SVM的.py与嵌套验证框架已上传但待真实运行。下一步协调共同协议与接口、解决传统预处理问题并整合CNN/SupCon；尚未完成正式三模型或嵌套实验。
 - 当前算法方向：Logistic Regression、RBF SVM、SupCon-based matching。不是旧草稿中的 LightGBM 或 TabM。
 - 代码格式：共享与最终提交代码以 `PythonCode/` 的 `.py` 为准，Notebook 不再作为正式入口。
 - SOP 数据资格检查已完成；`PythonCode/01_SOP_Preprocessing.py`（及历史 Notebook 版本）已提供全量预处理代码，但 Windows 全量运行尚未验证，也不是已完成的模型或实验。

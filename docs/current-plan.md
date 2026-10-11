@@ -15,8 +15,16 @@ For unseen products, can adding local visual features reduce false matches betwe
 
 ## 建议方案，尚待小规模验证
 
-- 用户已要求按[SML课内测试安排](reviews/2026-10-11_ae5a1d6_feature-options_codex.md)分别检查池化、中间层和现有表示的训练/成本；池化对比显示平均池化较高，layer3/layer4三种子没有稳定赢家。平均池化暂作开发基准而非最终定案。下一步先回应预处理互评，再固定共同输入/样本并做LR训练/成本小试；DINOv2暂缓。负责人及最终特征仍待确认，SupCon论文选择不变。
-- [已完成开发诊断](experiments/2026-10-11-feature-diagnostics.md)已归档：含CNN逐种子、池化和层级表示CSV、环境/冒烟与传统特征汇总，缺失原始明细明确标注。只是冻结特征/单项评分测试，无正式三模型或嵌套评估结果。
+### 最新交接（覆盖下方早期计划中的“LR尚未运行”状态）
+
+请拉取后的组员及AI先读 [CNN+LR三轮开发结果](experiments/2026-10-11-lr-feature-pilot.md) 和 [PythonCode进度互评](reviews/2026-10-11_009a241_python-progress_codex.md)。仓库最新.py是HSV48/HSV+空间梯度192的传统LR/SVM；用户终端测试的是ResNet18 Global512/G+L2560，尚未合入.py。不得相互冒充运行结果。
+
+全局与局部两个候选均保留。种子45/46/47两轮C搜索配对哈希一致；扩展至[0.0001,0.001,0.01,0.1]后遮挡FPR均值从Global的0.3194降到G+L的0.2639，平均TPR同为0.7583，但逐种子TPR不同且AUC差仅+0.0059，尚无稳定优越性结论。这是开发诊断，不替代正式nested CV。
+
+CNN原图小试和传统预处理修复可以并行。正式共同协议仍未确认：传统代码用95%目标召回率、1:2正负例、HSV困难负例及内容区域灰色遮挡；CNN小试用80%、1:1随机负例及中心裁剪画布均值色遮挡。应先统一或明确差异，再整合正式.py，不能直接比较两边分数。
+
+- 用户已要求按[SML课内测试安排](reviews/2026-10-11_ae5a1d6_feature-options_codex.md)检查池化、中间层和训练/成本；平均池化暂作基准，layer3/layer4无稳定赢家。后续LR开发选参已完成，正式整合与共同协议待定；DINOv2暂缓，SupCon论文选择不变。
+- [冻结特征开发诊断](experiments/2026-10-11-feature-diagnostics.md)及[LR训练诊断](experiments/2026-10-11-lr-feature-pilot.md)分开归档；有运行数值但缺完整可复现包，没有正式三模型或嵌套评估结果。
 - 新增的 `01_SOP_Preprocessing.ipynb` 当前会生成 192 维 HSV+空间 HOG 逐图特征；`sop_features.py` 提供 SIFT 图片对特征函数。这是可复用的初步预处理代码，不取代下列待验证的特征比较，也不表示正式评估协议已经确定。
 - 固定外部预训练图像编码器，构造 global-only 与 global+local 两种特征条件。
 - 以 2x2 区域池化作为局部特征候选，先不增加检测器；区域不等于语义部件。
@@ -47,4 +55,4 @@ For unseen products, can adding local visual features reduce false matches betwe
 
 ## 下一步
 
-当前阶段仍是特征选择，尚未进入正式三模型实验。先回应并处理[预处理互评](reviews/2026-10-11_3054cd3_preprocessing-features_claude.md)中的填边（R1）和缓存一致性（R2），再锁定共同开发样本/配对清单及像素处理；随后验证LR训练和成本。池化与layer3/layer4初试均已归档，但不构成最终特征决定。Windows环境仍需实际核验。文献综述按数据集引用加至少两篇额外研究论文组织，说明SupCon相对课堂方法的新意，不要求排除课堂论文；见[原要求澄清](reviews/2026-10-11_9291720_course-requirements_codex.md)。尚无正式模型结果或staff批准凭证。
+先读最新LR记录和PythonCode互评，协调共同商品折/配对、像素输入、负例、目标TPR与缓存接口；回应传统填边/JPEG问题及阈值移植风险。CNN LR开发运行已完成，不再列为未开始；正式CNN.py整合、SupCon和统一三方法实验仍待做。开发传统流程建议用`--skip-official-test`，不要在协议未定时反复查看官方holdout。最终特征仍未锁定，Windows需实际核验。文献综述按数据集引用加至少两篇额外论文组织，说明SupCon相对课堂方法的新意，不要求排除课堂论文；见[原要求澄清](reviews/2026-10-11_9291720_course-requirements_codex.md)。尚无正式三模型结果或staff批准凭证。
