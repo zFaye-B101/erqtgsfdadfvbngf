@@ -15,6 +15,7 @@ For unseen products, can adding local visual features reduce false matches betwe
 
 ## 建议方案，尚待小规模验证
 
+- 用户希望之后分别测试[课内外新增候选](reviews/2026-10-11_ae5a1d6_feature-options_codex.md)：中间层CNN、最大池化、ResNet50、AE、PCA及DINOv2。优先级/分工只是建议，新增候选未运行；下面的原有G/G+L路线仍为候选而非固定最终特征，SupCon论文选择不变。
 - 新增的 `01_SOP_Preprocessing.ipynb` 当前会生成 192 维 HSV+空间 HOG 逐图特征；`sop_features.py` 提供 SIFT 图片对特征函数。这是可复用的初步预处理代码，不取代下列待验证的特征比较，也不表示正式评估协议已经确定。
 - 固定外部预训练图像编码器，构造 global-only 与 global+local 两种特征条件。
 - 以 2x2 区域池化作为局部特征候选，先不增加检测器；区域不等于语义部件。
