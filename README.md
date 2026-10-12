@@ -9,6 +9,7 @@
 ### 最近更新：2026-10-12
 
 - **新增 ResNet50 小试准备（Claude，用户确认）：** 新增冻结 ResNet50（`IMAGENET1K_V2`）全局 2048 维提取器与组 F6，输入与 F3 相同，用于比较骨干深度；另注册 `resnet50_regions` 供以后在同一骨干内比较全局与局部。02 与 00 的 ResNet 检测改为通用。因模型源码指纹变化，按 [当前方案](docs/current-plan.md) 用运行名 `ResNet50_Pilot` 把 F3 与 F6 一起重跑（`.run/` 已加两个配置）。Mac/Python 3.11 CPU 上 22 + 9 项测试及 F3,F6 合成端到端运行通过；官方权重与真实 SOP 未运行。
+- **局部特征互评与待确认测试：** 新增[局部特征方案和测试安排](docs/reviews/2026-10-12_0cdaecc_local-feature-plan_codex.md)：建议优先跨区域最大汇总，局部裁剪分别编码及局部PCA为后续候选；明确课程依据、成本、缓存/折内拟合验收和外层评估边界。保持原研究问题，TPR/FPR必须联合判断。本会话建议暂缓骨干扩展，但并行提交3587ad1已新增F6；保留其全部实现，两条安排待团队协调，不自动取消F6。请组员与各自AI拉取后阅读并回应；三个局部候选均未实施，本批仅文档，不改代码/配置，不影响用户报告正在运行的F5。
 - **结果补充与依赖（Claude）：** 在[结果报告](docs/experiments/2026-10-12-main-experiments/README.md)中新增“补充分析”一节（原内容未改）：F4−F3 逐折方向（如 SupCon 模糊条件困难负例 FPR 10/10 折升高、LR 遮挡 AUC 0/10 折更高），以及 95% 召回工作点 FPR 偏高、干净阈值在扰动下失准的说明；数字均由已归档 CSV 计算。`PythonCode/requirements-base.txt` 的 OpenCV 上限由 `<5` 放宽为 `<6`，注明本轮结果实际在 OpenCV 5.0.0 下产出；同步 [环境说明](docs/environment.md) 与 [当前方案](docs/current-plan.md)。未改代码，未重新训练。
 - **完整真实实验回传：** 另一台Windows GPU电脑完成F1–F4的LR/SVM/SupCon十折实验。[结果与解读](docs/experiments/2026-10-12-main-experiments/README.md)包含1626份结果证据；600份预测、1800行逐折指标、1440行汇总和10800行跨组差值核对通过。ResNet整体优于传统特征，F4未稳定优于F3；F5与官方holdout未完成。用户授权发布结果，模型、数据和原始ZIP留在本地。
 - **指纹保存：** 结果文件和模型/协议工具源码关闭Git换行转换，保留运行时的Windows字节格式，使已记录的结果SHA256和模型源码指纹在检出后仍一致；算法未改。
