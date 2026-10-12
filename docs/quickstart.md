@@ -30,7 +30,7 @@
 真实测试将在一台 Windows 电脑的 PyCharm 中运行，仓库已预置：
 
 1. 用 PyCharm 打开**仓库根目录**（含 `.run/` 与 `PythonCode/`），在 Settings > Project > Python Interpreter 选择已装依赖的 Python 3.11 解释器。建议把项目放在较短路径（如 `D:\sml\`），结果目录层级较深。
-2. Run 下拉框会出现 `.run/` 中共享的配置：`00 Check environment` → `01 Preprocess SOP` → `02 Smoke baselines` / `02 Smoke SupCon` → `02 Baselines` / `02 SupCon`，另有 `Tests PythonCode`。局部特征方案 A（当前优先）另有 `02 Smoke F4.1 (plan A)` 和 `02 Local feature A (F3,F4,F4.1)`（运行名 `LocalFeature_A`）；ResNet50 小试另有 `02 Smoke ResNet50 (F6)` 和 `02 ResNet50 pilot (F3,F6)`（运行名 `ResNet50_Pilot`，F3 与 F6 一起重跑以便配对比较）。工作目录都是 `PythonCode/`，并设置 `PYTHONUTF8=1`。
+2. Run 下拉框会出现 `.run/` 中共享的配置：`00 Check environment` → `01 Preprocess SOP` → `02 Smoke baselines` / `02 Smoke SupCon` → `02 Baselines` / `02 SupCon`，另有 `Tests PythonCode`。局部特征方案 A（当前优先）另有 `02 Smoke F4.1 (plan A)` 和 `02 R2 Local feature A (F3,F4,F4.1)`（运行名 `R2_LocalFeatureA`）；ResNet50 小试另有 `02 Smoke ResNet50 (F6)` 和 `02 R3 ResNet50 pilot (F3,F6)`（运行名 `R3_ResNet50Pilot`，F3 与 F6 一起重跑以便配对比较）。编号规则见 [versioning.md](versioning.md)。工作目录都是 `PythonCode/`，并设置 `PYTHONUTF8=1`。
 3. 先运行 `00 Check environment`（只读，不安装不下载）；默认检查全部组，也可加 `--group F1,F2` 只检查计划要跑的组。它报告解释器、依赖、PyTorch 是否为 CPU 版、数据或 ZIP 位置、磁盘空间、写权限、Windows 路径长度与控制台编码；有 FAIL 时先处理。
 4. 若 PyCharm 提示找不到模块或解释器（如项目文件夹改名），在 Run > Edit Configurations 里重新选择解释器。ZIP 不在仓库旁时，在 `01 Preprocess SOP` 的参数中加 `--zip-path "D:/data/Stanford_Online_Products.zip"`。
 

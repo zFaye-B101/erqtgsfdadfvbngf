@@ -46,7 +46,7 @@ F4.1 (plan A) keeps the F3 global 512 columns and reduces the four F4 region
 vectors (columns 512-2560) by a per-channel maximum across regions, 1024 total.
 It reuses the same ResNet18 extraction as F3/F4 in one run, so no extra CNN pass.
 
-Naming: a new method gets a new number (F7, F8, ...); an improvement of an
+Naming (full rules in docs/versioning.md of the repository): a new method gets a new number (F7, F8, ...); an improvement of an
 existing method gets a sub-version of that method (F4.1, F4.2, ...). Never edit
 an existing group JSON whose results are archived; add a new file instead.
 Groups are listed and compared in version order (F4, F4.1, F4.2, F5), and

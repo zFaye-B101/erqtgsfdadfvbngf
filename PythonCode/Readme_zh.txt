@@ -16,12 +16,12 @@ python 02_SOP_Experiments.py --group F2,F5 --method baselines   （白边对照�
 
 局部特征方案 A（F4.1，当前优先）：F4.1 = F3 的全局 512 维 + 对 F4 四个区域向量逐通道取最大值（512 维），共 1024 维。这一版代码改变了模型源码指纹，所以用同一个运行名把 F3、F4 和 F4.1 一起重跑：
 python 02_SOP_Experiments.py --group F4.1 --method all --smoke-test --skip-official-test
-python 02_SOP_Experiments.py --group F3,F4,F4.1 --method all --run-name LocalFeature_A
-命名约定：新方法用新编号（F7、F8……）；对已有方法的改进用子版本（F4.1、F4.2……）。
+python 02_SOP_Experiments.py --group F3,F4,F4.1 --method all --run-name R2_LocalFeatureA
+命名约定：新方法用新编号（F7、F8……）；对已有方法的改进用子版本（F4.1、F4.2……）。正式运行按轮次编号 R1、R2……，运行名写成 R<轮次>_<主题>（不含点）；第一轮 F1–F4 即已归档的 Main_Experiments。
 
 ResNet50 小试（F6 对 F3，保留但不是当前优先）：F6 使用冻结的 ResNet50 IMAGENET1K_V2 权重（首次使用时 torchvision 自动下载约 98 MB），输入与 F3 相同（带白边的 224 图）。新增 ResNet50 提取器改变了模型源码指纹，新结果不能和 2026-10-12 的 F1–F4 结果直接配对，因此用新的运行名把 F3 和 F6 一起重跑（共同协议和测试图片对不变）：
 python 02_SOP_Experiments.py --group F6 --method all --smoke-test --skip-official-test
-python 02_SOP_Experiments.py --group F3,F6 --method all --run-name ResNet50_Pilot
+python 02_SOP_Experiments.py --group F3,F6 --method all --run-name R3_ResNet50Pilot
 python 02_SOP_Experiments.py --group all --method supcon
 
 启动 SupCon/ResNet 实验时，02 会先加载 PyTorch；含 ResNet 的实验还会检查 torchvision。

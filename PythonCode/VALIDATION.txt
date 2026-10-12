@@ -1,3 +1,8 @@
+NAMING UPDATE - 2026-10-12
+Run names follow docs/versioning.md: the planned LocalFeature_A and ResNet50_Pilot
+runs (never executed) are renamed R2_LocalFeatureA and R3_ResNet50Pilot. Earlier
+entries below keep the names used at the time. No code or protocol change.
+
 LOCAL FEATURE PLAN A (F4.1) - 2026-10-12
 Added component transform region_max (per-channel maximum across equal region
 vectors), group F4.1_ResNet_GlobalRegionMax1024, dotted sub-version group names

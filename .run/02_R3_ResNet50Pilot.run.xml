@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="02 Local feature A (F3,F4,F4.1)" type="PythonConfigurationType" factoryName="Python">
+  <configuration default="false" name="02 R3 ResNet50 pilot (F3,F6)" type="PythonConfigurationType" factoryName="Python">
     <module name="erqtgsfdadfvbngf" />
     <option name="ENV_FILES" value="" />
     <option name="INTERPRETER_OPTIONS" value="" />
@@ -14,7 +14,7 @@
     <option name="ADD_CONTENT_ROOTS" value="true" />
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <option name="SCRIPT_NAME" value="$PROJECT_DIR$/PythonCode/02_SOP_Experiments.py" />
-    <option name="PARAMETERS" value="--group F3,F4,F4.1 --method all --run-name LocalFeature_A" />
+    <option name="PARAMETERS" value="--group F3,F6 --method all --run-name R3_ResNet50Pilot" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />
     <option name="MODULE_MODE" value="false" />

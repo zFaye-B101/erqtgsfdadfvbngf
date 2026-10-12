@@ -28,8 +28,10 @@ Local feature plan A (F4.1, priority). F4.1 = F3 global 512 plus the per-channel
 maximum across the four F4 region vectors (1024). This code version changed the
 model-source fingerprint, so rerun F3 and F4 with F4.1 under one run name:
 python 02_SOP_Experiments.py --group F4.1 --method all --smoke-test --skip-official-test
-python 02_SOP_Experiments.py --group F3,F4,F4.1 --method all --run-name LocalFeature_A
+python 02_SOP_Experiments.py --group F3,F4,F4.1 --method all --run-name R2_LocalFeatureA
 Naming: new method = new number (F7...); improvement of a method = F4.1, F4.2...
+Formal rounds are numbered R1, R2...; run names use R<round>_<Topic> (no dots).
+Round 1 (F1-F4) is the archived Main_Experiments run.
 
 ResNet50 pilot (F6 versus F3, kept but not the current priority). F6 uses frozen ResNet50 IMAGENET1K_V2 weights
 (about 98 MB, downloaded by torchvision on first use) with the same padded 224
@@ -37,7 +39,7 @@ input as F3. Adding the ResNet50 extractor changed the model-source fingerprint,
 so new runs cannot be paired with the 2026-10-12 F1-F4 results; rerun F3 with F6
 under a new run name (shared protocol and test pairs are unchanged):
 python 02_SOP_Experiments.py --group F6 --method all --smoke-test --skip-official-test
-python 02_SOP_Experiments.py --group F3,F6 --method all --run-name ResNet50_Pilot
+python 02_SOP_Experiments.py --group F3,F6 --method all --run-name R3_ResNet50Pilot
 
 SupCon/ResNet runs initialize PyTorch before experiment setup or reporting.
 Runs containing ResNet also check torchvision. A small tensor calculation checks
