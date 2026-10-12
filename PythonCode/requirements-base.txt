@@ -1,6 +1,7 @@
 numpy>=1.24,<3
 pandas>=2.0,<4
 Pillow>=10.0,<13
-opencv-python-headless>=4.8,<5
+# The 2026-10-12 F1-F4 results were produced with OpenCV 5.0.0.
+opencv-python-headless>=4.8,<6
 scikit-learn>=1.5,<2
 matplotlib>=3.8,<4

@@ -8,6 +8,7 @@
 
 ### 最近更新：2026-10-12
 
+- **结果补充与依赖（Claude）：** 在[结果报告](docs/experiments/2026-10-12-main-experiments/README.md)中新增“补充分析”一节（原内容未改）：F4−F3 逐折方向（如 SupCon 模糊条件困难负例 FPR 10/10 折升高、LR 遮挡 AUC 0/10 折更高），以及 95% 召回工作点 FPR 偏高、干净阈值在扰动下失准的说明；数字均由已归档 CSV 计算。`PythonCode/requirements-base.txt` 的 OpenCV 上限由 `<5` 放宽为 `<6`，注明本轮结果实际在 OpenCV 5.0.0 下产出；同步 [环境说明](docs/environment.md) 与 [当前方案](docs/current-plan.md)。未改代码，未重新训练。
 - **完整真实实验回传：** 另一台Windows GPU电脑完成F1–F4的LR/SVM/SupCon十折实验。[结果与解读](docs/experiments/2026-10-12-main-experiments/README.md)包含1626份结果证据；600份预测、1800行逐折指标、1440行汇总和10800行跨组差值核对通过。ResNet整体优于传统特征，F4未稳定优于F3；F5与官方holdout未完成。用户授权发布结果，模型、数据和原始ZIP留在本地。
 - **指纹保存：** 结果文件和模型/协议工具源码关闭Git换行转换，保留运行时的Windows字节格式，使已记录的结果SHA256和模型源码指纹在检出后仍一致；算法未改。
 - **GPU 启动流程修正：** 02 在实验开始前加载所选方法需要的 PyTorch/torchvision，并实际执行小型设备运算检查，避免 baseline 和图表完成后才首次加载 PyTorch。模型与协议源码指纹不变。代码可传至另一台 GPU 电脑运行，本开发电脑负责代码整理与回传结果核对；组员的 F5 与分组预检更新已保留。

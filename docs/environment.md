@@ -198,5 +198,6 @@ New-Item -ItemType Directory -Force outputs | Out-Null
 
 - 用户Mac arm64：Python3.12.14、torch2.14.1、torchvision0.29.1，MPS前向及小样本CNN/传统特征诊断通过。这是已报告的具体环境，不保证这些版本在所有平台可用。
 - 本轮只读包元数据：numpy2.5.4、Pillow12.3.0、opencv-python5.0.0.93、scikit-learn1.9.1；该`sml-cnn`尚无pandas、matplotlib、ipykernel。其他环境装过不代表这里已安装。
-- 上述实测使用GUI版OpenCV5；新环境沿用基础清单的headless4.x，是不同配置，不能互相替代验收。依赖安装范围不是最终版本锁。
+- 上述实测使用GUI版OpenCV5；当时基础清单为headless4.x，是不同配置，不能互相替代验收。依赖安装范围不是最终版本锁。
+- 2026-10-12：F1–F4 正式结果在 OpenCV 5.0.0 下产出（见[结果报告](experiments/2026-10-12-main-experiments/README.md)），基础清单上限已从 `<5` 放宽为 `opencv-python-headless>=4.8,<6`。用 4.x 复现时手工特征数值可能有细微差异。
 - 新环境完整安装、Windows CPU/CUDA、全量Notebook、SupCon训练及正式复现实验仍待执行。终端试验代码在会话中，不因发布本指南就成为仓库里的训练脚本。
