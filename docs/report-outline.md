@@ -388,11 +388,13 @@
 
 | 编号 | 内容 | 数据来源 | 状态 |
 | --- | --- | --- | --- |
-| 图 1 | 三个面板（LR / SVM / SupCon）：横轴 5 种条件，纵轴全部负例 ROC-AUC，F1–F4（R2 后加 F4.1、F4.2）各一条线，误差条为折间 SD | R1/R2 的 `all_metrics.csv` | 待写绘图脚本（建议放 `tools/`，只读归档 CSV） |
-| 图 2 | 配对差值图：F4−F3、F4.1−F3、F4.2−F3 的 ΔFPR 与 ΔTPR（每种条件 × 算法），标出 0 线和 TPR −1 个百分点界线 | R2 的 `paired_group_deltas.csv` | 待 R2 |
+| 图 1 | 三个面板（LR / SVM / SupCon）：横轴 5 种条件，纵轴 ROC-AUC，F1–F4（R2 后加 F4.1、F4.2）各一条线，误差条为折间 SD | R1/R2 的 `all_metrics.csv` | R1 版已生成：[全部负例](report-figures/fig1_auc_by_condition_all.png)、[随机负例](report-figures/fig1_auc_by_condition_random.png)（PDF 同名） |
+| 图 2 | 配对差值图：F4−F3、F4.1−F3、F4.2−F3 的 ΔFPR 与 ΔTPR（每种条件 × 算法），圆点为各折、标记为均值±SD，标出 0 线和 TPR −1 个百分点界线 | R2 的 `paired_group_deltas.csv` | R1 预览版（仅 F4−F3）：[全部负例](report-figures/fig2_paired_deltas_F4_vs_F3_all.png)；R2 存档后用 `--added F4,F4.1,F4.2` 重新生成 |
 | 表 A | 关键数字小表：原图与遮挡下 F3/F4/F4.1/F4.2 的 TPR、FPR、AUC（三算法） | R2 汇总 | 待 R2 |
 | 表 B（可选） | 调参摘要，可压缩为一句话或并入方法 | T7 | 已有 |
 | 示意图（可选） | 协议数据流或四类扰动示例图条 | 示例需从本机数据生成；数据集图片可在报告中少量展示并引用 | 视篇幅 |
+
+绘图脚本：[tools/plot_report_figures.py](../tools/plot_report_figures.py)，只读归档 CSV，不训练、不读数据；默认生成 R1 版到 `docs/report-figures/`（PDF 用于 LaTeX，PNG 用于预览），宽 6.9 英寸（单栏正文宽）、字号 7–8.5pt。颜色固定对应特征组（已用配色校验脚本检查色觉差异），另以标记形状和线型区分，黑白打印也可读。R2 存档后的命令示例：`python tools/plot_report_figures.py --metrics <R2>/all_metrics.csv --deltas <R2>/artifacts/comparisons/paired_group_deltas.csv --groups F1,F2,F3,F4,F4.1,F4.2 --added F4,F4.1,F4.2`。
 
 现有各组目录下的 `figures/*_robustness.png` 是逐组运行时自动生成的诊断图，不适合直接放进报告。不要放训练 loss 随 epoch 的曲线作为实验结果。
 
@@ -434,7 +436,7 @@
 | Results and Discussion：E1、E2 初稿 | B | 未开始（数据已就绪，§3） |
 | Results and Discussion：E3 | B | 待 R2 |
 | Introduction、Literature review、Conclusion、References | C | 未开始 |
-| 图表脚本 | 待定 | 未开始 |
+| 图表脚本 | Claude | R1 版完成（`tools/plot_report_figures.py`）；R2 后重新生成 |
 | 代码 ZIP 与 Readme 核对 | 待定 | 未开始 |
 | 会议记录整理 | 待定 | 未开始 |
 | 合并稿与四页排版 | C | 未开始 |
