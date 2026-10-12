@@ -18,6 +18,37 @@ ResNet50 global-versus-local group can use resnet50_regions, whose columns
 local to decide whether local features help.
 The gradient descriptor is a simplified cell histogram, not full standard HOG.
 
+## Local aggregation groups A and B
+
+Plan A has one canonical configuration: F4.1. The duplicate F7 is removed.
+Former F8 is renamed F4.2 for plan B. Existing result folders are preserved.
+
+F6 remains ResNet50 global2048; it is not renamed or overwritten.
+F4.1_ResNet_GlobalRegionMax1024 (A) retains F4's global512 and takes the channelwise
+maximum of its four regional mean descriptors, producing another512 dimensions.
+Its component region_max transform uses the verified resnet18 source cache.
+Old-version caches are not silently adopted when source fingerprints differ.
+F4.2_ResNet_GlobalCropMax1024 (B) retains the same global512 and separately encodes five
+160x160 windows (four corners and centre) resized to224 with PIL bilinear sampling.
+The five global-average descriptors are channelwise-max aggregated into local512.
+Both groups retain ImageNet V1 weights, padded inputs and existing fold scaling;
+no descriptor L2 or new fusion weights are added. B uses six sequential image
+batches per batch of originals, including the global batch, to limit peak memory.
+Query corruption is applied before cropping, without using corruption masks.
+
+Compare F3,F4,F4.1,F4.2 in a fresh run, for example:
+python 02_SOP_Experiments.py --group F3,F4,F4.1,F4.2 --method all --run-name Local_Pilot
+Report all four corruptions and clean results, TPR/FPR/AUC and fold differences.
+F3/F4 are 512/2560 dimensions; F4.1/F4.2 are1024. A/B isolate different local encoding
+approaches better than comparison with F3 alone, but differ in crop geometry
+and context. No accuracy or FPR improvement has been verified on real SOP data.
+Adding these extractors changes cache/model fingerprints: do not resume old
+group folders under the new code. Script01 data can still be reused.
+New F4.1/F4.2 folders can use default Main_Experiments with --group F4.1,F4.2 --method all.
+Automatic comparisons with old-version groups are skipped; this does not prevent
+training or saving the new groups. Use one new run/version for automatic paired
+comparisons including F3/F4.
+
 ## Add an existing-feature combination
 
 Create `F5_HSV_ResNetGlobal.json`, for example:
@@ -46,7 +77,7 @@ F4.1 (plan A) keeps the F3 global 512 columns and reduces the four F4 region
 vectors (columns 512-2560) by a per-channel maximum across regions, 1024 total.
 It reuses the same ResNet18 extraction as F3/F4 in one run, so no extra CNN pass.
 
-Naming (full rules in docs/versioning.md of the repository): a new method gets a new number (F7, F8, ...); an improvement of an
+Naming (full rules in docs/versioning.md of the repository): a new method gets a new number (F4.1, F4.2, ...); an improvement of an
 existing method gets a sub-version of that method (F4.1, F4.2, ...). Never edit
 an existing group JSON whose results are archived; add a new file instead.
 Groups are listed and compared in version order (F4, F4.1, F4.2, F5), and

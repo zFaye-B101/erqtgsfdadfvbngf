@@ -1,3 +1,34 @@
+CANONICAL GROUP CONSOLIDATION - 2026-10-12
+F4.1 is the sole plan A component-transform implementation. Duplicate F7 removed.
+Former F8 crop extractor is now configured as F4.2; F6 remains unchanged.
+Source cache identity checks and existing result directories are preserved.
+Windows Python 3.11 CPU: 29 PythonCode tests passed in 144.699 seconds;
+9 root tests passed in 0.543 seconds. No real SOP training or weights download.
+The earlier implementation record below is historical and superseded in naming
+and in the removed plan A derived-extractor implementation.
+
+HISTORICAL RECORD:
+LOCAL A/B IMPLEMENTATION - 2026-10-12
+F6 retained as ResNet50. F7 derives global512 plus max-of-regional-means512 from
+verified current-version ResNet18 caches, recording the source cache key/metadata.
+F8 retains global512 and max-aggregates five independently encoded160x160 crops;
+four corners and centre, bilinear224 resize, sequential batches, no mask filtering.
+Both have1024 dimensions and reuse the existing three models and five conditions.
+No image processing, pairing, calibration or tuning rule was changed.
+Windows Python3.11 CPU, isolated existing verification environment:
+  PythonCode/tests:27 passed in80.484 seconds.
+  Root tests:9 passed in0.405 seconds.
+  New tests:5 passed in5.478 seconds when run separately.
+Coverage includes hand-calculated aggregation, region-order invariance, zero/invalid
+inputs, exact crop geometry, random-weight CNN global/crop equality and frozen
+parameters, derived-cache provenance, corruption cache/resume/tamper rejection,
+group discovery and preflight weight registration. Existing synthetic CLI and
+end-to-end LR/SVM/SupCon tests passed unchanged. Code/02 --list lists F1-F8.
+No pretrained weights were downloaded, no CUDA or real SOP training was run.
+No improvement in formal TPR/FPR/AUC is claimed. C/PCA and a zero-slot dimension
+control remain unimplemented. Changes invalidate old model/cache fingerprints;
+use a fresh run and rerun desired baselines without bypassing identity checks.
+
 NAMING UPDATE - 2026-10-12
 Run names follow docs/versioning.md: the planned LocalFeature_A and ResNet50_Pilot
 runs (never executed) are renamed R2_LocalFeatureA and R3_ResNet50Pilot. Earlier

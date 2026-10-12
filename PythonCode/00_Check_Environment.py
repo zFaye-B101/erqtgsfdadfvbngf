@@ -28,6 +28,7 @@ OPENCV_DISTRIBUTIONS = ("opencv-python", "opencv-python-headless",
                         "opencv-contrib-python", "opencv-contrib-python-headless")
 # Frozen torchvision weights per extractor: (enum class, member, approximate download size).
 RESNET_WEIGHTS = {"resnet18": ("ResNet18_Weights", "IMAGENET1K_V1", 45),
+                  "resnet18_crop_max": ("ResNet18_Weights", "IMAGENET1K_V1", 45),
                   "resnet50": ("ResNet50_Weights", "IMAGENET1K_V2", 98),
                   "resnet50_regions": ("ResNet50_Weights", "IMAGENET1K_V2", 98)}
 WINDOWS_PATH_LIMIT = 260

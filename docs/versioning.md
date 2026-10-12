@@ -32,6 +32,7 @@
 | F3 | ResNet18 全局512 | `F3_ResNet_Global512` | R1 已完成；R2、R3 中重跑 |
 | F4 | ResNet18 全局＋2×2区域2560 | `F4_ResNet_GlobalLocal2560` | R1 已完成；R2 中重跑 |
 | F4.1 | 局部特征方案 A：全局512＋跨区域最大512 | `F4.1_ResNet_GlobalRegionMax1024` | 待 R2 |
+| F4.2 | 局部特征方案 B：全局512＋五窗口独立编码最大512 | `F4.2_ResNet_GlobalCropMax1024` | 合成验证，正式运行未排期 |
 | F5 | 仅内容区域的 HSV48/HSV＋梯度192（白边对照） | `F5_Traditional_Content_HSV_Gradient` | 据报告正在运行，回传后登记轮次 |
 | F6 | ResNet50 全局2048（保留，非当前优先） | `F6_ResNet50_Global2048` | 待 R3 |
 | R1 | F1–F4 × LR/SVM/SupCon 十折 | 运行名 `Main_Experiments`（规则前命名，不改）；存档 [2026-10-12-main-experiments](experiments/2026-10-12-main-experiments/README.md)（不改名） | 已完成并归档 |

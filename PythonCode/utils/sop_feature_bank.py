@@ -86,6 +86,37 @@ class ResNet18Extractor:
             return torch.cat([global_features, regions], dim=1).cpu().numpy().astype(np.float32)
 
 
+class ResNet18CropMaxExtractor(ResNet18Extractor):
+    """Global512 + maximum of five independently encoded 160x160 crop descriptors.
+
+    Crops come from the already corrupted padded input, without mask-based filtering.
+    Process one crop batch at a time to avoid multiplying GPU batch memory by six.
+    """
+    dimension = 1024
+    crop_boxes = ((0, 0, 160, 160), (64, 0, 224, 160),
+                  (0, 64, 160, 224), (64, 64, 224, 224), (32, 32, 192, 192))
+
+    def __init__(self, settings):
+        super().__init__(settings)
+        self.metadata.update(extractor='resnet18_crop_max', dimension=self.dimension,
+                             layout='global512_then_max_of_five_crop_global_means512',
+                             crop_boxes=[list(box) for box in self.crop_boxes], crop_resize=[224, 224],
+                             crop_interpolation='PIL_BILINEAR', aggregation='channelwise_max',
+                             crop_source='already_corrupted_padded_224_input',
+                             normalization='ImageNet_mean_std_no_descriptor_l2')
+
+    def __call__(self, images):
+        if any(image.size != (224, 224) for image in images):
+            raise ValueError('Crop extractor requires 224 x 224 inputs.')
+        global_values = super().__call__(images)[:, :512]
+        local = None
+        for box in self.crop_boxes:
+            crops = [image.crop(box).resize((224, 224), Image.Resampling.BILINEAR) for image in images]
+            values = super().__call__(crops)[:, :512]
+            local = values if local is None else np.maximum(local, values)
+        return np.concatenate([global_values, local], axis=1).astype(np.float32)
+
+
 class ResNet50Extractor:
     """Frozen ImageNet ResNet50 (IMAGENET1K_V2) global average pooling, 2048 dimensions.
 
@@ -141,7 +172,8 @@ class ResNet50RegionsExtractor(ResNet50Extractor):
 # Add new fixed extractors here; the numbered entry points do not change.
 EXTRACTORS = {"hsv_hog": HandcraftedExtractor, "hsv_hog_content": ContentHandcraftedExtractor,
               "resnet18": ResNet18Extractor, "resnet50": ResNet50Extractor,
-              "resnet50_regions": ResNet50RegionsExtractor}
+              "resnet50_regions": ResNet50RegionsExtractor,
+              "resnet18_crop_max": ResNet18CropMaxExtractor}
 _INSTANCES = {}
 
 

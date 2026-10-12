@@ -1,0 +1,10 @@
+{
+  "group": "F4.2_ResNet_GlobalCropMax1024",
+  "description": "F4.2 plan B: global512 plus max of five separately encoded crop descriptors512",
+  "features": {
+    "ResNet18_GlobalCropMax1024": {
+      "extractor": "resnet18_crop_max",
+      "columns": [0, 1024]
+    }
+  }
+}

@@ -1,5 +1,15 @@
 # 当前方向与待定事项
 
+## 局部方案实施：2026-10-12
+
+用户要求接入组员A/B。F6已为ResNet50，保留；A作为F4.1（全局512＋四区域平均描述子最大汇总512），B作为F4.2（同一全局512＋五个160×160窗口独立编码最大汇总512）。均使用冻结ResNet18 V1、现有归一化/模型/查询扰动规则；B在扰动后裁剪，不筛选遮挡区域。两组最终维数均1024，未加入额外权重、L2或PCA。
+
+5项新合成与随机权重检查通过，尚无真实性能结果。采用新运行名比较F3/F4/F4.1/F4.2，覆盖原图、遮挡、噪声、模糊、旋转，联合TPR/FPR/AUC和逐折差值。F4.1对当前版本resnet18缓存作组件变换，F4.2需新缓存；新增提取器改变源码指纹，旧正式结果保留为历史，不能强行续跑或配对。C及同维度零槽位参考暂未实施。
+
+## 老师反馈范围对齐：2026-10-12
+
+用户再次提供老师2026-09-27反馈并确认：除遮挡外，噪声、模糊、旋转也属于主要鲁棒性实验，不能仅作为可忽略的补充。现有代码与F1–F4结果已包含四类扰动；本轮只扩展问题与评价说明，不修改像素规则、95%校准目标或实验划分。新局部方案须在原图及全部四类扰动下与同骨干全局参考比较，联合展示TPR、FPR、AUC。组员方案借鉴与已核实的逐折方向问题见[本轮复查](reviews/2026-10-12_bc886e2_robustness-plan_codex.md)。
+
 ## 当前入口与目录更新（2026-10-12）
 
 - 正式入口保持 01 → 02；已有处理数据无需重跑 01。01 仅改工具导入路径和默认配置文件名。
@@ -69,7 +79,7 @@
 
 ## 已选择的方向
 
-For unseen products, can adding local visual features reduce false matches between visually similar products under partial occlusion while maintaining same-product matching performance?
+For unseen products, can adding local visual features reduce false matches between visually similar products under occlusion, noise, blur, and rotation while maintaining same-product matching performance?
 
 - 数据：Stanford Online Products (SOP)。`class_id` 是商品标注 ID；`super_class_id` 是大类。
 - 比较：正则化 Logistic Regression、RBF SVM、SupCon-based matching。

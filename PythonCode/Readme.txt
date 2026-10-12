@@ -5,6 +5,29 @@ Shared .run configurations select F1 by default; edit --group to select another 
 
 SOP EXPERIMENTS: TWO ENTRY POINTS
 
+LOCAL GROUPS A/B - 2026-10-12
+Plan A uses the single F4.1 component region_max implementation.
+The duplicate F7 configuration is removed; former F8 is now F4.2.
+F6 remains ResNet50 global2048. F4.1 implements global512 plus channelwise max
+of four regional means512; F4.2 implements global512 plus max of five separately
+encoded crop descriptors512. Each is1024-dimensional and uses the same ResNet18
+IMAGENET1K_V1 weights. F4.1 reuses verified current-version resnet18 caches;
+F4.2 requires new crop extraction. Both use all existing corruptions and models.
+New F4.1/F4.2 folders may be added to the existing default Main_Experiments:
+python 02_SOP_Experiments.py --group F4.1,F4.2 --method all
+Existing F1-F4 results remain separate. Automatic comparisons skip old/new source
+fingerprints. To compare all four groups automatically, use a NEW run name:
+python 02_SOP_Experiments.py --group F3,F4,F4.1,F4.2 --method all --run-name Local_Pilot
+New formal round names follow docs/versioning.md (for example R2_LocalFeatureA);
+Local_Pilot is an earlier illustrative name, not a recorded completed round.
+To run only the new groups: --group F4.1,F4.2 --method all --run-name Local_Pilot.
+Reusing an existing group's old-version result folder fails its identity check;
+old cache fingerprints also differ. Never bypass these compatibility guards.
+01 does not need to run again. A uses the existing component transform; B adds a crop extractor,
+registry entry, group JSON and preflight weight metadata.
+Real pretrained-weight execution and formal performance still need verification
+on the GPU computer. Region pooling/cropping is not semantic-part detection.
+
 Use the Unimelb_SML_A2 interpreter in PyCharm.
 Run 01_SOP_Preprocessing.py only if preprocessing has not completed.
 Run 02_SOP_Experiments.py and select groups, models and a run name in the console.
@@ -29,7 +52,7 @@ maximum across the four F4 region vectors (1024). This code version changed the
 model-source fingerprint, so rerun F3 and F4 with F4.1 under one run name:
 python 02_SOP_Experiments.py --group F4.1 --method all --smoke-test --skip-official-test
 python 02_SOP_Experiments.py --group F3,F4,F4.1 --method all --run-name R2_LocalFeatureA
-Naming: new method = new number (F7...); improvement of a method = F4.1, F4.2...
+Naming: new method = new number (F4.1...); improvement of a method = F4.1, F4.2...
 Formal rounds are numbered R1, R2...; run names use R<round>_<Topic> (no dots).
 Round 1 (F1-F4) is the archived Main_Experiments run.
 
