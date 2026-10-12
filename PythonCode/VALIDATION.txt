@@ -249,4 +249,3 @@ training modules were not changed. Synthetic directory and ZIP input checks
 passed: original source bytes unchanged, repeated output rejected unchanged,
 nested output rejected, calibration-only threshold produces expected recall.
 This check does not retrain models or evaluate a new independent test set.
-
