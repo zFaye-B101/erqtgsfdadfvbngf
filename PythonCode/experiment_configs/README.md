@@ -10,7 +10,12 @@ F4 ResNet global plus four regions2560; F5 content-only HSV48 and HSV plus
 spatial gradient192. F1-F4 use padded images. F5 uses hsv_hog_content, which
 excludes the white padding; compare F5 with F1/F2 to measure the padding effect.
 Its gradient cells resize the content rectangle to 128x128 without keeping the
-aspect ratio.
+aspect ratio. F6 is frozen ResNet50 (IMAGENET1K_V2) global average pooling,
+2048 dimensions, on the same padded 224 input as F3; compare F6 with F3 to measure
+the backbone change. Judge local features only within one backbone: a later
+ResNet50 global-versus-local group can use resnet50_regions, whose columns
+[0, 2048] equal the F6 descriptor. Do not compare ResNet50 global with ResNet18
+local to decide whether local features help.
 The gradient descriptor is a simplified cell histogram, not full standard HOG.
 
 ## Add an existing-feature combination
@@ -37,7 +42,8 @@ This example is not an active F5 file. Normalization is `none` (default) or
 Simple extractor/columns specifications still work. Column end is exclusive.
 Existing fold-fitted model scaling follows feature extraction. Labels are not features.
 
-Registry: `hsv_hog`, `hsv_hog_content`, `resnet18`. A new fixed method needs
+Registry: `hsv_hog`, `hsv_hog_content`, `resnet18`, `resnet50` (2048) and
+`resnet50_regions` (2048 global + 8192 regions = 10240). A new fixed method needs
 implementation and registration in `utils/sop_feature_bank.py` plus a JSON.
 Data-fitted methods such as PCA must fit inside training folds, not global caches.
 

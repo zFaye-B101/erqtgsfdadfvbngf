@@ -2,6 +2,8 @@
 
 ## 最新依赖入口（v3）
 
+F6（ResNet50）首次运行时，torchvision 会下载 `ResNet50_Weights.IMAGENET1K_V2`（约 98 MB）；`00_Check_Environment.py --group F6` 会报告该权重是否已缓存。
+
 在最终运行机上，先用将要运行实验的同一解释器执行 `python PythonCode/00_Check_Environment.py`（或 PyCharm 的 `00 Check environment` 配置）。它只读检查依赖、PyTorch/CUDA 构建、数据位置、磁盘空间和 Windows 路径长度，不安装、不下载。Windows PyCharm 预置见 [quickstart](quickstart.md)。
 
 PythonCode正式流程使用Python3.11+，Windows CPU合成检查的实际版本见[VALIDATION](../PythonCode/VALIDATION.txt)。基础依赖以PythonCode/requirements-base.txt为唯一共同清单，包含LR/SVM和绘图；根requirements-base.txt通过-r引用该清单并追加历史Notebook内核，requirements-experiments.txt再引用根清单。torch/torchvision仍按设备单独安装，既有OpenCV不要重复叠装。下方历史开发环境说明不替代v3的验证记录，真实数据和GPU仍待验收。

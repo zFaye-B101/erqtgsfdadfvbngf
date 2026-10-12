@@ -84,6 +84,21 @@ class EntryTests(unittest.TestCase):
         with patch.object(entry.importlib, 'import_module', side_effect=AssertionError('Unexpected torch import')):
             entry.prepare_runtime([config], 'baselines')
 
+    def test_resnet50_group_initializes_torch_before_baselines(self):
+        spec = importlib.util.spec_from_file_location('entry', ROOT / '02_SOP_Experiments.py')
+        entry = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(entry)
+        config = load_config(ROOT / 'config.json',
+                             experiment_path=ROOT / 'experiment_configs' / 'F6_ResNet50_Global2048.json')
+        self.assertEqual(config['feature_sets']['ResNet50_Global2048']['extractor'], 'resnet50')
+        import contextlib
+        import io
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            entry.prepare_runtime([config], 'baselines')
+        # A ResNet50 group must load torch before baselines even without SupCon.
+        self.assertIn('PyTorch ready:', output.getvalue())
+
     def test_dynamic_group_and_common_paths(self):
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / 'F8.json'

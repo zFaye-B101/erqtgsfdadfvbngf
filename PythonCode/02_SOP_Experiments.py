@@ -34,7 +34,7 @@ def prepare_runtime(configs, method):
     """Load PyTorch before fitting or plotting, and check requested devices."""
     uses_supcon = method in ('supcon', 'all')
     uses_resnet = any(
-        component['extractor'] == 'resnet18'
+        component['extractor'].startswith('resnet')
         for config in configs
         for feature in config['feature_sets'].values()
         for component in feature.get('components', [feature])
@@ -52,7 +52,7 @@ def prepare_runtime(configs, method):
         for config in configs:
             if uses_supcon:
                 devices.add(choose_device(config['supcon']['device'], torch))
-            if any(component['extractor'] == 'resnet18'
+            if any(component['extractor'].startswith('resnet')
                    for feature in config['feature_sets'].values()
                    for component in feature.get('components', [feature])):
                 devices.add(choose_device(config['extraction']['device'], torch))

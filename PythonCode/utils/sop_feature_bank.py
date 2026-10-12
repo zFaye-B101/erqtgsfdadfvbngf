@@ -1,7 +1,7 @@
 """Pluggable fixed extractors and image-based corruption feature caches.
 
-No SOP labels are used to fit these extractors. ResNet18 uses frozen external
-ImageNet weights. Learned representations belong inside model training folds.
+No SOP labels are used to fit these extractors. ResNet18 and ResNet50 use frozen
+external ImageNet weights. Learned representations belong inside model training folds.
 """
 
 import hashlib
@@ -86,9 +86,62 @@ class ResNet18Extractor:
             return torch.cat([global_features, regions], dim=1).cpu().numpy().astype(np.float32)
 
 
+class ResNet50Extractor:
+    """Frozen ImageNet ResNet50 (IMAGENET1K_V2) global average pooling, 2048 dimensions.
+
+    Uses the same padded 224x224 input and ImageNet mean/std as ResNet18, without the
+    weights' default resize-232/centre-crop transform, so only the backbone differs
+    from F3. ImageNet accuracy does not imply better product matching.
+    """
+    dimension = 2048
+    regions = False
+
+    def __init__(self, settings):
+        import torch
+        import torchvision
+        from torchvision.models import ResNet50_Weights, resnet50
+        self.torch = torch
+        self.device = choose_device(settings["device"], torch)
+        model = resnet50(weights=ResNet50_Weights.IMAGENET1K_V2)
+        self.model = torch.nn.Sequential(*list(model.children())[:-2]).to(self.device).eval()
+        self.model.requires_grad_(False)
+        self.mean = torch.tensor([0.485, 0.456, 0.406], device=self.device).view(1, 3, 1, 1)
+        self.std = torch.tensor([0.229, 0.224, 0.225], device=self.device).view(1, 3, 1, 1)
+        layout = "global2048_then_row_major_2x2_regions8192" if self.regions else "global2048"
+        self.metadata = {"extractor": "resnet50_regions" if self.regions else "resnet50",
+                         "weights": "IMAGENET1K_V2", "torch": torch.__version__,
+                         "torchvision": torchvision.__version__, "device": self.device,
+                         "geometry": "224_square_white_padding_no_crop",
+                         "normalization": "ImageNet_mean_std", "dimension": self.dimension,
+                         "layout": layout}
+
+    def __call__(self, images):
+        torch = self.torch
+        array = np.stack([np.asarray(image.convert("RGB"), dtype=np.float32) / 255 for image in images])
+        x = torch.from_numpy(array.transpose(0, 3, 1, 2).copy()).to(self.device)
+        with torch.inference_mode():
+            fmap = self.model((x - self.mean) / self.std)
+            features = [fmap.mean(dim=(2, 3))]
+            if self.regions:
+                regions = torch.nn.functional.adaptive_avg_pool2d(fmap, (2, 2))
+                features.append(regions.permute(0, 2, 3, 1).reshape(len(images), -1))
+            return torch.cat(features, dim=1).cpu().numpy().astype(np.float32)
+
+
+class ResNet50RegionsExtractor(ResNet50Extractor):
+    """Same ResNet50 global 2048 followed by four 2x2 region descriptors (10240 total).
+
+    Registered for a later global-versus-local comparison within ResNet50; columns
+    [0, 2048] equal the global descriptor. Not used by the first ResNet50 pilot.
+    """
+    dimension = 10240
+    regions = True
+
+
 # Add new fixed extractors here; the numbered entry points do not change.
 EXTRACTORS = {"hsv_hog": HandcraftedExtractor, "hsv_hog_content": ContentHandcraftedExtractor,
-              "resnet18": ResNet18Extractor}
+              "resnet18": ResNet18Extractor, "resnet50": ResNet50Extractor,
+              "resnet50_regions": ResNet50RegionsExtractor}
 _INSTANCES = {}
 
 

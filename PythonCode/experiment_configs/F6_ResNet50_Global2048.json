@@ -1,0 +1,13 @@
+{
+  "group": "F6_ResNet50_Global2048",
+  "description": "F6 frozen ResNet50 IMAGENET1K_V2 global average pooling 2048 (compare with F3 ResNet18 global512)",
+  "features": {
+    "ResNet50_Global2048": {
+      "extractor": "resnet50",
+      "columns": [
+        0,
+        2048
+      ]
+    }
+  }
+}

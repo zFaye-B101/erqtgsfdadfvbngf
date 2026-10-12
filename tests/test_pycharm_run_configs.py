@@ -36,7 +36,7 @@ class RunConfigurationTests(unittest.TestCase):
                 self.assertTrue(Path(script).is_file(), script)
                 if script.endswith("02_SOP_Experiments.py"):
                     parameters = values["PARAMETERS"].split()
-                    self.assertIn(parameters[parameters.index("--method") + 1], {"baselines", "supcon"})
+                    self.assertIn(parameters[parameters.index("--method") + 1], {"baselines", "supcon", "all"})
         self.assertEqual(len(names), len(files), "Run configuration names must be unique.")
 
 

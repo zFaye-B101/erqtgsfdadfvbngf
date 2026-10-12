@@ -115,6 +115,27 @@ class PipelineTests(unittest.TestCase):
         self.assertFalse(any(p.requires_grad for p in extractor.model.parameters()))
         np.testing.assert_array_equal(values, extractor(images))
 
+    def test_resnet50_global_and_regions(self):
+        import torchvision.models as models
+        from utils.sop_feature_bank import EXTRACTORS, ResNet50Extractor, ResNet50RegionsExtractor
+        torch.set_num_threads(2)
+        backbone = models.resnet50(weights=None)  # random weights: no download, shape check only
+        with patch('torchvision.models.resnet50', return_value=backbone) as factory:
+            global_extractor = ResNet50Extractor({'device': 'cpu'})
+            region_extractor = ResNet50RegionsExtractor({'device': 'cpu'})
+        self.assertEqual(str(factory.call_args.kwargs['weights']), 'ResNet50_Weights.IMAGENET1K_V2')
+        self.assertIs(EXTRACTORS['resnet50'], ResNet50Extractor)
+        images = [Image.new('RGB', (224, 224), (50, 100, 150)), Image.new('RGB', (224, 224), (200, 30, 30))]
+        global_values = global_extractor(images)
+        region_values = region_extractor(images)
+        self.assertEqual(global_values.shape, (2, 2048))
+        self.assertEqual(region_values.shape, (2, 10240))
+        self.assertTrue(np.isfinite(region_values).all())
+        np.testing.assert_allclose(region_values[:, :2048], global_values, rtol=1e-5, atol=1e-6)
+        self.assertFalse(any(p.requires_grad for p in global_extractor.model.parameters()))
+        np.testing.assert_array_equal(global_values, global_extractor(images))
+        self.assertEqual(global_extractor.metadata['weights'], 'IMAGENET1K_V2')
+
     def test_shared_protocol_end_to_end_resume(self):
         from utils.sop_baselines import run_experiment as baselines
         from utils.sop_supcon import run_experiment as supcon

@@ -26,7 +26,10 @@ REQUIRED = (("numpy", "numpy"), ("pandas", "pandas"), ("PIL", "Pillow"), ("cv2",
             ("sklearn", "scikit-learn"), ("matplotlib", "matplotlib"))
 OPENCV_DISTRIBUTIONS = ("opencv-python", "opencv-python-headless",
                         "opencv-contrib-python", "opencv-contrib-python-headless")
-RESNET18_WEIGHTS = "resnet18-f37072fd.pth"
+# Frozen torchvision weights per extractor: (enum class, member, approximate download size).
+RESNET_WEIGHTS = {"resnet18": ("ResNet18_Weights", "IMAGENET1K_V1", 45),
+                  "resnet50": ("ResNet50_Weights", "IMAGENET1K_V2", 98),
+                  "resnet50_regions": ("ResNet50_Weights", "IMAGENET1K_V2", 98)}
 WINDOWS_PATH_LIMIT = 260
 MINIMUM_FREE_GB_BEFORE_PREPROCESSING = 10.0
 MINIMUM_FREE_GB_AFTER_PREPROCESSING = 3.0
@@ -93,7 +96,8 @@ def extractors_of(config):
 
 
 def check_torch(report, settings, groups):
-    torch_groups = [name for name, config in groups.items() if "resnet18" in extractors_of(config)]
+    resnets = sorted({name for config in groups.values() for name in extractors_of(config) if name in RESNET_WEIGHTS})
+    torch_groups = [name for name, config in groups.items() if extractors_of(config) & set(RESNET_WEIGHTS)]
     needs_torch_for_features = bool(torch_groups)
     gpu = nvidia_gpu_name()
     try:
@@ -122,13 +126,24 @@ def check_torch(report, settings, groups):
     if settings:
         report.add("INFO", "SupCon device", f"configured '{settings['supcon']['device']}', "
                    f"cpu_threads={settings['supcon']['cpu_threads']}")
-    if needs_torch_for_features:
-        weights = Path(torch.hub.get_dir()) / "checkpoints" / RESNET18_WEIGHTS
+    checked = set()
+    for extractor in resnets:
+        enum_name, member, size_mb = RESNET_WEIGHTS[extractor]
+        if (enum_name, member) in checked:
+            continue
+        checked.add((enum_name, member))
+        label = f"{enum_name}.{member}"
+        try:
+            url = getattr(getattr(torchvision.models, enum_name), member).url
+        except AttributeError:
+            report.add("FAIL", label, f"not available in torchvision {torchvision.__version__}")
+            continue
+        weights = Path(torch.hub.get_dir()) / "checkpoints" / url.rsplit("/", 1)[-1]
         if weights.is_file():
-            report.add("PASS", "ResNet18 weights", f"cached at {weights}")
+            report.add("PASS", label, f"cached at {weights}")
         else:
-            report.add("WARN", "ResNet18 weights", "not cached; torchvision downloads about 45 MB "
-                       "on the first ResNet run, so internet access is needed once.")
+            report.add("WARN", label, f"not cached; torchvision downloads about {size_mb} MB "
+                       "on the first run that uses it, so internet access is needed once.")
 
 
 def select_groups(names, selection):

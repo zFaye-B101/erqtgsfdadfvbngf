@@ -24,6 +24,14 @@ python 02_SOP_Experiments.py --group all --method supcon
 python 02_SOP_Experiments.py --group F1 --method all --run-name HSV48_repeat1
 python 02_SOP_Experiments.py --compare-only
 
+ResNet50 pilot (F6 versus F3). F6 uses frozen ResNet50 IMAGENET1K_V2 weights
+(about 98 MB, downloaded by torchvision on first use) with the same padded 224
+input as F3. Adding the ResNet50 extractor changed the model-source fingerprint,
+so new runs cannot be paired with the 2026-10-12 F1-F4 results; rerun F3 with F6
+under a new run name (shared protocol and test pairs are unchanged):
+python 02_SOP_Experiments.py --group F6 --method all --smoke-test --skip-official-test
+python 02_SOP_Experiments.py --group F3,F6 --method all --run-name ResNet50_Pilot
+
 SupCon/ResNet runs initialize PyTorch before experiment setup or reporting.
 Runs containing ResNet also check torchvision. A small tensor calculation checks
 each requested device, and startup prints the Python executable and device.
