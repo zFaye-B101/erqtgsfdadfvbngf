@@ -1,0 +1,4 @@
+# Keep published evidence bytes unchanged so file_manifest SHA256 values survive checkout.
+docs/experiments/2026-10-12-main-experiments/artifacts/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+# Runtime fingerprints hash source bytes, including the original Windows line endings.
+PythonCode/utils/*.py -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

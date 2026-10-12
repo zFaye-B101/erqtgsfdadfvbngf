@@ -1,0 +1,59 @@
+{
+  "fold": 9,
+  "algorithm": "SupCon",
+  "features": "ResNet18_Global512",
+  "temperature": 0.1,
+  "final_grid": [
+    0.05,
+    0.1,
+    0.2
+  ],
+  "history": [
+    {
+      "stage": 0,
+      "grid": [
+        0.05,
+        0.1,
+        0.2
+      ],
+      "selected_temperature": 0.1,
+      "mean_validation_auc": {
+        "0.05": 0.8300153341800648,
+        "0.1": 0.8304733232849433,
+        "0.2": 0.8136659008074988
+      }
+    }
+  ],
+  "boundary_unresolved": false,
+  "candidate_results": {
+    "0.05": {
+      "mean_auc": 0.8300153341800648,
+      "fold_auc": [
+        0.8414815689981097,
+        0.8359203676512652,
+        0.8126440658908192
+      ]
+    },
+    "0.1": {
+      "mean_auc": 0.8304733232849433,
+      "fold_auc": [
+        0.8500637996219281,
+        0.8238115215194218,
+        0.8175446487134799
+      ]
+    },
+    "0.2": {
+      "mean_auc": 0.8136659008074988,
+      "fold_auc": [
+        0.8202197542533082,
+        0.8207414046261513,
+        0.8000365435430371
+      ]
+    }
+  },
+  "mean_validation_auc": 0.8304733232849433,
+  "objective": "Mean clean-validation matching ROC-AUC across inner product folds",
+  "threshold_note": "Fixed final encoder calibrated separately on products excluded from tuning and fitting.",
+  "adaptation": "fixed_features_learned_encoder_distinct_clean_product_images",
+  "threshold": 0.26516619324684143
+}

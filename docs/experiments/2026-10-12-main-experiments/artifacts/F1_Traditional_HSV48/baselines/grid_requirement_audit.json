@@ -1,0 +1,16 @@
+[
+  {
+    "algorithm": "LR",
+    "features": "HSV48",
+    "boundary_selected_folds": 0,
+    "middle_selected_folds": 10,
+    "middle_is_majority": true
+  },
+  {
+    "algorithm": "SVM",
+    "features": "HSV48",
+    "boundary_selected_folds": 0,
+    "middle_selected_folds": 10,
+    "middle_is_majority": true
+  }
+]

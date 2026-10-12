@@ -1,7 +1,10 @@
 """Run any saved feature experiment through one interactive or CLI entry."""
 import argparse
+import importlib
 import json
+import os
 from pathlib import Path
+import sys
 
 from utils.sop_config import discover_experiments, load_config, validate_config
 from utils.sop_reporting import update_comparisons
@@ -25,6 +28,46 @@ def select_groups(groups, selection):
         if matches[0] not in chosen:
             chosen.append(matches[0])
     return chosen
+
+
+def prepare_runtime(configs, method):
+    """Load PyTorch before fitting or plotting, and check requested devices."""
+    uses_supcon = method in ('supcon', 'all')
+    uses_resnet = any(
+        component['extractor'] == 'resnet18'
+        for config in configs
+        for feature in config['feature_sets'].values()
+        for component in feature.get('components', [feature])
+    )
+    if not uses_supcon and not uses_resnet:
+        return
+    # Set this before any CUDA context is created, including ResNet extraction.
+    os.environ.setdefault('CUBLAS_WORKSPACE_CONFIG', ':4096:8')
+    try:
+        torch = importlib.import_module('torch')
+        if uses_resnet:
+            importlib.import_module('torchvision')
+        from utils.sop_feature_bank import choose_device
+        devices = set()
+        for config in configs:
+            if uses_supcon:
+                devices.add(choose_device(config['supcon']['device'], torch))
+            if any(component['extractor'] == 'resnet18'
+                   for feature in config['feature_sets'].values()
+                   for component in feature.get('components', [feature])):
+                devices.add(choose_device(config['extraction']['device'], torch))
+        # CUDA detection alone does not check that kernels can execute.
+        for device in sorted(devices):
+            probe = torch.ones((2, 2), device=device)
+            if (probe @ probe).sum().item() != 8.0:
+                raise RuntimeError('Unexpected tensor calculation on ' + device)
+        print('PyTorch ready:', torch.__version__, '/ devices:', ', '.join(sorted(devices)),
+              '/ Python:', sys.executable, flush=True)
+    except (ImportError, OSError, RuntimeError) as error:
+        raise RuntimeError(
+            'PyTorch/torchvision initialization failed before experiment execution. '
+            'Python: ' + sys.executable + '. Original error: ' + str(error)
+        ) from error
 
 
 def main(argv=None):
@@ -72,8 +115,7 @@ def main(argv=None):
     run_name = args.run_name
     if run_name is None and args.group is None:
         run_name = input(f'Run name [{common["run_name"]}]: ').strip() or common['run_name']
-    from utils.sop_experiment import Experiment
-    from utils.sop_reporting import combine_results, print_tables
+    configs = []
     for name in selected:
         config = load_config(args.config, args.smoke_test, groups[name][0])
         if run_name:
@@ -86,6 +128,11 @@ def main(argv=None):
         if args.skip_official_test:
             config['run_official_test'] = False
         validate_config(config)
+        configs.append(config)
+    prepare_runtime(configs, method)
+    from utils.sop_experiment import Experiment
+    from utils.sop_reporting import combine_results, print_tables
+    for name, config in zip(selected, configs):
         print('Running:', name, '/', method, '/', config['mode'])
         experiment = Experiment(config)
         for family in (('baselines', 'supcon') if method == 'all' else (method,)):

@@ -1,3 +1,46 @@
+RETURNED REAL SOP RESULT AUDIT - 2026-10-12
+The user supplied the complete results.zip from a separate Windows GPU computer.
+F1-F4 each have completed ten-fold LR, SVM and SupCon summaries. No formal model
+was trained or rerun on this development computer. tools/audit_result_archive.py
+independently recomputed 600 test-prediction files against 1800 fold-metric rows,
+verified 1440 summary rows and all four combined summaries, and recomputed 10800
+paired group deltas. Saved fitting/calibration/test products are disjoint.
+All eight family protocols share the same protocol ID and current model-source
+fingerprint. ResNet metadata records IMAGENET1K_V1 weights and CUDA; SupCon records
+torch 2.14.1+cu130. The model-archive files were neither loaded nor executed.
+Published 1626 CSV/JSON/PNG/gzip evidence files, with hashes and eight protocol
+path redactions; excluded 582 model/checkpoint files. Original ZIP retained locally.
+Git attributes preserve artifact and model/protocol source bytes (Windows line
+endings included), so stored SHA256 values match both staged blobs and checkouts.
+The source-line-ending preservation does not change runtime source content or logic.
+Full preprocessing manifest and all inner/outer partition manifests were not
+returned; this output audit cannot independently verify every training partition.
+No F5, official holdout, independent-seed repeats or significance tests are claimed.
+Report: docs/experiments/2026-10-12-main-experiments/README.md at repository root.
+
+GPU STARTUP REPAIR AND MERGED-TREE CHECK - 2026-10-12
+02 initializes torch and, for selected ResNet groups, torchvision before Experiment
+construction, baseline execution or reporting. CUBLAS_WORKSPACE_CONFIG is set before
+CUDA initialization. A small matrix calculation checks the selected devices.
+Model/protocol source files and their fingerprints are unchanged. Retained the
+team's latest group-aware preflight, F5 configuration and CLI checks.
+Windows Python 3.11 CPU, existing isolated verification environment:
+  PythonCode/tests: 20 passed in 99.267 seconds.
+  Root tests: 9 passed in 0.281 seconds.
+  git diff --check passed.
+The new fresh-process regression checks early initialization and baseline-to-SupCon
+transitions across F1-F4, including actual Matplotlib rendering; this entry test
+stubs formal training. Existing synthetic tests separately exercise model fitting,
+calibration, reports, shared protocols and checkpoint resume.
+The initial sandbox root-test attempt failed on temporary-folder permissions;
+the approved rerun passed. No formal SOP training ran on this development computer.
+The user's CUDA installation is on a separate GPU computer. Screenshots show
+torch/torchvision CUDA imports succeeding and F1 SupCon training starting after
+the launcher repair. This is not evidence of a completed GPU experiment.
+The original shm.dll failure was not reproduced locally with CPU torch, even
+after a small LR fit and Matplotlib rendering; the exact DLL cause is unconfirmed.
+The repair avoids the late first import and detects runtime failure before work.
+
 PREFLIGHT AND F5 UPDATE - 2026-10-12
 00_Check_Environment.py now loads the experiment_configs groups (--group, default
 all) instead of the legacy feature_profile, fails when selected ResNet groups lack

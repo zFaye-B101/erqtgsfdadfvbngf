@@ -3,7 +3,9 @@ import importlib.util
 import json
 from pathlib import Path
 import sys
+import subprocess
 import tempfile
+import textwrap
 import unittest
 from unittest.mock import patch
 
@@ -18,6 +20,70 @@ from utils.sop_reporting import update_comparisons
 
 
 class EntryTests(unittest.TestCase):
+    def test_all_initializes_torch_before_experiments_and_reports(self):
+        # Use a fresh process: the pipeline tests already import torch globally.
+        script = textwrap.dedent('''
+            import importlib.util
+            import sys
+            import types
+            from pathlib import Path
+            from unittest.mock import patch
+
+            spec = importlib.util.spec_from_file_location('entry', '02_SOP_Experiments.py')
+            entry = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(entry)
+            assert 'torch' not in sys.modules
+            events = []
+
+            def experiment(config):
+                assert 'torch' in sys.modules, 'PyTorch loaded after experiment setup'
+                assert 'torchvision' in sys.modules, 'ResNet dependencies were not checked'
+                events.append('setup')
+                return object()
+
+            def baseline_run(experiment):
+                import matplotlib
+                matplotlib.use('Agg')
+                import matplotlib.pyplot as plt
+                fig, axis = plt.subplots()
+                axis.plot([0, 1], [0, 1])
+                fig.canvas.draw()
+                plt.close(fig)
+                events.append('baseline')
+                return Path('unused')
+
+            def supcon_run(experiment):
+                import torch
+                assert torch.ones(1).item() == 1.0
+                events.append('supcon')
+                return Path('unused')
+
+            baselines = types.ModuleType('utils.sop_baselines')
+            baselines.run_experiment = baseline_run
+            supcon = types.ModuleType('utils.sop_supcon')
+            supcon.run_experiment = supcon_run
+            with patch.dict(sys.modules, {'utils.sop_baselines': baselines, 'utils.sop_supcon': supcon}), \\
+                 patch('utils.sop_experiment.Experiment', side_effect=experiment), \\
+                 patch('utils.sop_reporting.print_tables'), \\
+                 patch('utils.sop_reporting.combine_results'), \\
+                 patch.object(entry, 'update_comparisons'):
+                entry.main(['--group', 'F1,F2,F3,F4', '--method', 'all'])
+            assert events == ['setup', 'baseline', 'supcon'] * 4, events
+        ''')
+        result = subprocess.run([sys.executable, '-c', script], cwd=ROOT,
+                                capture_output=True, text=True, timeout=120)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn('PyTorch ready:', result.stdout)
+
+    def test_handcrafted_baselines_do_not_require_torch(self):
+        spec = importlib.util.spec_from_file_location('entry', ROOT / '02_SOP_Experiments.py')
+        entry = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(entry)
+        config = load_config(ROOT / 'config.json',
+                             experiment_path=ROOT / 'experiment_configs' / 'F1_Traditional_HSV48.json')
+        with patch.object(entry.importlib, 'import_module', side_effect=AssertionError('Unexpected torch import')):
+            entry.prepare_runtime([config], 'baselines')
+
     def test_dynamic_group_and_common_paths(self):
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / 'F8.json'

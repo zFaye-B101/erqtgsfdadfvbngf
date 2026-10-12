@@ -1,0 +1,103 @@
+{
+  "fold": 5,
+  "algorithm": "SupCon",
+  "features": "HSV48",
+  "temperature": 0.0125,
+  "final_grid": [
+    0.0125,
+    0.025,
+    0.05
+  ],
+  "history": [
+    {
+      "stage": 0,
+      "grid": [
+        0.05,
+        0.1,
+        0.2
+      ],
+      "selected_temperature": 0.05,
+      "mean_validation_auc": {
+        "0.05": 0.7703537353753852,
+        "0.1": 0.7690170310562289,
+        "0.2": 0.7688349830097501
+      }
+    },
+    {
+      "stage": 1,
+      "grid": [
+        0.025,
+        0.05,
+        0.1
+      ],
+      "selected_temperature": 0.025,
+      "mean_validation_auc": {
+        "0.025": 0.7715412161990569,
+        "0.05": 0.7703537353753852,
+        "0.1": 0.7690170310562289
+      }
+    },
+    {
+      "stage": 2,
+      "grid": [
+        0.0125,
+        0.025,
+        0.05
+      ],
+      "selected_temperature": 0.0125,
+      "mean_validation_auc": {
+        "0.0125": 0.772433294403931,
+        "0.025": 0.7715412161990569,
+        "0.05": 0.7703537353753852
+      }
+    }
+  ],
+  "boundary_unresolved": true,
+  "candidate_results": {
+    "0.05": {
+      "mean_auc": 0.7703537353753852,
+      "fold_auc": [
+        0.7820985496698571,
+        0.7696698208647615,
+        0.7592928355915369
+      ]
+    },
+    "0.1": {
+      "mean_auc": 0.7690170310562289,
+      "fold_auc": [
+        0.7809039066502593,
+        0.7670206708984053,
+        0.7591265156200221
+      ]
+    },
+    "0.2": {
+      "mean_auc": 0.7688349830097501,
+      "fold_auc": [
+        0.7778035805773549,
+        0.7682934862907665,
+        0.7604078821611289
+      ]
+    },
+    "0.025": {
+      "mean_auc": 0.7715412161990569,
+      "fold_auc": [
+        0.7826946741425623,
+        0.7703662226321164,
+        0.7615627518224921
+      ]
+    },
+    "0.0125": {
+      "mean_auc": 0.772433294403931,
+      "fold_auc": [
+        0.7852276046330123,
+        0.7699192079841521,
+        0.762153070594629
+      ]
+    }
+  },
+  "mean_validation_auc": 0.772433294403931,
+  "objective": "Mean clean-validation matching ROC-AUC across inner product folds",
+  "threshold_note": "Fixed final encoder calibrated separately on products excluded from tuning and fitting.",
+  "adaptation": "fixed_features_learned_encoder_distinct_clean_product_images",
+  "threshold": 0.057670846581459045
+}

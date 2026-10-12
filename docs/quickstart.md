@@ -10,10 +10,20 @@
 - 结果保存至 `results/<run_name>/<group>/`；`comparisons/`读取兼容已完成结果生成逐折比较，不重复训练。
 - 移动代码改变指纹，新协议目录为 `protocols/Main_Experiments_Organized`；旧输出保留，不强行混用。
 - 保留组员 00 预检、共享 PyCharm 配置及历史 Notebook；运行配置默认选 F1。
-- 不改变三模型、10/3商品折、校准和扰动规则；正式SOP结果及预训练ResNet运行仍未验证。
+- 不改变三模型、10/3商品折、校准和扰动规则；F1–F4三算法真实十折结果已回传核对，F5与官方holdout仍缺结果。
 
 
 ## 当前实验流程
+
+### 两台电脑协作与 GPU 启动
+
+开发电脑可只负责整理代码与分析结果，将 `PythonCode` 中的代码、配置和必要说明传到 GPU 电脑运行。GPU 电脑保留自己的数据、缓存、模型与原始结果目录；无需把其 Conda 环境传回开发电脑。
+
+已回传的F1–F4十折结果见[结果归档](experiments/2026-10-12-main-experiments/README.md)。公开副本仅供结果查看与核对，路径已便携化且不含模型，不能直接放回 `results/` 当作可续跑目录。正式实验没有在开发电脑重跑。
+
+02 在 SupCon/ResNet 实验开始前初始化 PyTorch，含 ResNet 的组还检查 torchvision，并执行实际张量运算。正常启动显示 `PyTorch ready`、所用设备和 Python 路径；初始化错误会在任何实验组开始前停止。该入口修正不改变模型/协议源码指纹，原来兼容的已完成折仍可复用。
+
+运行 F1–F4 全部方法：`python 02_SOP_Experiments.py --group F1,F2,F3,F4 --method all`。`--group all` 会包含当前所有JSON组，包括新增F5。回传结果时应保留完整目录结构，便于核对每个实验组及算法的完成折数。
 
 ### Windows + PyCharm（最终运行机）
 

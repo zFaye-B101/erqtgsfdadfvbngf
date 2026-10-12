@@ -24,6 +24,20 @@ python 02_SOP_Experiments.py --group all --method supcon
 python 02_SOP_Experiments.py --group F1 --method all --run-name HSV48_repeat1
 python 02_SOP_Experiments.py --compare-only
 
+SupCon/ResNet runs initialize PyTorch before experiment setup or reporting.
+Runs containing ResNet also check torchvision. A small tensor calculation checks
+each requested device, and startup prints the Python executable and device.
+An initialization failure stops before any group runs. Handcrafted-only baseline
+runs, --list and --compare-only do not require this startup check.
+This launcher-only repair does not change model/protocol fingerprints, so completed
+folds remain reusable when configuration, data and recorded software versions match.
+
+Code can be copied to a separate GPU computer for execution; this development
+computer does not need to run the formal experiments. Returned F1-F4 LR/SVM/SupCon
+ten-fold evidence is published under docs/experiments/2026-10-12-main-experiments at
+the repository root. Its portable copy excludes trained models and replaces
+machine-specific paths; it is an evidence archive, not a resumable run folder.
+
 config.json contains common paths, folds, models and test conditions.
 experiment_configs/*.json contain feature groups. A new valid JSON appears automatically.
 See experiment_configs/README.md for combinations and new extractors.

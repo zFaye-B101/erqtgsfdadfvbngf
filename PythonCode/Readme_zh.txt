@@ -15,6 +15,18 @@ python 02_SOP_Experiments.py --group F3,F4 --method baselines
 python 02_SOP_Experiments.py --group F2,F5 --method baselines   （白边对照：F5 只用商品内容区域）
 python 02_SOP_Experiments.py --group all --method supcon
 
+启动 SupCon/ResNet 实验时，02 会先加载 PyTorch；含 ResNet 的实验还会检查 torchvision。
+启动检查会执行一次小型张量运算，打印实际 Python 路径和设备（cuda/cpu 等）。
+检查失败会在任何实验组开始之前停止，避免 baseline 完成后才首次加载 PyTorch。
+仅传统特征 baseline、--list 和 --compare-only 不要求这项检查。
+这次只修正入口的启动流程，不改变模型及协议的代码指纹；配置、数据和记录的
+软件版本一致时，已完成的折仍可复用。
+
+代码可传到另一台 GPU 电脑运行，本开发电脑只负责整理和分析回传结果。
+F1–F4 三算法的完整十折结果位于仓库根目录 docs/experiments/2026-10-12-main-experiments。
+公开副本保留指标、预测、图表及调参记录，机器路径改为相对路径，不包含模型。
+它用于查看和核对结果，不能代替 GPU 电脑上包含模型的原始续跑目录。
+
 utils 都是内部工具，01 直接从 utils 导入。根目录兼容文件和旧入口备份已删除。
 tests 是开发检查，不需要放入日常实验运行顺序。
 公共设置在 config.json，各组特征在 experiment_configs/*.json。
