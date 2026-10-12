@@ -6,13 +6,22 @@ Groups inherit common settings; paths are relative to the common JSON file.
 import copy
 import json
 import math
+import re
 from pathlib import Path
+
+
+def group_sort_key(path):
+    """Order F4, F4.1, F4.2, F5 numerically; other file names follow alphabetically."""
+    match = re.match(r'F(\d+)(?:\.(\d+))?(?=_|\.json$)', Path(path).name)
+    if match is None:
+        return (1, 0, 0, Path(path).name)
+    return (0, int(match.group(1)), int(match.group(2) or 0), Path(path).name)
 
 
 def discover_experiments(directory):
     """Discover arbitrary groups without a hardcoded menu."""
     groups = {}
-    for path in sorted(Path(directory).glob('*.json')):
+    for path in sorted(Path(directory).glob('*.json'), key=group_sort_key):
         data = json.loads(path.read_text(encoding='utf-8'))
         name = data['group']
         if name in groups:
@@ -51,8 +60,13 @@ def load_config(path, smoke=False, experiment_path=None):
 
 def validate_config(config):
     for field in ("run_name", "feature_profile"):
-        if not config[field] or not all(c.isalnum() or c in "_-" for c in config[field]):
-            raise ValueError(field + " must contain only letters, numbers, underscores or hyphens.")
+        if not config[field] or not all(c.isalnum() or c in "_-" for c in config[field].replace(".", "")):
+            raise ValueError(field + " must contain only letters, numbers, underscores, hyphens or dots.")
+        # Dots allow sub-versions such as F4.1, but never hidden or parent-directory names.
+        if field == "run_name" and "." in config[field]:
+            raise ValueError("run_name must contain only letters, numbers, underscores or hyphens.")
+        if config[field].startswith(".") or ".." in config[field]:
+            raise ValueError(field + " must not start with a dot or contain '..'.")
     formal = config["mode"] == "formal"
     if config["mode"] not in {"formal", "smoke"}:
         raise ValueError("mode must be formal or smoke.")
@@ -79,6 +93,11 @@ def validate_config(config):
                 raise ValueError('Invalid feature column range: ' + name)
             if component.get('normalization', 'none') not in {'none', 'l2'}:
                 raise ValueError('Component normalization must be none or l2.')
+            transform = component.get('transform', 'none')
+            if transform not in {'none', 'region_max'}:
+                raise ValueError('Component transform must be none or region_max.')
+            if transform == 'region_max' and (end - start) % int(component.get('regions', 4)):
+                raise ValueError('region_max columns must split evenly into regions: ' + name)
     for base, added in config["comparisons"]:
         if base not in config["feature_sets"] or added not in config["feature_sets"]:
             raise ValueError("Comparison references an unselected feature.")

@@ -35,7 +35,7 @@
 
 已记录的互评：
 
-- **当前优先阅读（2026-10-12）：** [0cdaecc局部特征候选与测试安排](reviews/2026-10-12_0cdaecc_local-feature-plan_codex.md)，结合[正式F1–F4结果](experiments/2026-10-12-main-experiments/README.md)和[当前方案](current-plan.md)。A跨区域最大汇总建议优先，B局部裁剪编码、C局部PCA待讨论；研究问题/三算法不变，F5继续运行。请组员与各自AI记录已读SHA、负责范围及R1–R5回应。仅文档方案，未改代码/配置，未证明效果，不代表他人已读或批准实施。下面入口互评与开发小试为历史记录，不代表当前仍未完成正式实验。
+- **当前优先阅读（2026-10-12）：** [0cdaecc局部特征候选与测试安排](reviews/2026-10-12_0cdaecc_local-feature-plan_codex.md)，结合[正式F1–F4结果](experiments/2026-10-12-main-experiments/README.md)和[当前方案](current-plan.md)。A跨区域最大汇总建议优先，B局部裁剪编码、C局部PCA待讨论；研究问题/三算法不变，F5继续运行。请组员与各自AI记录已读SHA、负责范围及R1–R5回应。仅文档方案，未改代码/配置，未证明效果，不代表他人已读或批准实施。下面入口互评与开发小试为历史记录，不代表当前仍未完成正式实验。 2026-10-12：用户采纳方案 A 并定为优先，已实施为 F4.1（复用 ResNet18 提取的 `region_max` 变换），真实 SOP 待运行；其余建议仍待回应。
 - **拉取后优先阅读** [231f2d6入口互评及修复](reviews/2026-10-11_231f2d6_entrypoint_codex.md) 和 [当前方案](current-plan.md)：入口已修复，Mac的10项合成/CLI测试通过，最终运行机和真实数据仍待验证。请组员把更新文档一起提供给各自AI，记录已读SHA与负责范围，不替其他成员确认已读。
 - [009a241历史进度与CNN交接](reviews/2026-10-11_009a241_python-progress_codex.md) 及 [LR开发结果](experiments/2026-10-11-lr-feature-pilot.md)：保留当时传统/CNN实现差异与开发数值；“CNN尚未合入”不是最新状态，JPEG/校准等后续变化见v3回应。
 

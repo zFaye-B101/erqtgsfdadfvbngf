@@ -1,0 +1,12 @@
+{
+  "group": "F4.1_ResNet_GlobalRegionMax1024",
+  "description": "F4.1 ResNet18 global512 plus per-channel maximum across the four 2x2 region vectors (local512), 1024 total; plan A, compare with F3/F4",
+  "features": {
+    "ResNet18_GlobalRegionMax1024": {
+      "components": [
+        {"extractor": "resnet18", "columns": [0, 512]},
+        {"extractor": "resnet18", "columns": [512, 2560], "transform": "region_max", "regions": 4}
+      ]
+    }
+  }
+}

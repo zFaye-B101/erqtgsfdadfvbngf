@@ -246,6 +246,12 @@ def build_banks(frame, data_dir, config, dataset_id, query_mask):
             block = {}
             for condition, values in extracted[extractor_name].items():
                 selected = values[:, start:end]
+                if component.get('transform', 'none') == 'region_max':
+                    # Columns hold equal-length region vectors in a fixed order (ResNet
+                    # layout: row-major 2x2). Take the per-channel maximum across regions,
+                    # so the result does not depend on which region a response came from.
+                    regions = int(component.get('regions', 4))
+                    selected = selected.reshape(len(selected), regions, -1).max(axis=1)
                 if component.get('normalization', 'none') == 'l2':
                     selected = selected / np.maximum(np.linalg.norm(selected, axis=1, keepdims=True), 1e-12)
                 block[condition] = selected

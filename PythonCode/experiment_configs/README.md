@@ -42,6 +42,20 @@ This example is not an active F5 file. Normalization is `none` (default) or
 Simple extractor/columns specifications still work. Column end is exclusive.
 Existing fold-fitted model scaling follows feature extraction. Labels are not features.
 
+F4.1 (plan A) keeps the F3 global 512 columns and reduces the four F4 region
+vectors (columns 512-2560) by a per-channel maximum across regions, 1024 total.
+It reuses the same ResNet18 extraction as F3/F4 in one run, so no extra CNN pass.
+
+Naming: a new method gets a new number (F7, F8, ...); an improvement of an
+existing method gets a sub-version of that method (F4.1, F4.2, ...). Never edit
+an existing group JSON whose results are archived; add a new file instead.
+Groups are listed and compared in version order (F4, F4.1, F4.2, F5), and
+paired deltas read later minus earlier (for example F4.1 minus F4).
+
+Component transform: `"transform": "region_max"` with `"regions": n` splits the
+selected columns into n equal region vectors and keeps the per-channel maximum
+(applied before optional l2 normalization). Default transform is `none`.
+
 Registry: `hsv_hog`, `hsv_hog_content`, `resnet18`, `resnet50` (2048) and
 `resnet50_regions` (2048 global + 8192 regions = 10240). A new fixed method needs
 implementation and registration in `utils/sop_feature_bank.py` plus a JSON.

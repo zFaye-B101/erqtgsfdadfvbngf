@@ -125,6 +125,40 @@ class EntryTests(unittest.TestCase):
         np.testing.assert_allclose(bank['Combo']['clean'], [[.6, .8, 7], [.6, .8, 7]])
         self.assertEqual(extract.call_count, 1)
 
+    def test_region_max_transform_plan_a(self):
+        # Plan A (F4.1): global columns kept, four region vectors reduced by per-channel max.
+        values = np.zeros((2, 12), dtype=np.float32)
+        values[:, :4] = [1, 2, 3, 4]                         # global (4 channels here)
+        values[0, 4:] = [0.9, 0.1, 0.2, 0.1, 0.1, 0.8, 0.3, 0.0]  # two regions x 4 channels
+        values[1, 4:] = [0.1, 0.8, 0.3, 0.0, 0.9, 0.1, 0.2, 0.1]  # same regions, swapped order
+        config = {'conditions': {'clean': {}}, 'feature_sets': {'A': {'components': [
+            {'extractor': 'hsv_hog', 'columns': [0, 4]},
+            {'extractor': 'hsv_hog', 'columns': [4, 12], 'transform': 'region_max', 'regions': 2}]}}}
+        with patch('utils.sop_feature_bank.extract_cached', return_value=values):
+            bank = build_banks(None, None, config, 'test', None)['A']['clean']
+        np.testing.assert_allclose(bank, [[1, 2, 3, 4, .9, .8, .3, .1]] * 2, rtol=0, atol=1e-7)
+
+    def test_plan_a_group_and_dotted_names(self):
+        from utils.sop_config import validate_config
+        groups = discover_experiments(ROOT / 'experiment_configs')
+        names = list(groups)
+        self.assertLess(names.index('F4_ResNet_GlobalLocal2560'), names.index('F4.1_ResNet_GlobalRegionMax1024'))
+        self.assertLess(names.index('F4.1_ResNet_GlobalRegionMax1024'), names.index('F5_Traditional_Content_HSV_Gradient'))
+        spec = importlib.util.spec_from_file_location('entry', ROOT / '02_SOP_Experiments.py')
+        entry = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(entry)
+        self.assertEqual(entry.select_groups(groups, 'F4.1'), ['F4.1_ResNet_GlobalRegionMax1024'])
+        self.assertEqual(entry.select_groups(groups, 'F4'), ['F4_ResNet_GlobalLocal2560'])
+        config = load_config(ROOT / 'config.json', experiment_path=groups['F4.1_ResNet_GlobalRegionMax1024'][0])
+        self.assertEqual(config['feature_profile'], 'F4.1_ResNet_GlobalRegionMax1024')
+        for field, bad in (('feature_profile', '..'), ('feature_profile', '.hidden'), ('run_name', 'run.1')):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                validate_config(dict(config, **{field: bad}))
+        broken = json.loads(json.dumps(config))
+        broken['feature_sets']['ResNet18_GlobalRegionMax1024']['components'][1]['columns'] = [512, 2559]
+        with self.assertRaisesRegex(ValueError, 'split evenly'):
+            validate_config(broken)
+
     def test_saved_comparison_compatibility(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)

@@ -6,6 +6,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from .sop_config import group_sort_key
 from .sop_protocol import manual_metrics, write_json
 
 
@@ -146,7 +147,9 @@ def update_comparisons(run_directory):
     records, summaries, skipped = [], [], []
     for family in ('baselines', 'supcon'):
         runs = []
-        for path in sorted(root.glob('*/' + family + '/outer_fold_metrics.csv')):
+        # Version order (F4 before F4.1) so deltas read as later/added minus earlier/baseline.
+        for path in sorted(root.glob('*/' + family + '/outer_fold_metrics.csv'),
+                           key=lambda item: group_sort_key(item.parent.parent.name + '.json')):
             identity_path = path.parent / 'protocol.json'
             if not identity_path.exists():
                 continue
