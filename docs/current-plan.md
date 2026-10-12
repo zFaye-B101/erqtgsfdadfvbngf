@@ -94,6 +94,8 @@
 
 For unseen products, can adding local visual features reduce false matches between visually similar products under occlusion, noise, blur, and rotation while maintaining same-product matching performance?
 
+中文定稿（2026-10-12 用户确认）：对训练中未见过的商品，加入局部视觉特征，能否在遮挡、噪声、模糊和旋转条件下减少外观相似商品之间的误匹配，同时保持同商品匹配能力？
+
 - 数据：Stanford Online Products (SOP)。`class_id` 是商品标注 ID；`super_class_id` 是大类。
 - 比较：正则化 Logistic Regression、RBF SVM、SupCon-based matching。
 - SupCon 训练使用商品 ID，使同商品表示靠近；最终用相似度和阈值判断两图是否同商品。不是用训练商品分类头直接预测未见商品。
