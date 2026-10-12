@@ -74,6 +74,31 @@ class EntryTests(unittest.TestCase):
                                 capture_output=True, text=True, timeout=120)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn('PyTorch ready:', result.stdout)
+        self.assertIn('All requested runs finished.', result.stdout)
+
+    def test_exit_watchdog_records_hang_and_cleans_up_normal_exit(self):
+        def run(script):
+            return subprocess.run([sys.executable, '-c', textwrap.dedent(script)], cwd=ROOT,
+                                  capture_output=True, text=True, timeout=60)
+        with tempfile.TemporaryDirectory() as folder:
+            common = f'''
+                import importlib.util, threading, time
+                spec = importlib.util.spec_from_file_location('entry', {str(ROOT / '02_SOP_Experiments.py')!r})
+                entry = importlib.util.module_from_spec(spec); spec.loader.exec_module(entry)
+            '''
+            normal = run(common + f'''
+                entry.arm_exit_watchdog({folder!r}, seconds=30)
+            ''')
+            self.assertEqual(normal.returncode, 0, normal.stderr)
+            self.assertFalse((Path(folder) / 'exit_watchdog_traceback.txt').exists())
+            # A non-daemon thread keeps the interpreter from exiting beyond the timeout.
+            hang = run(common + f'''
+                entry.arm_exit_watchdog({folder!r}, seconds=1)
+                threading.Thread(target=time.sleep, args=(3,), name='blocking-worker').start()
+            ''')
+            self.assertEqual(hang.returncode, 0, hang.stderr)
+            text = (Path(folder) / 'exit_watchdog_traceback.txt').read_text(encoding='utf-8')
+            self.assertIn('File "', text)
 
     def test_handcrafted_baselines_do_not_require_torch(self):
         spec = importlib.util.spec_from_file_location('entry', ROOT / '02_SOP_Experiments.py')

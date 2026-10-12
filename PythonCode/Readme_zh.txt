@@ -11,13 +11,9 @@ F4.2：保留同一全局512；四角和中心五个160×160窗口分别缩放�
 四类扰动仍在查询图上先施加，再取窗口；不使用遮挡掩码挑选可见区域。
 F4.1复用当前代码版本且身份校验通过的resnet18缓存；旧版本缓存不强行复用。
 F4.2需要重新提取局部裁剪特征。01处理图片无需重跑。
-仅增加F4.1/F4.2可以继续使用默认Main_Experiments，无需手动起名：
-python 02_SOP_Experiments.py --group F4.1,F4.2 --method all
-它们有独立子目录，不会因旧F1–F4的指纹不同而拒绝创建；已有相同组目录仍须身份一致。
-自动跨组比较会跳过旧版F3/F4与新版F4.1/F4.2。要自动统一比较，用新运行名重跑四组：
-python 02_SOP_Experiments.py --group F3,F4,F4.1,F4.2 --method all --run-name Local_Pilot
-新的正式轮次名遵循docs/versioning.md，例如R2_LocalFeatureA；Local_Pilot是此前示例名。
-仅跑新增组可使用 --group F4.1,F4.2，其余参数相同。
+不要把F4.1/F4.2加进Main_Experiments：该运行名是已结束的第1轮（R1），而且自动跨组比较会跳过新旧代码指纹不同的组。第2轮（R2）用一个新运行名把基准和两个局部方案一起重跑（规则见docs/versioning.md）：
+python 02_SOP_Experiments.py --group F3,F4,F4.1,F4.2 --method all --run-name R2_LocalFeatureAB
+（Local_Pilot是此前的示例名，不是已登记的轮次。）
 新增提取器改变代码/缓存指纹，不要用新版恢复同一组的旧版结果，不要绕过检查。
 这次除了新增两个JSON，还实现提取器、注册与组件变换和预检权重信息；02入口接口不变。
 真实GPU权重运行和正式效果尚未验证，不能保证加入局部特征一定改善。
@@ -34,10 +30,11 @@ python 02_SOP_Experiments.py --group F1,F2 --method baselines
 python 02_SOP_Experiments.py --group F3,F4 --method baselines
 python 02_SOP_Experiments.py --group F2,F5 --method baselines   （白边对照：F5 只用商品内容区域）
 
-局部特征方案 A（F4.1，当前优先）：F4.1 = F3 的全局 512 维 + 对 F4 四个区域向量逐通道取最大值（512 维），共 1024 维。这一版代码改变了模型源码指纹，所以用同一个运行名把 F3、F4 和 F4.1 一起重跑：
-python 02_SOP_Experiments.py --group F4.1 --method all --smoke-test --skip-official-test
-python 02_SOP_Experiments.py --group F3,F4,F4.1 --method all --run-name R2_LocalFeatureA
-命名约定：新方法用新编号（F4.1、F4.2……）；对已有方法的改进用子版本（F4.1、F4.2……）。正式运行按轮次编号 R1、R2……，运行名写成 R<轮次>_<主题>（不含点）；第一轮 F1–F4 即已归档的 Main_Experiments。
+第 2 轮（R2）：局部特征方案 A（F4.1）与 B（F4.2），连同基准 F3/F4。F4.1 = F3 全局 512 维 + F4 四个区域向量逐通道最大值；F4.2 = 同一全局 512 维 + 五个窗口分别编码后取最大值；均为 1024 维。代码指纹已变化，F3/F4 在 R2 中重跑：
+python 02_SOP_Experiments.py --group F4.1,F4.2 --method all --smoke-test --skip-official-test
+python 02_SOP_Experiments.py --group F3,F4,F4.1,F4.2 --method all --run-name R2_LocalFeatureAB
+命名约定：新方法用新编号（F7、F8……）；对已有方法的改进用子版本（F4.1、F4.2……）。正式运行按轮次编号 R1、R2……，运行名写成 R<轮次>_<主题>（不含点）；第一轮 F1–F4 即已归档的 Main_Experiments。
+运行结束：所有组和跨组比较保存完毕后，02 会打印 “All requested runs finished. Results: <运行目录>”，此后可以放心停止进程。同时在运行目录写入 exit_watchdog_traceback.txt：正常退出时自动删除；若 120 秒后进程仍未退出，所有线程的调用栈会写入该文件，便于排查卡住原因，结果不受影响。
 
 ResNet50 小试（F6 对 F3，保留但不是当前优先）：F6 使用冻结的 ResNet50 IMAGENET1K_V2 权重（首次使用时 torchvision 自动下载约 98 MB），输入与 F3 相同（带白边的 224 图）。新增 ResNet50 提取器改变了模型源码指纹，新结果不能和 2026-10-12 的 F1–F4 结果直接配对，因此用新的运行名把 F3 和 F6 一起重跑（共同协议和测试图片对不变）：
 python 02_SOP_Experiments.py --group F6 --method all --smoke-test --skip-official-test

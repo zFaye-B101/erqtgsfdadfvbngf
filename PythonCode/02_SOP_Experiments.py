@@ -1,5 +1,7 @@
 """Run any saved feature experiment through one interactive or CLI entry."""
 import argparse
+import atexit
+import faulthandler
 import importlib
 import json
 import os
@@ -10,6 +12,7 @@ from utils.sop_config import discover_experiments, load_config, validate_config
 from utils.sop_reporting import update_comparisons
 
 ROOT = Path(__file__).resolve().parent
+EXIT_WATCHDOG_SECONDS = 120
 
 
 def select_groups(groups, selection):
@@ -68,6 +71,32 @@ def prepare_runtime(configs, method):
             'PyTorch/torchvision initialization failed before experiment execution. '
             'Python: ' + sys.executable + '. Original error: ' + str(error)
         ) from error
+
+
+def arm_exit_watchdog(run_directory, seconds=EXIT_WATCHDOG_SECONDS):
+    """Record all thread stacks if the process has not exited `seconds` after the work.
+
+    Called only after every requested run and comparison has been saved. A normal
+    shutdown removes the file; it remains only when the interpreter is still waiting
+    (for example joining threads at exit) and contains the stacks for diagnosis.
+    """
+    run_directory = Path(run_directory)
+    if not run_directory.is_dir():
+        return None
+    path = run_directory / 'exit_watchdog_traceback.txt'
+    stream = path.open('w', encoding='utf-8')
+    stream.write(f'All requested runs had finished. Stack traces below mean the process '
+                 f'had not exited {seconds} s later; saved results are unaffected.\n')
+    stream.flush()
+    faulthandler.dump_traceback_later(seconds, repeat=False, file=stream, exit=False)
+
+    def disarm():
+        faulthandler.cancel_dump_traceback_later()
+        stream.close()
+        if 'File "' not in path.read_text(encoding='utf-8', errors='replace'):
+            path.unlink(missing_ok=True)
+    atexit.register(disarm)
+    return path
 
 
 def main(argv=None):
@@ -144,6 +173,12 @@ def main(argv=None):
             print_tables(output)
             combine_results(experiment)
         update_comparisons(Path(config['results_dir']) / config['run_name'])
+    run_directory = Path(configs[-1]['results_dir']) / configs[-1]['run_name']
+    print('All requested runs finished. Results:', run_directory, flush=True)
+    watchdog = arm_exit_watchdog(run_directory)
+    if watchdog is not None:
+        print(f'If this process has not exited after {EXIT_WATCHDOG_SECONDS} s, thread stacks are saved to:',
+              watchdog, flush=True)
 
 
 if __name__ == '__main__':

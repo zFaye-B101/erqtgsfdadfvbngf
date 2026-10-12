@@ -36,8 +36,8 @@ no descriptor L2 or new fusion weights are added. B uses six sequential image
 batches per batch of originals, including the global batch, to limit peak memory.
 Query corruption is applied before cropping, without using corruption masks.
 
-Compare F3,F4,F4.1,F4.2 in a fresh run, for example:
-python 02_SOP_Experiments.py --group F3,F4,F4.1,F4.2 --method all --run-name Local_Pilot
+Compare F3,F4,F4.1,F4.2 in round R2 (docs/versioning.md):
+python 02_SOP_Experiments.py --group F3,F4,F4.1,F4.2 --method all --run-name R2_LocalFeatureAB
 Report all four corruptions and clean results, TPR/FPR/AUC and fold differences.
 F3/F4 are 512/2560 dimensions; F4.1/F4.2 are1024. A/B isolate different local encoding
 approaches better than comparison with F3 alone, but differ in crop geometry

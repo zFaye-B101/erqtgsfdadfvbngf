@@ -1,0 +1,1786 @@
+[
+  {
+    "fold": 1,
+    "algorithm": "LR",
+    "features": "ContentHSV48",
+    "C": 0.01,
+    "final_grid": [
+      0.001,
+      0.01,
+      0.1
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.01": 0.7035356122376486,
+          "0.1": 0.7020871477926897,
+          "1.0": 0.7017328891806135
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.001,
+          0.01,
+          0.1
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.001": 0.7001717767902983,
+          "0.01": 0.7035356122376486,
+          "0.1": 0.7020871477926897
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7035356122376486,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.7398277688780204
+  },
+  {
+    "fold": 1,
+    "algorithm": "LR",
+    "features": "ContentHSV_HOG192",
+    "C": 0.001,
+    "final_grid": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.01": 0.7317084439604088,
+          "0.1": 0.7244479559057931,
+          "1.0": 0.7232637908055141
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.001,
+          0.01,
+          0.1
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.001": 0.7420069632591186,
+          "0.01": 0.7317084439604088,
+          "0.1": 0.7244479559057931
+        }
+      },
+      {
+        "stage": 2,
+        "grid": [
+          0.0001,
+          0.001,
+          0.01
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.0001": 0.7371869041572668,
+          "0.001": 0.7420069632591186,
+          "0.01": 0.7317084439604088
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7420069632591186,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.5652357847499432
+  },
+  {
+    "fold": 1,
+    "algorithm": "SVM",
+    "features": "ContentHSV48",
+    "C": 1.0,
+    "final_grid": [
+      0.1,
+      1.0,
+      10.0
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "selected_C": 1.0,
+        "mean_validation_auc": {
+          "0.1": 0.6895504282428412,
+          "1.0": 0.7027158852450824,
+          "10.0": 0.680628675596121
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7027158852450824,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.2591479206060505
+  },
+  {
+    "fold": 1,
+    "algorithm": "SVM",
+    "features": "ContentHSV_HOG192",
+    "C": 1.0,
+    "final_grid": [
+      0.1,
+      1.0,
+      10.0
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "selected_C": 1.0,
+        "mean_validation_auc": {
+          "0.1": 0.7458195284645662,
+          "1.0": 0.7467998090123507,
+          "10.0": 0.7337801185426255
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7467998090123507,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.0805256308350892
+  },
+  {
+    "fold": 2,
+    "algorithm": "LR",
+    "features": "ContentHSV48",
+    "C": 0.01,
+    "final_grid": [
+      0.001,
+      0.01,
+      0.1
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.01": 0.7033855991421314,
+          "0.1": 0.7023002243627307,
+          "1.0": 0.7020534605333819
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.001,
+          0.01,
+          0.1
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.001": 0.7008598753761515,
+          "0.01": 0.7033855991421314,
+          "0.1": 0.7023002243627307
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7033855991421314,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -2.050589942801441
+  },
+  {
+    "fold": 2,
+    "algorithm": "LR",
+    "features": "ContentHSV_HOG192",
+    "C": 0.001,
+    "final_grid": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.01": 0.7335701050770317,
+          "0.1": 0.7259919684964257,
+          "1.0": 0.7246767326482342
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.001,
+          0.01,
+          0.1
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.001": 0.7415143803943298,
+          "0.01": 0.7335701050770317,
+          "0.1": 0.7259919684964257
+        }
+      },
+      {
+        "stage": 2,
+        "grid": [
+          0.0001,
+          0.001,
+          0.01
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.0001": 0.7336856357459528,
+          "0.001": 0.7415143803943298,
+          "0.01": 0.7335701050770317
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7415143803943298,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.6917325379166703
+  },
+  {
+    "fold": 2,
+    "algorithm": "SVM",
+    "features": "ContentHSV48",
+    "C": 1.0,
+    "final_grid": [
+      0.1,
+      1.0,
+      10.0
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "selected_C": 1.0,
+        "mean_validation_auc": {
+          "0.1": 0.6988323446818189,
+          "1.0": 0.7122205662932869,
+          "10.0": 0.7009253123201397
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7122205662932869,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.2042781346497686
+  },
+  {
+    "fold": 2,
+    "algorithm": "SVM",
+    "features": "ContentHSV_HOG192",
+    "C": 1.0,
+    "final_grid": [
+      0.1,
+      1.0,
+      10.0
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "selected_C": 1.0,
+        "mean_validation_auc": {
+          "0.1": 0.7426354269552204,
+          "1.0": 0.7462502192343988,
+          "10.0": 0.7350404046593898
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7462502192343988,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.1324194004148556
+  },
+  {
+    "fold": 3,
+    "algorithm": "LR",
+    "features": "ContentHSV48",
+    "C": 0.01,
+    "final_grid": [
+      0.001,
+      0.01,
+      0.1
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.01": 0.6923572353212718,
+          "0.1": 0.690747688816336,
+          "1.0": 0.6904268460730122
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.001,
+          0.01,
+          0.1
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.001": 0.6923281852477833,
+          "0.01": 0.6923572353212718,
+          "0.1": 0.690747688816336
+        }
+      }
+    ],
+    "mean_validation_auc": 0.6923572353212718,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.7975222150243524
+  },
+  {
+    "fold": 3,
+    "algorithm": "LR",
+    "features": "ContentHSV_HOG192",
+    "C": 0.001,
+    "final_grid": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.01": 0.7247306693192891,
+          "0.1": 0.715969787301271,
+          "1.0": 0.7145190620679845
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.001,
+          0.01,
+          0.1
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.001": 0.7369464569495997,
+          "0.01": 0.7247306693192891,
+          "0.1": 0.715969787301271
+        }
+      },
+      {
+        "stage": 2,
+        "grid": [
+          0.0001,
+          0.001,
+          0.01
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.0001": 0.7343878843375652,
+          "0.001": 0.7369464569495997,
+          "0.01": 0.7247306693192891
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7369464569495997,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.651911752839223
+  },
+  {
+    "fold": 3,
+    "algorithm": "SVM",
+    "features": "ContentHSV48",
+    "C": 1.0,
+    "final_grid": [
+      0.1,
+      1.0,
+      10.0
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "selected_C": 1.0,
+        "mean_validation_auc": {
+          "0.1": 0.6828016064313376,
+          "1.0": 0.6956365889525408,
+          "10.0": 0.6796667476068867
+        }
+      }
+    ],
+    "mean_validation_auc": 0.6956365889525408,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.1836902228629376
+  },
+  {
+    "fold": 3,
+    "algorithm": "SVM",
+    "features": "ContentHSV_HOG192",
+    "C": 0.1,
+    "final_grid": [
+      0.01,
+      0.1,
+      1.0
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "selected_C": 0.1,
+        "mean_validation_auc": {
+          "0.1": 0.7385440834024267,
+          "1.0": 0.7377300514718385,
+          "10.0": 0.724601343431902
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.1,
+        "mean_validation_auc": {
+          "0.01": 0.735611219879952,
+          "0.1": 0.7385440834024267,
+          "1.0": 0.7377300514718385
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7385440834024267,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.0869891459335246
+  },
+  {
+    "fold": 4,
+    "algorithm": "LR",
+    "features": "ContentHSV48",
+    "C": 0.01,
+    "final_grid": [
+      0.001,
+      0.01,
+      0.1
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.01": 0.7008454654495572,
+          "0.1": 0.6985639035226608,
+          "1.0": 0.698103622998246
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.001,
+          0.01,
+          0.1
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.001": 0.70033183206709,
+          "0.01": 0.7008454654495572,
+          "0.1": 0.6985639035226608
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7008454654495572,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.7518420227235203
+  },
+  {
+    "fold": 4,
+    "algorithm": "LR",
+    "features": "ContentHSV_HOG192",
+    "C": 0.001,
+    "final_grid": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.01": 0.7264565638710528,
+          "0.1": 0.7177690724613242,
+          "1.0": 0.7162844008759702
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.001,
+          0.01,
+          0.1
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.001": 0.7374879153191637,
+          "0.01": 0.7264565638710528,
+          "0.1": 0.7177690724613242
+        }
+      },
+      {
+        "stage": 2,
+        "grid": [
+          0.0001,
+          0.001,
+          0.01
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.0001": 0.7335681063876258,
+          "0.001": 0.7374879153191637,
+          "0.01": 0.7264565638710528
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7374879153191637,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.6319234369906392
+  },
+  {
+    "fold": 4,
+    "algorithm": "SVM",
+    "features": "ContentHSV48",
+    "C": 1.0,
+    "final_grid": [
+      0.1,
+      1.0,
+      10.0
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "selected_C": 1.0,
+        "mean_validation_auc": {
+          "0.1": 0.700630174785046,
+          "1.0": 0.7106530984503573,
+          "10.0": 0.6936370117813997
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7106530984503573,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.2000911102496747
+  },
+  {
+    "fold": 4,
+    "algorithm": "SVM",
+    "features": "ContentHSV_HOG192",
+    "C": 1.0,
+    "final_grid": [
+      0.1,
+      1.0,
+      10.0
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "selected_C": 1.0,
+        "mean_validation_auc": {
+          "0.1": 0.739417233980324,
+          "1.0": 0.7397752376363019,
+          "10.0": 0.7290467895374642
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7397752376363019,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.0554022241283516
+  },
+  {
+    "fold": 5,
+    "algorithm": "LR",
+    "features": "ContentHSV48",
+    "C": 0.001,
+    "final_grid": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.01": 0.7076304665031121,
+          "0.1": 0.7041766563021037,
+          "1.0": 0.7035823082489818
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.001,
+          0.01,
+          0.1
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.001": 0.7095546406082237,
+          "0.01": 0.7076304665031121,
+          "0.1": 0.7041766563021037
+        }
+      },
+      {
+        "stage": 2,
+        "grid": [
+          0.0001,
+          0.001,
+          0.01
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.0001": 0.7062367934064429,
+          "0.001": 0.7095546406082237,
+          "0.01": 0.7076304665031121
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7095546406082237,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.4886397396430795
+  },
+  {
+    "fold": 5,
+    "algorithm": "LR",
+    "features": "ContentHSV_HOG192",
+    "C": 0.001,
+    "final_grid": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.01": 0.744483380740992,
+          "0.1": 0.7356188475763764,
+          "1.0": 0.7338998836710934
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.001,
+          0.01,
+          0.1
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.001": 0.7553031014315305,
+          "0.01": 0.744483380740992,
+          "0.1": 0.7356188475763764
+        }
+      },
+      {
+        "stage": 2,
+        "grid": [
+          0.0001,
+          0.001,
+          0.01
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.0001": 0.7504410667285653,
+          "0.001": 0.7553031014315305,
+          "0.01": 0.744483380740992
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7553031014315305,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.875755172970159
+  },
+  {
+    "fold": 5,
+    "algorithm": "SVM",
+    "features": "ContentHSV48",
+    "C": 1.0,
+    "final_grid": [
+      0.1,
+      1.0,
+      10.0
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "selected_C": 1.0,
+        "mean_validation_auc": {
+          "0.1": 0.6970485871286168,
+          "1.0": 0.7051351482663403,
+          "10.0": 0.6901595543922019
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7051351482663403,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.1881587175103312
+  },
+  {
+    "fold": 5,
+    "algorithm": "SVM",
+    "features": "ContentHSV_HOG192",
+    "C": 0.1,
+    "final_grid": [
+      0.01,
+      0.1,
+      1.0
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "selected_C": 0.1,
+        "mean_validation_auc": {
+          "0.1": 0.7592660603939042,
+          "1.0": 0.7584825895921815,
+          "10.0": 0.7450378727233994
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.1,
+        "mean_validation_auc": {
+          "0.01": 0.7544278148661295,
+          "0.1": 0.7592660603939042,
+          "1.0": 0.7584825895921815
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7592660603939042,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.1192251558797968
+  },
+  {
+    "fold": 6,
+    "algorithm": "LR",
+    "features": "ContentHSV48",
+    "C": 0.01,
+    "final_grid": [
+      0.001,
+      0.01,
+      0.1
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.01": 0.709931532129143,
+          "0.1": 0.7078186392273693,
+          "1.0": 0.7073551224453359
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.001,
+          0.01,
+          0.1
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.001": 0.7085268494138921,
+          "0.01": 0.709931532129143,
+          "0.1": 0.7078186392273693
+        }
+      }
+    ],
+    "mean_validation_auc": 0.709931532129143,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.8232931779527022
+  },
+  {
+    "fold": 6,
+    "algorithm": "LR",
+    "features": "ContentHSV_HOG192",
+    "C": 0.001,
+    "final_grid": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.01": 0.7455539252131134,
+          "0.1": 0.7378497422376834,
+          "1.0": 0.7365000744493445
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.001,
+          0.01,
+          0.1
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.001": 0.7537618557351248,
+          "0.01": 0.7455539252131134,
+          "0.1": 0.7378497422376834
+        }
+      },
+      {
+        "stage": 2,
+        "grid": [
+          0.0001,
+          0.001,
+          0.01
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.0001": 0.7433963236714826,
+          "0.001": 0.7537618557351248,
+          "0.01": 0.7455539252131134
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7537618557351248,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.8015512676268302
+  },
+  {
+    "fold": 6,
+    "algorithm": "SVM",
+    "features": "ContentHSV48",
+    "C": 1.0,
+    "final_grid": [
+      0.1,
+      1.0,
+      10.0
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "selected_C": 1.0,
+        "mean_validation_auc": {
+          "0.1": 0.6973918674107135,
+          "1.0": 0.713047703584362,
+          "10.0": 0.7019108436111688
+        }
+      }
+    ],
+    "mean_validation_auc": 0.713047703584362,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.1859565645293786
+  },
+  {
+    "fold": 6,
+    "algorithm": "SVM",
+    "features": "ContentHSV_HOG192",
+    "C": 1.0,
+    "final_grid": [
+      0.1,
+      1.0,
+      10.0
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "selected_C": 1.0,
+        "mean_validation_auc": {
+          "0.1": 0.7502706724269311,
+          "1.0": 0.7537496270350511,
+          "10.0": 0.7380595429339287
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7537496270350511,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.1196724084370404
+  },
+  {
+    "fold": 7,
+    "algorithm": "LR",
+    "features": "ContentHSV48",
+    "C": 0.01,
+    "final_grid": [
+      0.001,
+      0.01,
+      0.1
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.01": 0.708070524239664,
+          "0.1": 0.7062545649870696,
+          "1.0": 0.7056746743771051
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.001,
+          0.01,
+          0.1
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.001": 0.7059466467374328,
+          "0.01": 0.708070524239664,
+          "0.1": 0.7062545649870696
+        }
+      }
+    ],
+    "mean_validation_auc": 0.708070524239664,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -2.0379585916988945
+  },
+  {
+    "fold": 7,
+    "algorithm": "LR",
+    "features": "ContentHSV_HOG192",
+    "C": 0.001,
+    "final_grid": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.01": 0.7417679539870233,
+          "0.1": 0.7350388213479134,
+          "1.0": 0.7338762946441956
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.001,
+          0.01,
+          0.1
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.001": 0.7483731819481939,
+          "0.01": 0.7417679539870233,
+          "0.1": 0.7350388213479134
+        }
+      },
+      {
+        "stage": 2,
+        "grid": [
+          0.0001,
+          0.001,
+          0.01
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.0001": 0.7413925630388526,
+          "0.001": 0.7483731819481939,
+          "0.01": 0.7417679539870233
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7483731819481939,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.7602339424299496
+  },
+  {
+    "fold": 7,
+    "algorithm": "SVM",
+    "features": "ContentHSV48",
+    "C": 1.0,
+    "final_grid": [
+      0.1,
+      1.0,
+      10.0
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "selected_C": 1.0,
+        "mean_validation_auc": {
+          "0.1": 0.6926973899182256,
+          "1.0": 0.7088390882618706,
+          "10.0": 0.6996725711497497
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7088390882618706,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.2590283635869457
+  },
+  {
+    "fold": 7,
+    "algorithm": "SVM",
+    "features": "ContentHSV_HOG192",
+    "C": 1.0,
+    "final_grid": [
+      0.1,
+      1.0,
+      10.0
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "selected_C": 1.0,
+        "mean_validation_auc": {
+          "0.1": 0.7455867415554183,
+          "1.0": 0.7501762221949835,
+          "10.0": 0.7437516228045026
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7501762221949835,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.111678854194056
+  },
+  {
+    "fold": 8,
+    "algorithm": "LR",
+    "features": "ContentHSV48",
+    "C": 0.01,
+    "final_grid": [
+      0.001,
+      0.01,
+      0.1
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.01": 0.7101705078021568,
+          "0.1": 0.7099813299369981,
+          "1.0": 0.7098493444126802
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.001,
+          0.01,
+          0.1
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.001": 0.7067256375902647,
+          "0.01": 0.7101705078021568,
+          "0.1": 0.7099813299369981
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7101705078021568,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.9349529976363142
+  },
+  {
+    "fold": 8,
+    "algorithm": "LR",
+    "features": "ContentHSV_HOG192",
+    "C": 0.001,
+    "final_grid": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.01": 0.7391278104823856,
+          "0.1": 0.7290325974999828,
+          "1.0": 0.7273000259358736
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.001,
+          0.01,
+          0.1
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.001": 0.7502596636038138,
+          "0.01": 0.7391278104823856,
+          "0.1": 0.7290325974999828
+        }
+      },
+      {
+        "stage": 2,
+        "grid": [
+          0.0001,
+          0.001,
+          0.01
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.0001": 0.7439411739813067,
+          "0.001": 0.7502596636038138,
+          "0.01": 0.7391278104823856
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7502596636038138,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.7313142476476666
+  },
+  {
+    "fold": 8,
+    "algorithm": "SVM",
+    "features": "ContentHSV48",
+    "C": 1.0,
+    "final_grid": [
+      0.1,
+      1.0,
+      10.0
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "selected_C": 1.0,
+        "mean_validation_auc": {
+          "0.1": 0.7023827003365647,
+          "1.0": 0.7094481388784648,
+          "10.0": 0.6893791973152936
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7094481388784648,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.2116983120752054
+  },
+  {
+    "fold": 8,
+    "algorithm": "SVM",
+    "features": "ContentHSV_HOG192",
+    "C": 0.1,
+    "final_grid": [
+      0.01,
+      0.1,
+      1.0
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "selected_C": 0.1,
+        "mean_validation_auc": {
+          "0.1": 0.7542299579136782,
+          "1.0": 0.75409192000317,
+          "10.0": 0.7436949454294551
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.1,
+        "mean_validation_auc": {
+          "0.01": 0.7479593568516498,
+          "0.1": 0.7542299579136782,
+          "1.0": 0.75409192000317
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7542299579136782,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.089025943696245
+  },
+  {
+    "fold": 9,
+    "algorithm": "LR",
+    "features": "ContentHSV48",
+    "C": 0.001,
+    "final_grid": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.01": 0.702635624428318,
+          "0.1": 0.7005988356241214,
+          "1.0": 0.7002554967161826
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.001,
+          0.01,
+          0.1
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.001": 0.7026764774891028,
+          "0.01": 0.702635624428318,
+          "0.1": 0.7005988356241214
+        }
+      },
+      {
+        "stage": 2,
+        "grid": [
+          0.0001,
+          0.001,
+          0.01
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.0001": 0.6983815945094239,
+          "0.001": 0.7026764774891028,
+          "0.01": 0.702635624428318
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7026764774891028,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.4388571334593176
+  },
+  {
+    "fold": 9,
+    "algorithm": "LR",
+    "features": "ContentHSV_HOG192",
+    "C": 0.001,
+    "final_grid": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.01": 0.7274650593659501,
+          "0.1": 0.7187010504075076,
+          "1.0": 0.7172636706131036
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.001,
+          0.01,
+          0.1
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.001": 0.7395173773047107,
+          "0.01": 0.7274650593659501,
+          "0.1": 0.7187010504075076
+        }
+      },
+      {
+        "stage": 2,
+        "grid": [
+          0.0001,
+          0.001,
+          0.01
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.0001": 0.7363859195100263,
+          "0.001": 0.7395173773047107,
+          "0.01": 0.7274650593659501
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7395173773047107,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.7085483527166274
+  },
+  {
+    "fold": 9,
+    "algorithm": "SVM",
+    "features": "ContentHSV48",
+    "C": 1.0,
+    "final_grid": [
+      0.1,
+      1.0,
+      10.0
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "selected_C": 1.0,
+        "mean_validation_auc": {
+          "0.1": 0.6915271427892887,
+          "1.0": 0.7060134432740792,
+          "10.0": 0.6962091296058069
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7060134432740792,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.2326527186577043
+  },
+  {
+    "fold": 9,
+    "algorithm": "SVM",
+    "features": "ContentHSV_HOG192",
+    "C": 0.1,
+    "final_grid": [
+      0.01,
+      0.1,
+      1.0
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "selected_C": 0.1,
+        "mean_validation_auc": {
+          "0.1": 0.7439906554258547,
+          "1.0": 0.7415376801413341,
+          "10.0": 0.7286847665535993
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.1,
+        "mean_validation_auc": {
+          "0.01": 0.7398107872970944,
+          "0.1": 0.7439906554258547,
+          "1.0": 0.7415376801413341
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7439906554258547,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.1125963273565462
+  },
+  {
+    "fold": 10,
+    "algorithm": "LR",
+    "features": "ContentHSV48",
+    "C": 0.01,
+    "final_grid": [
+      0.001,
+      0.01,
+      0.1
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.01": 0.6948702827939224,
+          "0.1": 0.6939967776371351,
+          "1.0": 0.6938779654154389
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.001,
+          0.01,
+          0.1
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.001": 0.693279876884342,
+          "0.01": 0.6948702827939224,
+          "0.1": 0.6939967776371351
+        }
+      }
+    ],
+    "mean_validation_auc": 0.6948702827939224,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.8688820323172055
+  },
+  {
+    "fold": 10,
+    "algorithm": "LR",
+    "features": "ContentHSV_HOG192",
+    "C": 0.001,
+    "final_grid": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "selected_C": 0.01,
+        "mean_validation_auc": {
+          "0.01": 0.7230192382537682,
+          "0.1": 0.718640942882808,
+          "1.0": 0.7177476600626406
+        }
+      },
+      {
+        "stage": 1,
+        "grid": [
+          0.001,
+          0.01,
+          0.1
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.001": 0.725771084638645,
+          "0.01": 0.7230192382537682,
+          "0.1": 0.718640942882808
+        }
+      },
+      {
+        "stage": 2,
+        "grid": [
+          0.0001,
+          0.001,
+          0.01
+        ],
+        "selected_C": 0.001,
+        "mean_validation_auc": {
+          "0.0001": 0.7173724846927629,
+          "0.001": 0.725771084638645,
+          "0.01": 0.7230192382537682
+        }
+      }
+    ],
+    "mean_validation_auc": 0.725771084638645,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.6765925158418784
+  },
+  {
+    "fold": 10,
+    "algorithm": "SVM",
+    "features": "ContentHSV48",
+    "C": 1.0,
+    "final_grid": [
+      0.1,
+      1.0,
+      10.0
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "selected_C": 1.0,
+        "mean_validation_auc": {
+          "0.1": 0.6877768783874432,
+          "1.0": 0.6973854861448082,
+          "10.0": 0.6752122871865845
+        }
+      }
+    ],
+    "mean_validation_auc": 0.6973854861448082,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.3418667577815646
+  },
+  {
+    "fold": 10,
+    "algorithm": "SVM",
+    "features": "ContentHSV_HOG192",
+    "C": 1.0,
+    "final_grid": [
+      0.1,
+      1.0,
+      10.0
+    ],
+    "boundary_unresolved": false,
+    "history": [
+      {
+        "stage": 0,
+        "grid": [
+          0.1,
+          1.0,
+          10.0
+        ],
+        "selected_C": 1.0,
+        "mean_validation_auc": {
+          "0.1": 0.7283404894859657,
+          "1.0": 0.7374075060747591,
+          "10.0": 0.7284551166668886
+        }
+      }
+    ],
+    "mean_validation_auc": 0.7374075060747591,
+    "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+    "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+    "threshold": -1.1071624523409993
+  }
+]

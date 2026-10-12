@@ -14,7 +14,7 @@
 ## 2. 实验轮次编号：R
 
 - 每一轮正式运行（同一版代码、同一运行名下的一组实验）分配一个轮次编号 R1、R2……，只增不复用。smoke 和合成测试不占轮次编号。
-- **运行名**（`--run-name`）格式为 `R<轮次>_<主题>`，主题用英文驼峰、不含点，例如 `R2_LocalFeatureA`。代码会拒绝运行名中的点。
+- **运行名**（`--run-name`）格式为 `R<轮次>_<主题>`，主题用英文驼峰、不含点，例如 `R2_LocalFeatureAB`。代码会拒绝运行名中的点。
 - 代码指纹变化后，需要配对比较的旧组必须在新轮次中一起重跑；不同轮次的结果不直接配对。
 - **结果存档目录**格式为 `docs/experiments/<YYYY-MM-DD>-R<轮次>-<主题小写连字符>/`，例如 `2026-10-13-R2-local-feature-a/`，日期取结果回传日。
 
@@ -32,11 +32,11 @@
 | F3 | ResNet18 全局512 | `F3_ResNet_Global512` | R1 已完成；R2、R3 中重跑 |
 | F4 | ResNet18 全局＋2×2区域2560 | `F4_ResNet_GlobalLocal2560` | R1 已完成；R2 中重跑 |
 | F4.1 | 局部特征方案 A：全局512＋跨区域最大512 | `F4.1_ResNet_GlobalRegionMax1024` | 待 R2 |
-| F4.2 | 局部特征方案 B：全局512＋五窗口独立编码最大512 | `F4.2_ResNet_GlobalCropMax1024` | 合成验证，正式运行未排期 |
-| F5 | 仅内容区域的 HSV48/HSV＋梯度192（白边对照） | `F5_Traditional_Content_HSV_Gradient` | 据报告正在运行，回传后登记轮次 |
+| F4.2 | 局部特征方案 B：全局512＋五窗口独立编码最大512 | `F4.2_ResNet_GlobalCropMax1024` | 待 R2 |
+| F5 | 仅内容区域的 HSV48/HSV＋梯度192（白边对照） | `F5_Traditional_Content_HSV_Gradient` | R1 补充已完成；存档 [2026-10-12-R1-f5-padding](experiments/2026-10-12-R1-f5-padding/README.md) |
 | F6 | ResNet50 全局2048（保留，非当前优先） | `F6_ResNet50_Global2048` | 待 R3 |
-| R1 | F1–F4 × LR/SVM/SupCon 十折 | 运行名 `Main_Experiments`（规则前命名，不改）；存档 [2026-10-12-main-experiments](experiments/2026-10-12-main-experiments/README.md)（不改名） | 已完成并归档 |
-| R2 | F3、F4、F4.1（局部特征方案 A，当前优先） | 运行名 `R2_LocalFeatureA`；`.run` 配置 `02 R2 Local feature A (F3,F4,F4.1)` | 待在 Windows GPU 电脑运行 |
+| R1 | F1–F4 × LR/SVM/SupCon 十折；F5 为同运行名、同代码与协议的补充 | 运行名 `Main_Experiments`（规则前命名，不改）；存档 [2026-10-12-main-experiments](experiments/2026-10-12-main-experiments/README.md)（不改名） | 已完成并归档 |
+| R2 | F3、F4、F4.1、F4.2（局部特征方案 A、B，当前优先） | 运行名 `R2_LocalFeatureAB`；`.run` 配置 `02 R2 Local features A,B (F3,F4,F4.1,F4.2)` | 待在 Windows GPU 电脑运行 |
 | R3 | F3、F6（ResNet50 小试） | 运行名 `R3_ResNet50Pilot`；`.run` 配置 `02 R3 ResNet50 pilot (F3,F6)` | 保留，未排期 |
 
 新增编号或轮次时，在同一次提交中更新本表、README 和当前方案。

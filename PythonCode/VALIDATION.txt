@@ -1,3 +1,17 @@
+R2 PREPARATION AND EXIT DIAGNOSTICS - 2026-10-12
+Round R2 now runs F3, F4, F4.1 and F4.2 under run name R2_LocalFeatureAB. 02 prints
+a completion marker after all saved work and arms a faulthandler exit watchdog
+(exit_watchdog_traceback.txt, removed on normal exit, stacks after 120 s otherwise).
+Entry script only; model/protocol source fingerprint unchanged.
+macOS arm64, Python 3.11.15 CPU temporary environment:
+  PythonCode/tests 30 passed (53.1 s), including a subprocess whose exit is blocked
+  by a non-daemon thread (stacks recorded) and a normal exit (file removed);
+  root tests 9 passed.
+  Real-image subset smoke (1690 SOP images from the local ZIP, CPU): 01 then
+  02 --group F3,F4,F4.1,F4.2 --method all --smoke-test completed in 8.7 min;
+  six group comparisons, none skipped.
+NOT verified: Windows, GPU, full SOP data, the exit hang cause.
+
 CANONICAL GROUP CONSOLIDATION - 2026-10-12
 F4.1 is the sole plan A component-transform implementation. Duplicate F7 removed.
 Former F8 crop extractor is now configured as F4.2; F6 remains unchanged.

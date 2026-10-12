@@ -13,14 +13,11 @@ of four regional means512; F4.2 implements global512 plus max of five separately
 encoded crop descriptors512. Each is1024-dimensional and uses the same ResNet18
 IMAGENET1K_V1 weights. F4.1 reuses verified current-version resnet18 caches;
 F4.2 requires new crop extraction. Both use all existing corruptions and models.
-New F4.1/F4.2 folders may be added to the existing default Main_Experiments:
-python 02_SOP_Experiments.py --group F4.1,F4.2 --method all
-Existing F1-F4 results remain separate. Automatic comparisons skip old/new source
-fingerprints. To compare all four groups automatically, use a NEW run name:
-python 02_SOP_Experiments.py --group F3,F4,F4.1,F4.2 --method all --run-name Local_Pilot
-New formal round names follow docs/versioning.md (for example R2_LocalFeatureA);
-Local_Pilot is an earlier illustrative name, not a recorded completed round.
-To run only the new groups: --group F4.1,F4.2 --method all --run-name Local_Pilot.
+Do not add F4.1/F4.2 to Main_Experiments: that run name is round R1 (closed),
+and automatic comparisons skip old/new source fingerprints. Round R2 reruns the
+baselines with both local plans under one new run name (docs/versioning.md):
+python 02_SOP_Experiments.py --group F3,F4,F4.1,F4.2 --method all --run-name R2_LocalFeatureAB
+(Local_Pilot was an earlier illustrative name, not a recorded round.)
 Reusing an existing group's old-version result folder fails its identity check;
 old cache fingerprints also differ. Never bypass these compatibility guards.
 01 does not need to run again. A uses the existing component transform; B adds a crop extractor,
@@ -47,12 +44,18 @@ python 02_SOP_Experiments.py --group all --method supcon
 python 02_SOP_Experiments.py --group F1 --method all --run-name HSV48_repeat1
 python 02_SOP_Experiments.py --compare-only
 
-Local feature plan A (F4.1, priority). F4.1 = F3 global 512 plus the per-channel
-maximum across the four F4 region vectors (1024). This code version changed the
-model-source fingerprint, so rerun F3 and F4 with F4.1 under one run name:
-python 02_SOP_Experiments.py --group F4.1 --method all --smoke-test --skip-official-test
-python 02_SOP_Experiments.py --group F3,F4,F4.1 --method all --run-name R2_LocalFeatureA
-Naming: new method = new number (F4.1...); improvement of a method = F4.1, F4.2...
+Round R2: local feature plans A (F4.1) and B (F4.2) with the F3/F4 baselines.
+F4.1 = F3 global 512 plus the per-channel maximum across the four F4 region
+vectors; F4.2 = the same global 512 plus five crops encoded separately and
+max-pooled; both 1024. The source fingerprint changed, so F3/F4 rerun in R2:
+python 02_SOP_Experiments.py --group F4.1,F4.2 --method all --smoke-test --skip-official-test
+python 02_SOP_Experiments.py --group F3,F4,F4.1,F4.2 --method all --run-name R2_LocalFeatureAB
+Naming: new method = new number (F7...); improvement of a method = F4.1, F4.2...
+End of run: 02 prints "All requested runs finished. Results: <run folder>" after
+every requested group and comparison is saved; it is then safe to stop the process.
+It also writes exit_watchdog_traceback.txt in the run folder; a normal exit removes
+it. If the process has not exited 120 s later, all thread stacks are saved there
+to diagnose the hang; results are unaffected.
 Formal rounds are numbered R1, R2...; run names use R<round>_<Topic> (no dots).
 Round 1 (F1-F4) is the archived Main_Experiments run.
 

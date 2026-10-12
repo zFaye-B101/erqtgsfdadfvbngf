@@ -2,9 +2,9 @@
 
 ## 新增局部组A/B
 
-F6仍是ResNet50；新增F4.1（四区域最大汇总）、F4.2（五窗口分别编码并最大汇总），两者均1024维。新版用 `python 02_SOP_Experiments.py --group F3,F4,F4.1,F4.2 --method all --run-name Local_Pilot` 比较基准和新增组；01无需重跑。源码指纹变化，旧正式目录不能用新版续跑，不强行复用旧缓存。新增组仍覆盖四种扰动，正式训练须在GPU电脑运行；本机只做合成验证。详见[运行说明](../PythonCode/Readme.txt)。
+F6仍是ResNet50；新增F4.1（四区域最大汇总）、F4.2（五窗口分别编码并最大汇总），两者均1024维。新版用 `python 02_SOP_Experiments.py --group F3,F4,F4.1,F4.2 --method all --run-name R2_LocalFeatureAB`（第 2 轮 R2）比较基准和新增组；01无需重跑。源码指纹变化，旧正式目录不能用新版续跑，不强行复用旧缓存。新增组仍覆盖四种扰动，正式训练须在GPU电脑运行；本机只做合成验证。详见[运行说明](../PythonCode/Readme.txt)。
 
-若只加入新组，可直接 `python 02_SOP_Experiments.py --group F4.1,F4.2 --method all`，默认在Main_Experiments生成各自的新子目录。兼容检查针对同组算法目录；旧F3/F4与新F4.1/F4.2之间的自动跨组比较会跳过，但不影响新组训练和保存。
+不要只把新组加进默认的 `Main_Experiments`：它是已结束的第 1 轮（R1），旧 F3/F4 与新 F4.1/F4.2 之间的自动跨组比较会被跳过。按[编号与版本规则](versioning.md)，用 R2 一起重跑四组。
 
 ## 当前入口与目录更新（2026-10-12）
 
@@ -36,7 +36,7 @@ F6仍是ResNet50；新增F4.1（四区域最大汇总）、F4.2（五窗口分�
 真实测试将在一台 Windows 电脑的 PyCharm 中运行，仓库已预置：
 
 1. 用 PyCharm 打开**仓库根目录**（含 `.run/` 与 `PythonCode/`），在 Settings > Project > Python Interpreter 选择已装依赖的 Python 3.11 解释器。建议把项目放在较短路径（如 `D:\sml\`），结果目录层级较深。
-2. Run 下拉框会出现 `.run/` 中共享的配置：`00 Check environment` → `01 Preprocess SOP` → `02 Smoke baselines` / `02 Smoke SupCon` → `02 Baselines` / `02 SupCon`，另有 `Tests PythonCode`。局部特征方案 A（当前优先）另有 `02 Smoke F4.1 (plan A)` 和 `02 R2 Local feature A (F3,F4,F4.1)`（运行名 `R2_LocalFeatureA`）；ResNet50 小试另有 `02 Smoke ResNet50 (F6)` 和 `02 R3 ResNet50 pilot (F3,F6)`（运行名 `R3_ResNet50Pilot`，F3 与 F6 一起重跑以便配对比较）。编号规则见 [versioning.md](versioning.md)。工作目录都是 `PythonCode/`，并设置 `PYTHONUTF4.2=1`。
+2. Run 下拉框会出现 `.run/` 中共享的配置：`00 Check environment` → `01 Preprocess SOP` → `02 Smoke baselines` / `02 Smoke SupCon` → `02 Baselines` / `02 SupCon`，另有 `Tests PythonCode`。局部特征方案 A（当前优先）另有 `02 Smoke F4.1,F4.2 (plans A,B)` 和 `02 R2 Local features A,B (F3,F4,F4.1,F4.2)`（运行名 `R2_LocalFeatureAB`）；ResNet50 小试另有 `02 Smoke ResNet50 (F6)` 和 `02 R3 ResNet50 pilot (F3,F6)`（运行名 `R3_ResNet50Pilot`，F3 与 F6 一起重跑以便配对比较）。编号规则见 [versioning.md](versioning.md)。工作目录都是 `PythonCode/`，并设置 `PYTHONUTF4.2=1`。
 3. 先运行 `00 Check environment`（只读，不安装不下载）；默认检查全部组，也可加 `--group F1,F2` 只检查计划要跑的组。它报告解释器、依赖、PyTorch 是否为 CPU 版、数据或 ZIP 位置、磁盘空间、写权限、Windows 路径长度与控制台编码；有 FAIL 时先处理。
 4. 若 PyCharm 提示找不到模块或解释器（如项目文件夹改名），在 Run > Edit Configurations 里重新选择解释器。ZIP 不在仓库旁时，在 `01 Preprocess SOP` 的参数中加 `--zip-path "D:/data/Stanford_Online_Products.zip"`。
 
