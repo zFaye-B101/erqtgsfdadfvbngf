@@ -1,5 +1,15 @@
 # 从 GitHub 拉取并运行
 
+## 90%阈值补充分析（2026-10-12）
+
+新增 `PythonCode/03_SOP_Recalibrate_90.py`，复用保存的校准和外层测试分数，
+不重新训练、不改95%公共配置。阈值仅用每折干净独立校准集正例确定。
+运行 `python 03_SOP_Recalibrate_90.py`，默认读同目录 results.zip，否则读 results/；
+输出独立 `results_recall90/`，已有目录一律拒绝覆盖。可用 --source 与 --output 指定位置。
+输出保留原运行名/组别/模型类别，含八项指标、图表、预测和95%对90%对照。
+这不是新F组或训练轮次，原数据/模型/95%结果不变。90%目标不保证测试召回90%或FPR<50%。
+
+
 ## 新增局部组A/B
 
 F6仍是ResNet50；新增F4.1（四区域最大汇总）、F4.2（五窗口分别编码并最大汇总），两者均1024维。新版用 `python 02_SOP_Experiments.py --group F3,F4,F4.1,F4.2 --method all --run-name R2_LocalFeatureAB`（第 2 轮 R2）比较基准和新增组；01无需重跑。源码指纹变化，旧正式目录不能用新版续跑，不强行复用旧缓存。新增组仍覆盖四种扰动，正式训练须在GPU电脑运行；本机只做合成验证。详见[运行说明](../PythonCode/Readme.txt)。

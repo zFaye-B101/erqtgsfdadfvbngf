@@ -243,3 +243,10 @@ Synthetic metrics are not reportable experimental results. Finite calibration
 recall does not guarantee held-out recall. The original padded baseline remains
 selectable; CNN still uses its documented padded geometry. SupCon remains the
 fixed-feature project adaptation described in Readme.txt.
+90% RECALIBRATION ADDITION - 2026-10-12
+Only a new postprocessing entry and its test were added; 01/02/config and
+training modules were not changed. Synthetic directory and ZIP input checks
+passed: original source bytes unchanged, repeated output rejected unchanged,
+nested output rejected, calibration-only threshold produces expected recall.
+This check does not retrain models or evaluate a new independent test set.
+

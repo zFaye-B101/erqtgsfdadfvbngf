@@ -1,5 +1,15 @@
 # COMP90051 Product Matching
 
+## 90%阈值补充分析（2026-10-12）
+
+新增 `PythonCode/03_SOP_Recalibrate_90.py`，复用保存的校准和外层测试分数，
+不重新训练、不改95%公共配置。阈值仅用每折干净独立校准集正例确定。
+运行 `python 03_SOP_Recalibrate_90.py`，默认读同目录 results.zip，否则读 results/；
+输出独立 `results_recall90/`，已有目录一律拒绝覆盖。可用 --source 与 --output 指定位置。
+输出保留原运行名/组别/模型类别，含八项指标、图表、预测和95%对90%对照。
+这不是新F组或训练轮次，原数据/模型/95%结果不变。90%目标不保证测试召回90%或FPR<50%。
+
+
 小组协作仓库：同步作业要求、代码、研究资料与实验决策。当前地址为 [zFaye-B101/erqtgsfdadfvbngf](https://github.com/zFaye-B101/erqtgsfdadfvbngf)。2026-10-11 核验为 Public，任何人都可读取；公开不代表课程资料或论文获得了自由转载许可。不要上传数据集、凭据、个人信息或模型缓存。
 
 ## 所有协作者与 AI 必读

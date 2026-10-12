@@ -1,3 +1,19 @@
+90% RECALL RECALIBRATION (no training)
+Keep the original 95% experiment results and config unchanged. Run:
+python 03_SOP_Recalibrate_90.py
+By default it reads results.zip beside the script, otherwise results/.
+New files go only to results_recall90/. If that path exists, it stops without
+writing. For a new repeat, specify another unused --output directory.
+Explicit paths:
+python 03_SOP_Recalibrate_90.py --source results.zip --output results_recall90
+The new output preserves source run/group/family names. Each family includes
+outer_fold_metrics.csv, summary_mean_sd.csv, figures/, comparison_95_vs_90.csv,
+recalibrated predictions and calibration records. Source models/tuning stay
+in the original location. No pretrained weights, model loading or fitting.
+90% means calibration recall target, not accuracy or guaranteed test recall.
+The script recalibrates all completed groups in the source. Use results only
+for threshold sensitivity analysis; keep independent holdout for final review.
+
 Optional: run python 00_Check_Environment.py first for a read-only environment check.
 It checks all groups by default; use --group F1,F2 (same syntax as 02) to check
 only the planned groups, for example whether ResNet groups have torch available.
