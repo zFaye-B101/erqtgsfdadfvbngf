@@ -1,0 +1,10 @@
+{
+  "group": "F1.1_Traditional_Content_HSV48",
+  "description": "F1.1 content-only HSV48 (padding excluded; compare with F1)",
+  "features": {
+    "ContentHSV48": {
+      "extractor": "hsv_hog_content",
+      "columns": [0, 48]
+    }
+  }
+}

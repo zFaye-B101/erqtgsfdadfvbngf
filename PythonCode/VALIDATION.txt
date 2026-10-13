@@ -249,3 +249,10 @@ training modules were not changed. Synthetic directory and ZIP input checks
 passed: original source bytes unchanged, repeated output rejected unchanged,
 nested output rejected, calibration-only threshold produces expected recall.
 This check does not retrain models or evaluate a new independent test set.
+
+2026-10-14 padding configuration split
+- Runtime changes: two new F1.1/F2.1 JSON files; removed active F5 JSON; one line in 02 accepts F1.2 as an input alias for F2.1. No git changes to 01,03,config.json or utils.
+- Nine focused configuration/composition/comparison/preflight checks passed on Python3.8.18; the local Code copy also passed three relevant checks.
+- Python3.11.15 recalibration directory/ZIP test passed (19.600s), with eight synthetic groups F1/F1.1/F2/F2.1/F3/F4/F4.1/F4.2, source preservation and existing-output rejection. Python3.8 cannot execute 03 because Path.is_relative_to requires Python3.9+; it was rerun successfully on the supported 3.11 environment.
+- 02 --list shows new groups in version order and no F5. Git diff --check and affected relative links checked.
+- No actual SOP training, GPU run, model fitting for the new groups, or migration/deletion of original result archives performed.

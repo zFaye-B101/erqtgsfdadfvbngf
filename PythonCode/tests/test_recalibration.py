@@ -1,6 +1,7 @@
 """Verify read-only source use and strict no-overwrite recalibration."""
 import importlib.util
 import json
+import shutil
 from pathlib import Path
 import sys
 import tempfile
@@ -46,10 +47,16 @@ class RecalibrationTests(unittest.TestCase):
                     rows.append(dict(fold=fold,algorithm='LR',features='HSV48',condition='clean',negative_subset=subset,
                                      **manual_metrics(part.label.to_numpy(),part.score.to_numpy(),.05)))
             pd.DataFrame(rows).to_csv(family / 'outer_fold_metrics.csv',index=False)
+            # Verify directory discovery keeps all eight groups after splitting F5.
+            group_names = ['F1', 'F1.1', 'F2', 'F2.1', 'F3', 'F4', 'F4.1', 'F4.2']
+            for group in group_names[1:]:
+                shutil.copytree(family, source / 'Example' / group / 'baselines')
             before = {p.relative_to(source).as_posix(): p.read_bytes() for p in source.rglob('*') if p.is_file()}
             output = root / 'results_recall90'
             entry.reprocess(source,output)
             result = pd.read_csv(output / 'Example/F1/baselines/outer_fold_metrics.csv')
+            self.assertEqual(sorted(p.parent.parent.name for p in output.glob('Example/*/baselines/outer_fold_metrics.csv')),
+                             sorted(group_names))
             self.assertTrue(result.TPR.eq(.9).all())
             self.assertEqual(before,{p.relative_to(source).as_posix():p.read_bytes() for p in source.rglob('*') if p.is_file()})
             result_bytes = (output / 'Example/F1/baselines/outer_fold_metrics.csv').read_bytes()

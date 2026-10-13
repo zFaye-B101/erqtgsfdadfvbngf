@@ -20,6 +20,32 @@ from utils.sop_reporting import update_comparisons
 
 
 class EntryTests(unittest.TestCase):
+    def test_padding_groups_select_alias_and_preserve_shared_settings(self):
+        groups = discover_experiments(ROOT / 'experiment_configs')
+        self.assertNotIn('F5_Traditional_Content_HSV_Gradient', groups)
+        expected = ['F1.1_Traditional_Content_HSV48', 'F2.1_Traditional_Content_HSV_Gradient192']
+        spec = importlib.util.spec_from_file_location('entry', ROOT / '02_SOP_Experiments.py')
+        entry = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(entry)
+        self.assertEqual(entry.select_groups(groups, 'F1.1,F2.1'), expected)
+        self.assertEqual(entry.select_groups(groups, 'F1.1,F1.2'), expected)
+        self.assertEqual(entry.select_groups(groups, 'F1.2,F2.1'), expected[1:])
+        with self.assertRaises(ValueError):
+            entry.select_groups(groups, 'F5')
+        configs = [load_config(ROOT / 'config.json', experiment_path=groups[g][0]) for g in expected]
+        self.assertEqual(list(configs[0]['feature_sets']), ['ContentHSV48'])
+        self.assertEqual(list(configs[1]['feature_sets']), ['ContentHSV_HOG192'])
+        self.assertEqual(configs[0]['feature_sets']['ContentHSV48'], {'extractor': 'hsv_hog_content', 'columns': [0, 48]})
+        self.assertEqual(configs[1]['feature_sets']['ContentHSV_HOG192'], {'extractor': 'hsv_hog_content', 'columns': [0, 192]})
+        for config in configs:
+            self.assertEqual(config['run_name'], 'Main_Experiments')
+            self.assertEqual((config['outer_folds'], config['inner_folds']), (10, 3))
+            self.assertEqual(config['target_validation_recall'], .95)
+            self.assertEqual(config['comparisons'], [])
+        excluded = {'feature_profile', 'feature_sets'}
+        self.assertEqual({k: v for k, v in configs[0].items() if k not in excluded},
+                         {k: v for k, v in configs[1].items() if k not in excluded})
+
     def test_all_initializes_torch_before_experiments_and_reports(self):
         # Use a fresh process: the pipeline tests already import torch globally.
         script = textwrap.dedent('''
@@ -168,7 +194,7 @@ class EntryTests(unittest.TestCase):
         groups = discover_experiments(ROOT / 'experiment_configs')
         names = list(groups)
         self.assertLess(names.index('F4_ResNet_GlobalLocal2560'), names.index('F4.1_ResNet_GlobalRegionMax1024'))
-        self.assertLess(names.index('F4.1_ResNet_GlobalRegionMax1024'), names.index('F5_Traditional_Content_HSV_Gradient'))
+        self.assertLess(names.index('F4.1_ResNet_GlobalRegionMax1024'), names.index('F4.2_ResNet_GlobalCropMax1024'))
         spec = importlib.util.spec_from_file_location('entry', ROOT / '02_SOP_Experiments.py')
         entry = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(entry)

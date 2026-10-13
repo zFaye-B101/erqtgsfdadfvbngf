@@ -1,3 +1,16 @@
+Padding groups split (2026-10-14)
+Replace 02_SOP_Experiments.py, remove experiment_configs/F5_Traditional_Content_HSV_Gradient.json,
+and add F1.1_Traditional_Content_HSV48.json and F2.1_Traditional_Content_HSV_Gradient192.json.
+Run: python 02_SOP_Experiments.py --group F1.1,F2.1 --method all
+F1.2 is accepted by 02 as an input alias for F2.1. Output names remain F1.1/F2.1.
+The default run name remains Main_Experiments. No changes to 01, 03, config.json or utils.
+Move the old results/Main_Experiments/F5_Traditional_Content_HSV_Gradient folder outside results.
+After the new runs finish, rename the old results_recall90 folder, then run:
+python 03_SOP_Recalibrate_90.py --source results --output results_recall90
+03 processes all completed source runs, without fitting models or overwriting existing output.
+Historical F5 archives remain valid historical evidence. Eight current research feature groups
+exclude the retained F6 pilot; repeated F3/F4 runs remain separate result directories.
+
 90% RECALL RECALIBRATION (no training)
 Keep the original 95% experiment results and config unchanged. Run:
 python 03_SOP_Recalibrate_90.py
