@@ -6,11 +6,11 @@ specifies a unique `group`, optional `description`, and `features` mapping.
 Complete merged settings are recorded in each result family's protocol.json.
 
 Current groups: F1 HSV48; F1.1 content-only HSV48; F2 HSV plus spatial
-gradient192; F1.2 content-only HSV plus spatial gradient192; F3 ResNet global512;
-F4 ResNet global plus four regions2560. F1.1/F1.2 replace the former combined
+gradient192; F2.1 content-only HSV plus spatial gradient192; F3 ResNet global512;
+F4 ResNet global plus four regions2560. F1.1/F2.1 replace the former combined
 F5 configuration and use hsv_hog_content to exclude white padding. Compare
-F1.1 with F1 and F1.2 with F2. Run --group F1.1,F1.2 --method all;
-F1.2 is the actual group name, not a compatibility spelling.
+F1.1 with F1 and F2.1 with F2. Run --group F1.1,F2.1 --method all;
+F2.1 is the actual group name, not a compatibility spelling.
 Its gradient cells resize the content rectangle to 128x128 without keeping the
 aspect ratio. F6 is frozen ResNet50 (IMAGENET1K_V2) global average pooling,
 2048 dimensions, on the same padded 224 input as F3; compare F6 with F3 to measure

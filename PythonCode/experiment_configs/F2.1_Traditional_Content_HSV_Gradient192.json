@@ -1,0 +1,10 @@
+{
+  "group": "F2.1_Traditional_Content_HSV_Gradient192",
+  "description": "F2.1 content-only HSV plus spatial gradient192 (padding excluded; compare with F2)",
+  "features": {
+    "ContentHSV_HOG192": {
+      "extractor": "hsv_hog_content",
+      "columns": [0, 192]
+    }
+  }
+}

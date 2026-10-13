@@ -261,3 +261,6 @@ This check does not retrain models or evaluate a new independent test set.
 - User chose F1.2 as the actual content-HSV-gradient group, replacing F2.1. Removed the 02 input-alias line.
 - Two focused canonical-name/preflight checks passed; Python3.11 directory/ZIP recalibration check passed for eight synthetic groups using F1.2. Source preservation and no-overwrite remain verified.
 - Feature definitions, training tools, config.json and 03 unchanged; no formal training performed.
+
+2026-10-14 final group name: F2.1
+- User confirmed F1.1/F2.1, with no F1.2 alias. Two canonical-selection/preflight checks and the eight-group directory/ZIP recalibration test passed. No training, feature, threshold or 03 implementation change.

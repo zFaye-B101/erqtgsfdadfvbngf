@@ -23,14 +23,14 @@ class EntryTests(unittest.TestCase):
     def test_padding_groups_select_canonical_names_and_preserve_shared_settings(self):
         groups = discover_experiments(ROOT / 'experiment_configs')
         self.assertNotIn('F5_Traditional_Content_HSV_Gradient', groups)
-        expected = ['F1.1_Traditional_Content_HSV48', 'F1.2_Traditional_Content_HSV_Gradient192']
+        expected = ['F1.1_Traditional_Content_HSV48', 'F2.1_Traditional_Content_HSV_Gradient192']
         spec = importlib.util.spec_from_file_location('entry', ROOT / '02_SOP_Experiments.py')
         entry = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(entry)
-        self.assertEqual(entry.select_groups(groups, 'F1.1,F1.2'), expected)
+        self.assertEqual(entry.select_groups(groups, 'F1.1,F2.1'), expected)
         with self.assertRaises(ValueError):
-            entry.select_groups(groups, 'F2.1')
-        self.assertEqual(entry.select_groups(groups, 'F1.2,F1.2'), expected[1:])
+            entry.select_groups(groups, 'F1.2')
+        self.assertEqual(entry.select_groups(groups, 'F2.1,F2.1'), expected[1:])
         with self.assertRaises(ValueError):
             entry.select_groups(groups, 'F5')
         configs = [load_config(ROOT / 'config.json', experiment_path=groups[g][0]) for g in expected]

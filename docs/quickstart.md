@@ -175,10 +175,10 @@ Notebook 格式校验通过，全部代码格已在 Mac 的 Python 3.12.14 / Pil
 这些不是 Windows 实测，也不是完整模型训练。依赖范围尚未锁定；主运行机验证后应另存可复现环境版本。[环境指南](environment.md)提供官方后端选择流程与命令，但Windows/CUDA仍待实测，不能当作已验证记录。
 ## 白边组拆分后的运行（2026-10-14）
 
-本节替代下方历史F5菜单说明。运行电脑仅需：替换02、新增两份F1.1/F1.2 JSON、删除原F5 JSON；01、03、config.json和utils均保持原样。新特征与旧F5两分支相同，八个当前研究表示为F1/F1.1/F2/F1.2/F3/F4/F4.1/F4.2；保留的F6不因本次更新被运行。
+本节替代下方历史F5菜单说明。运行电脑仅需：替换02、新增两份F1.1/F2.1 JSON、删除原F5 JSON；01、03、config.json和utils均保持原样。新特征与旧F5两分支相同，八个当前研究表示为F1/F1.1/F2/F2.1/F3/F4/F4.1/F4.2；保留的F6不因本次更新被运行。
 
 1. 将 `results/Main_Experiments/F5_Traditional_Content_HSV_Gradient` 移到 `results` 外备份；仅删JSON不会删除旧结果。不要把备份放在results下面，03递归扫描。
-2. 在代码目录运行：`python 02_SOP_Experiments.py --group F1.1,F1.2 --method all`。默认写 `results/Main_Experiments/F1.1_Traditional_Content_HSV48/` 与 `F1.2_Traditional_Content_HSV_Gradient192/`。
+2. 在代码目录运行：`python 02_SOP_Experiments.py --group F1.1,F2.1 --method all`。默认写 `results/Main_Experiments/F1.1_Traditional_Content_HSV48/` 与 `F2.1_Traditional_Content_HSV_Gradient192/`。
 3. 保留其余组和已有第二批ResNet运行目录。新两组会重训95%结果，01无需重跑；不要替换公共config或utils，以免旧运行指纹/协议变化。
 4. 将旧 `results_recall90` 改名备份，随后运行 `python 03_SOP_Recalibrate_90.py --source results --output results_recall90`。它重新处理results内所有完整结果，不重训；包括不同运行名下重跑的F3/F4，不等于只有八个输出目录。源中若仍有旧F5或已运行F6，它们也会进入90%输出。
 5. 02完成会重新生成Main_Experiments/comparisons；原有条件、内外层折、校准、训练设置不变，兼容的结果才会自动配对。03的已有目录拒绝覆盖规则不变。
