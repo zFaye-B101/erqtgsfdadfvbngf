@@ -20,6 +20,10 @@
 
 ### 最近更新：2026-10-12
 
+- **进度校准（核对 main@aabe148）：** F1–F5 正式结果均已归档；F4.1/F4.2 已实现，R2 四组真实图片 smoke 已有通过记录，完整正式结果尚未回传。报告提纲、A/B/C 分工和 R1 图表已建立，正文与 R2 分析待完成；代码 ZIP/会议记录负责人待定。同步修正当前方案和报告提纲的旧状态，本批仅文档，不改代码或配置、不重跑实验。
+
+以下为先前批次的历史变更摘要，测试范围及“未运行”等描述仅指当时版本；当前状态以本文“当前状态”和 [current-plan.md](docs/current-plan.md) 顶部摘要为准。旧 `R2_LocalFeatureA` 已被 `R2_LocalFeatureAB` 替代。
+
 - **Methods 小标题（用户确认）：** 在[报告提纲](docs/report-outline.md)中将数据集与预处理、特征与实验组、算法与超参数、交叉验证/扰动条件/指标整理为四个小节；说明三类选择的设计依据写入 Methods，选参结果和指标表现留给 Results and Discussion。仅更新报告结构，不改实验协议或代码。
 - **报告绘图脚本：** 新增 [tools/plot_report_figures.py](tools/plot_report_figures.py)，只读归档 CSV 生成报告图 1（ROC-AUC 随条件变化）与图 2（逐折配对差值，含 TPR −1 个百分点界线）；R1 版 PDF/PNG 存于 `docs/report-figures/`，R2 存档后用同一脚本加参数重新生成。提纲第 4、6 节同步。
 - **研究问题定稿（用户确认）：** 对训练中未见过的商品，加入局部视觉特征，能否在遮挡、噪声、模糊和旋转条件下减少外观相似商品之间的误匹配，同时保持同商品匹配能力？与 current-plan 英文版一致，实验与 R2 判断标准不变；README 当前状态与报告提纲同步为该措辞，并在提纲第 6 节说明 F1→F2 也可作为手工表示中“加入局部特征”的证据及其限制。
@@ -47,11 +51,11 @@
 - 总配置为 `PythonCode/config.json`；各组配置为 `PythonCode/experiment_configs/*.json`；工具在 `PythonCode/utils/`。
 - 直接运行 02 会显示实验/模型菜单；命令行示例：`python 02_SOP_Experiments.py --group F1,F2 --method baselines`。
 - JSON 自动发现任意新增组；已有提取器可通过 components 组合，全新方法还需实现并注册。
-- 默认五组：F1 HSV48、F2 HSV+分区域梯度192、F3 ResNet全局512、F4 ResNet全局+区域2560（均带填边），F5 仅内容区域的 HSV48 与 HSV+梯度192（白边对照）。
+- R1 的 F1–F5 已归档；当前 R2 选择 F3/F4/F4.1/F4.2，F6 保留但非当前优先。组定义和运行名见[编号规则](docs/versioning.md)。
 - 结果保存至 `results/<run_name>/<group>/`；`comparisons/`读取兼容已完成结果生成逐折比较，不重复训练。
 - 移动代码改变指纹，新协议目录为 `protocols/Main_Experiments_Organized`；旧输出保留，不强行混用。
-- 保留组员 00 预检、共享 PyCharm 配置及历史 Notebook；运行配置默认选 F1。
-- 不改变三模型、10/3商品折、校准和扰动规则；F1–F4三算法真实十折结果已回传核对，F5与官方holdout仍缺结果。
+- 保留 00 预检、共享 PyCharm 配置及历史 Notebook；R2 使用对应的四组 smoke/正式运行配置。
+- 三模型、10/3商品折、校准和扰动规则保持不变；F1–F5 正式结果已归档，R2 正式结果尚未回传，官方 holdout 未使用。
 
 
 
@@ -59,6 +63,8 @@
 - **验证：** Mac/Python 3.11 CPU 临时环境中 `PythonCode/tests` 12 项（新增 2 项预检测试）和根 `tests/` 9 项（新增运行配置检查）通过。预检的 Windows 专属分支、PyCharm 实际加载这些配置、Windows 运行、真实 SOP 均**未验证**。
 - **互评复查：** [可配置流程互评](docs/reviews/2026-10-11_88e1760_pipeline_claude.md) R1–R3 改为已验证、R4 大部分已实施；[预处理互评](docs/reviews/2026-10-11_3054cd3_preprocessing-features_claude.md) R1 改为部分实施、待真实数据量化。[docs/data.md](docs/data.md) 中 `.npz` 描述标注为历史 Notebook 版本。
 - 本次不改模型、协议或默认配置。更早的变更说明见 Git 历史、[docs/reviews/](docs/reviews/) 与 [当前方案](docs/current-plan.md)。
+
+上述 Windows 预配置和验证条目为早期记录；最新 R2 验证范围见 [VALIDATION.txt](PythonCode/VALIDATION.txt)，不能从旧记录推断当前仍无真实数据结果。
 
 ## 现在开始运行
 
