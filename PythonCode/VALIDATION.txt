@@ -256,3 +256,8 @@ This check does not retrain models or evaluate a new independent test set.
 - Python3.11.15 recalibration directory/ZIP test passed (19.600s), with eight synthetic groups F1/F1.1/F2/F2.1/F3/F4/F4.1/F4.2, source preservation and existing-output rejection. Python3.8 cannot execute 03 because Path.is_relative_to requires Python3.9+; it was rerun successfully on the supported 3.11 environment.
 - 02 --list shows new groups in version order and no F5. Git diff --check and affected relative links checked.
 - No actual SOP training, GPU run, model fitting for the new groups, or migration/deletion of original result archives performed.
+
+2026-10-14 canonical name correction
+- User chose F1.2 as the actual content-HSV-gradient group, replacing F2.1. Removed the 02 input-alias line.
+- Two focused canonical-name/preflight checks passed; Python3.11 directory/ZIP recalibration check passed for eight synthetic groups using F1.2. Source preservation and no-overwrite remain verified.
+- Feature definitions, training tools, config.json and 03 unchanged; no formal training performed.

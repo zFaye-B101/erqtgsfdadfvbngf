@@ -42,12 +42,12 @@
 | F1 | HSV48 | `F1_Traditional_HSV48` | R1 已完成 |
 | F1.1 | 仅内容区域HSV48，原F5的颜色分支 | `F1.1_Traditional_Content_HSV48` | 配置已拆分；正式重跑待执行 |
 | F2 | HSV＋空间梯度192 | `F2_Traditional_HSV_Gradient192` | R1 已完成 |
-| F2.1 | 仅内容区域HSV＋梯度192，原F5的梯度分支 | `F2.1_Traditional_Content_HSV_Gradient192` | 配置已拆分；正式重跑待执行；02中的F1.2仅为输入兼容别名 |
+| F1.2 | 仅内容区域HSV＋梯度192，原F5的梯度分支 | `F1.2_Traditional_Content_HSV_Gradient192` | 配置已拆分；正式重跑待执行；F1.2为正式编号 |
 | F3 | ResNet18 全局512 | `F3_ResNet_Global512` | R1 已完成；R2、R3 中重跑 |
 | F4 | ResNet18 全局＋2×2区域2560 | `F4_ResNet_GlobalLocal2560` | R1 已完成；R2 中重跑 |
 | F4.1 | 局部特征方案 A：全局512＋跨区域最大512 | `F4.1_ResNet_GlobalRegionMax1024` | R2 已完成并归档 |
 | F4.2 | 局部特征方案 B：全局512＋五窗口独立编码最大512 | `F4.2_ResNet_GlobalCropMax1024` | R2 已完成并归档 |
-| F5 | 历史合并白边组：HSV48/HSV＋梯度192 | `F5_Traditional_Content_HSV_Gradient` | 活跃配置已删除，由F1.1/F2.1替代；原R1存档保留 [2026-10-12-R1-f5-padding](experiments/2026-10-12-R1-f5-padding/README.md) |
+| F5 | 历史合并白边组：HSV48/HSV＋梯度192 | `F5_Traditional_Content_HSV_Gradient` | 活跃配置已删除，由F1.1/F1.2替代；原R1存档保留 [2026-10-12-R1-f5-padding](experiments/2026-10-12-R1-f5-padding/README.md) |
 | F6 | ResNet50 全局2048（保留，非当前优先） | `F6_ResNet50_Global2048` | 待 R3 |
 | R1 | F1–F4 × LR/SVM/SupCon 十折；F5 为同运行名、同代码与协议的补充 | 运行名 `Main_Experiments`（规则前命名，不改）；存档 [2026-10-12-main-experiments](experiments/2026-10-12-main-experiments/README.md)（不改名） | 已完成并归档 |
 | R2 | F3、F4、F4.1、F4.2（局部特征方案 A、B） | 实际回传运行名 `ResNet_LocalFeature_Comparison`；计划名及 `.run` 为 `R2_LocalFeatureAB`，不改已有结果名 | 已完成并[归档](experiments/2026-10-13-R2-local-features/README.md)，记录设备为 CPU |

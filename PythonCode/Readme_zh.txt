@@ -1,12 +1,12 @@
 白边配置拆分（2026-10-14）
-运行电脑只替换02，新增F1.1和F2.1两份JSON，删除旧F5 JSON；01、03、config.json和utils不替换。
-运行：python 02_SOP_Experiments.py --group F1.1,F2.1 --method all
-02也兼容误写的F1.2，实际选择并保存F2.1；默认结果进入results/Main_Experiments。
+运行电脑只替换02，新增F1.1和F1.2两份JSON，删除旧F5 JSON；01、03、config.json和utils不替换。
+运行：python 02_SOP_Experiments.py --group F1.1,F1.2 --method all
+F1.1和F1.2是正式组名；默认结果进入results/Main_Experiments。
 先把旧results/Main_Experiments/F5_Traditional_Content_HSV_Gradient移到results之外备份。
 新两组完成后，先将原results_recall90改名，再运行：
 python 03_SOP_Recalibrate_90.py --source results --output results_recall90
 03读取所有完整结果重新算90%指标，不重训；已有输出目录会拒绝覆盖。
-八组指F1/F1.1/F2/F2.1/F3/F4/F4.1/F4.2；不包含未运行的F6。不同运行名下重复的F3/F4仍保留。
+八组指F1/F1.1/F2/F1.2/F3/F4/F4.1/F4.2；不包含未运行的F6。不同运行名下重复的F3/F4仍保留。
 以下F5说明是历史记录，已有实验归档不会被本次配置修改改写。
 
 90%目标召回率的补充分析（不用重新训练）

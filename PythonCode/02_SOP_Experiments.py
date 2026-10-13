@@ -22,7 +22,6 @@ def select_groups(groups, selection):
     chosen = []
     for token in selection.split(','):
         token = token.strip()
-        token = 'F2.1' if token == 'F1.2' else token  # Accept the former command spelling.
         if token.isdigit() and 1 <= int(token) <= len(names):
             matches = [names[int(token) - 1]]
         else:

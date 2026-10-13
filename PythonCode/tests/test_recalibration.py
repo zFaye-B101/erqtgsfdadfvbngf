@@ -48,7 +48,7 @@ class RecalibrationTests(unittest.TestCase):
                                      **manual_metrics(part.label.to_numpy(),part.score.to_numpy(),.05)))
             pd.DataFrame(rows).to_csv(family / 'outer_fold_metrics.csv',index=False)
             # Verify directory discovery keeps all eight groups after splitting F5.
-            group_names = ['F1', 'F1.1', 'F2', 'F2.1', 'F3', 'F4', 'F4.1', 'F4.2']
+            group_names = ['F1', 'F1.1', 'F2', 'F1.2', 'F3', 'F4', 'F4.1', 'F4.2']
             for group in group_names[1:]:
                 shutil.copytree(family, source / 'Example' / group / 'baselines')
             before = {p.relative_to(source).as_posix(): p.read_bytes() for p in source.rglob('*') if p.is_file()}

@@ -69,8 +69,8 @@ class PreflightTests(unittest.TestCase):
         preflight = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(preflight)
         found = discover_experiments(ROOT / "experiment_configs")
-        self.assertEqual(preflight.select_groups(list(found), "F2.1"), ["F2.1_Traditional_Content_HSV_Gradient192"])
-        content = load_config(ROOT / "config.json", experiment_path=found["F2.1_Traditional_Content_HSV_Gradient192"][0])
+        self.assertEqual(preflight.select_groups(list(found), "F1.2"), ["F1.2_Traditional_Content_HSV_Gradient192"])
+        content = load_config(ROOT / "config.json", experiment_path=found["F1.2_Traditional_Content_HSV_Gradient192"][0])
         self.assertEqual(preflight.extractors_of(content), {"hsv_hog_content"})
         name = preflight.select_groups(list(found), "F4")[0]
         config = load_config(ROOT / "config.json", experiment_path=found[name][0])
