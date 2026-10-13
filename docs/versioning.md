@@ -30,6 +30,8 @@
 
 ## 3. 其他编号
 
+- 统计后处理不分配新F/R号；`2026-10-13-course-statistics`是跨95/90工作点的课堂统计补充目录，不是新的正式实验轮次。
+
 - 互评记录中的问题编号 R1、R2……只在该记录内部有效，与实验轮次无关；引用时写明记录文件，例如“局部特征互评 R2”。
 - 提交说明（commit message）使用中文，可保留 `feat:`、`fix:`、`docs:` 等类型前缀，例如 `feat: 新增 F4.1 跨区域最大汇总`。2026-10-12 之前的英文提交不改写。
 
@@ -49,5 +51,6 @@
 | R2 | F3、F4、F4.1、F4.2（局部特征方案 A、B） | 实际回传运行名 `ResNet_LocalFeature_Comparison`；计划名及 `.run` 为 `R2_LocalFeatureAB`，不改已有结果名 | 已完成并[归档](experiments/2026-10-13-R2-local-features/README.md)，记录设备为 CPU |
 | R1/R2 后处理 | 95%校准目标改为90%，不重新训练 | 保留两个原运行名，输出 `results_recall90` | 已核对并[归档](experiments/2026-10-13-R1-R2-recall90/README.md)，不占新训练轮次 |
 | R3 | F3、F6（ResNet50 小试） | 运行名 `R3_ResNet50Pilot`；`.run` 配置 `02 R3 ResNet50 pilot (F3,F6)` | 保留，未排期 |
+| R2 统计后处理 | Lecture 15公式，95%主分析及90%补充 | [2026-10-13-course-statistics](experiments/2026-10-13-course-statistics/README.md) | 已复算并独立数值核验；未重训，不占新轮次 |
 
 新增编号或轮次时，在同一次提交中更新本表、README 和当前方案。

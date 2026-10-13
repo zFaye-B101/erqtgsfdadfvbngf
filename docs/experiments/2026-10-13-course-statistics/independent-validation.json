@@ -1,0 +1,8 @@
+{
+  "checks": "passed",
+  "rows_verified_independently": 810,
+  "distribution_checks": 54,
+  "slide29_rounded_statistic": 0.22206996305928078,
+  "slide30_rounded_statistic": 2.2364979492329233,
+  "note": "Raw-data examples differ slightly because lecture rounds means and variances before substitution."
+}

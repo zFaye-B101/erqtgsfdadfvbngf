@@ -1,0 +1,36 @@
+{
+  "source_sha256": {
+    "docs/experiments/2026-10-13-R2-local-features/outer_fold_metrics.csv": "966d6be8705298f2e2b4d0638fbae3b116556aa84d0eb6357146c2ba875a873e",
+    "docs/experiments/2026-10-13-R1-R2-recall90/outer_fold_metrics.csv": "79029be6fc4e06c292ff49f3a570a029c46cb3c725d62e7fd99bce83f1eccef2"
+  },
+  "scipy_version": "1.18.1",
+  "classroom_example1": {
+    "statistic": 0.24659848095803505,
+    "df_raw": 15.76678063703437,
+    "df": 16,
+    "critical": 1.7458836762762506,
+    "p": 0.4041774697345928,
+    "reject": false
+  },
+  "classroom_example2": {
+    "statistic": 2.1853931903038437,
+    "df_raw": 15.219776498476127,
+    "df": 16,
+    "critical": 1.7458836762762506,
+    "p": 0.022038052961959927,
+    "reject": true
+  },
+  "calibration_files_verified": 120,
+  "fold_sizes": {
+    "fitting": 1380,
+    "calibration": 348,
+    "test": 192
+  },
+  "comparisons": 810,
+  "course_variance_divisor": 10,
+  "primary_family_size_per_metric": 45,
+  "multiple_comparison_adjustment": null,
+  "status": "post-hoc exploratory classroom approximation; dependent CV folds",
+  "no_retraining": true,
+  "no_training_code_changes": true
+}
