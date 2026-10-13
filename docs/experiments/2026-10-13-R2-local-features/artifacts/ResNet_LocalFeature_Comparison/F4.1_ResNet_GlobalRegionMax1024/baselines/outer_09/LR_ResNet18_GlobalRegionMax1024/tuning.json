@@ -1,0 +1,60 @@
+{
+  "fold": 9,
+  "algorithm": "LR",
+  "features": "ResNet18_GlobalRegionMax1024",
+  "C": 0.001,
+  "final_grid": [
+    0.0001,
+    0.001,
+    0.01
+  ],
+  "boundary_unresolved": false,
+  "history": [
+    {
+      "stage": 0,
+      "grid": [
+        0.01,
+        0.1,
+        1.0
+      ],
+      "selected_C": 0.01,
+      "mean_validation_auc": {
+        "0.01": 0.7974404056521069,
+        "0.1": 0.7660287225441341,
+        "1.0": 0.7321188020962085
+      }
+    },
+    {
+      "stage": 1,
+      "grid": [
+        0.001,
+        0.01,
+        0.1
+      ],
+      "selected_C": 0.001,
+      "mean_validation_auc": {
+        "0.001": 0.8200095430991791,
+        "0.01": 0.7974404056521069,
+        "0.1": 0.7660287225441341
+      }
+    },
+    {
+      "stage": 2,
+      "grid": [
+        0.0001,
+        0.001,
+        0.01
+      ],
+      "selected_C": 0.001,
+      "mean_validation_auc": {
+        "0.0001": 0.8130920238224695,
+        "0.001": 0.8200095430991791,
+        "0.01": 0.7974404056521069
+      }
+    }
+  ],
+  "mean_validation_auc": 0.8200095430991791,
+  "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+  "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+  "threshold": -1.8980097100293913
+}

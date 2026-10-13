@@ -41,12 +41,13 @@
 | F2 | HSV＋空间梯度192 | `F2_Traditional_HSV_Gradient192` | R1 已完成 |
 | F3 | ResNet18 全局512 | `F3_ResNet_Global512` | R1 已完成；R2、R3 中重跑 |
 | F4 | ResNet18 全局＋2×2区域2560 | `F4_ResNet_GlobalLocal2560` | R1 已完成；R2 中重跑 |
-| F4.1 | 局部特征方案 A：全局512＋跨区域最大512 | `F4.1_ResNet_GlobalRegionMax1024` | 待 R2 |
-| F4.2 | 局部特征方案 B：全局512＋五窗口独立编码最大512 | `F4.2_ResNet_GlobalCropMax1024` | 待 R2 |
+| F4.1 | 局部特征方案 A：全局512＋跨区域最大512 | `F4.1_ResNet_GlobalRegionMax1024` | R2 已完成并归档 |
+| F4.2 | 局部特征方案 B：全局512＋五窗口独立编码最大512 | `F4.2_ResNet_GlobalCropMax1024` | R2 已完成并归档 |
 | F5 | 仅内容区域的 HSV48/HSV＋梯度192（白边对照） | `F5_Traditional_Content_HSV_Gradient` | R1 补充已完成；存档 [2026-10-12-R1-f5-padding](experiments/2026-10-12-R1-f5-padding/README.md) |
 | F6 | ResNet50 全局2048（保留，非当前优先） | `F6_ResNet50_Global2048` | 待 R3 |
 | R1 | F1–F4 × LR/SVM/SupCon 十折；F5 为同运行名、同代码与协议的补充 | 运行名 `Main_Experiments`（规则前命名，不改）；存档 [2026-10-12-main-experiments](experiments/2026-10-12-main-experiments/README.md)（不改名） | 已完成并归档 |
-| R2 | F3、F4、F4.1、F4.2（局部特征方案 A、B，当前优先） | 运行名 `R2_LocalFeatureAB`；`.run` 配置 `02 R2 Local features A,B (F3,F4,F4.1,F4.2)` | 待在 Windows GPU 电脑运行 |
+| R2 | F3、F4、F4.1、F4.2（局部特征方案 A、B） | 实际回传运行名 `ResNet_LocalFeature_Comparison`；计划名及 `.run` 为 `R2_LocalFeatureAB`，不改已有结果名 | 已完成并[归档](experiments/2026-10-13-R2-local-features/README.md)，记录设备为 CPU |
+| R1/R2 后处理 | 95%校准目标改为90%，不重新训练 | 保留两个原运行名，输出 `results_recall90` | 已核对并[归档](experiments/2026-10-13-R1-R2-recall90/README.md)，不占新训练轮次 |
 | R3 | F3、F6（ResNet50 小试） | 运行名 `R3_ResNet50Pilot`；`.run` 配置 `02 R3 ResNet50 pilot (F3,F6)` | 保留，未排期 |
 
 新增编号或轮次时，在同一次提交中更新本表、README 和当前方案。

@@ -1,0 +1,19 @@
+{
+  "threshold": 0.22311432659626,
+  "target_recall": 0.9,
+  "metrics": {
+    "TP": 314,
+    "FP": 433,
+    "TN": 263,
+    "FN": 34,
+    "accuracy": 0.5526819923371648,
+    "precision": 0.4203480589022758,
+    "TPR": 0.9022988505747126,
+    "FPR": 0.6221264367816092,
+    "F1": 0.5735159817351598,
+    "balanced_accuracy": 0.6400862068965516,
+    "ROC_AUC": 0.7766878055225261,
+    "average_precision": 0.6910962785420786
+  },
+  "note": "Original final model reused. No test labels used for threshold selection."
+}
