@@ -9,8 +9,9 @@ Output: report_figures/figure1_auc_errorbars.png (16 x 7.2 cm, 400 dpi).
 Error bars show sample SD across outer folds, not confidence intervals.
 Full condition labels (Clean/Occlusion/Noise/Blur/Rotation) are tilted 40 degrees.
 Fonts, markers and error-bar lines are enlarged for readability.
-Options: --source results --subset all|random|colour_hard; --overwrite replaces
-only an existing output figure. Other subsets have separate output filenames.
+Options: --source results --subset all|random|colour_hard. Existing output PNGs
+are overwritten by default; --overwrite is optional for older commands.
+Other subsets have separate output filenames.
 Dependencies: existing matplotlib plus the Python standard library.
 No changes to 01-03, experiment settings, or saved experiment results.
 

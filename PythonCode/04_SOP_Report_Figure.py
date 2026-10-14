@@ -3,6 +3,7 @@
 No training, feature extraction, or metric recomputation. Directory input only.
 Default input: results/ beside this script; no compressed archive is needed.
 Default output: report_figures/figure1_auc_errorbars.png beside this script.
+An existing output PNG is overwritten automatically.
 Error bars show mean +/- one sample SD across ten outer test folds.
 All eight report feature groups are included by default.
 Default figure size is 16 x 7.2 cm, with full condition labels tilted 40 degrees.
@@ -156,7 +157,8 @@ def main():
     parser.add_argument("--local-run", default="ResNet_LocalFeature_Comparison")
     parser.add_argument("--width-cm", type=float, default=16.0)
     parser.add_argument("--height-cm", type=float, default=7.2)
-    parser.add_argument("--overwrite", action="store_true")
+    parser.add_argument("--overwrite", action="store_true",
+                        help="Optional compatibility flag; output PNG is overwritten by default.")
     args = parser.parse_args()
     groups = [g.strip() for g in args.groups.split(",")]
     if not groups or len(groups) != len(set(groups)) or any(g not in GROUPS for g in groups):
@@ -168,8 +170,6 @@ def main():
     output = output.expanduser().resolve()
     if output.suffix.lower() != ".png":
         parser.error("Output must be a .png file.")
-    if output.exists() and not args.overwrite:
-        parser.error("Output exists; use --overwrite to replace only this figure.")
     source_path = args.source
     if source_path is None:
         source_path = ROOT / "results"
