@@ -1,5 +1,12 @@
 # COMP90051 Product Matching
 
+## 紧凑报告误差条图（2026-10-15）
+
+- 新增[04绘图脚本](PythonCode/04_SOP_Report_Figure.py)，运行 `python 04_SOP_Report_Figure.py`，默认读取脚本旁的普通 `results/` 文件夹，不读取ZIP、不训练。
+- 默认展示八组F1/F1.1/F2/F2.1/F3/F4/F4.1/F4.2，三算法、五条件、混合负例的ROC-AUC均值及十折样本标准差；单张PNG约16×4.8厘米，保存到 `report_figures/figure1_auc_errorbars.png`。
+- 可用 `--subset random` 或 `--subset colour_hard`，各负例口径保存为不同文件名；已有图需显式 `--overwrite`。只新增04及运行说明，01–03、配置、模型/协议工具与结果不变；此次未执行绘图或模型测试。
+
+
 ## 最终八组结果（2026-10-14）
 
 - [最终95%与90%结果及说明](docs/experiments/2026-10-14-final-experiments/README.md)：F1、F1.1、F2、F2.1、F3、F4、F4.1、F4.2已回传；新结果不包含F5或F1.2。保存逐折/汇总指标、预测、校准、调参及诊断图，不上传模型、数据和原始ZIP。

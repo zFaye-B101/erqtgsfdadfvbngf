@@ -1,5 +1,18 @@
 # 从 GitHub 拉取并运行
 
+## 04生成报告误差条图（2026-10-15）
+
+将[04_SOP_Report_Figure.py](../PythonCode/04_SOP_Report_Figure.py)放到GPU运行电脑01–03所在目录。保留已完成的普通 `results/` 文件夹，直接运行：
+
+```bash
+python 04_SOP_Report_Figure.py
+```
+
+只读汇总CSV及protocol.json，不需要ZIP、模型加载或重训。默认从Main_Experiments读取四个手工组，从ResNet_LocalFeature_Comparison读取四个CNN组；不以旧Main的CNN结果替代共同重跑批次。八组、三算法、五条件均须完整，目标为原95%校准召回、每组十折。依赖已有requirements-base中的matplotlib及Python标准库。
+
+输出 `report_figures/figure1_auc_errorbars.png`，400dpi、16×4.8厘米。误差条是样本标准差，不是置信区间。C/O/N/B/R依次为干净/遮挡/噪声/模糊/旋转。`--subset random`、`--subset colour_hard`选择其他负例口径并使用独立文件名；`--overwrite`只允许替换输出图。`--source`仅接受普通文件夹；可通过`--main-run`和`--local-run`指定实际运行名。此步不更改原结果。
+
+
 ## 90%阈值补充分析（2026-10-12）
 
 新增 `PythonCode/03_SOP_Recalibrate_90.py`，复用保存的校准和外层测试分数，

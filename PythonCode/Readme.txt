@@ -1,3 +1,18 @@
+COMPACT REPORT FIGURE (2026-10-15)
+Run: python 04_SOP_Report_Figure.py
+Input: the ordinary results/ folder beside 04; ZIP input is not supported.
+Uses saved summaries/protocols only; no fitting, model loading or metric recomputation.
+Defaults: all eight report groups, LR/SVM/SupCon, five conditions, mixed negatives,
+original 95% calibration target, ten outer folds. Handcrafted groups come from
+Main_Experiments; CNN groups come from ResNet_LocalFeature_Comparison.
+Output: report_figures/figure1_auc_errorbars.png (16 x 4.8 cm, 400 dpi).
+Error bars show sample SD across outer folds, not confidence intervals.
+C/O/N/B/R denote Clean/Occlusion/Noise/Blur/Rotation.
+Options: --source results --subset all|random|colour_hard; --overwrite replaces
+only an existing output figure. Other subsets have separate output filenames.
+Dependencies: existing matplotlib plus the Python standard library.
+No changes to 01-03, experiment settings, or saved experiment results.
+
 Padding groups split (2026-10-14)
 Replace 02_SOP_Experiments.py, remove experiment_configs/F5_Traditional_Content_HSV_Gradient.json,
 and add F1.1_Traditional_Content_HSV48.json and F2.1_Traditional_Content_HSV_Gradient192.json.
