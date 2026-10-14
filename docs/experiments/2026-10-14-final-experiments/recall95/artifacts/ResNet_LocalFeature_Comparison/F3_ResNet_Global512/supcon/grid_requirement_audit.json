@@ -1,0 +1,9 @@
+[
+  {
+    "algorithm": "SupCon",
+    "features": "ResNet18_Global512",
+    "boundary_selected_folds": 2,
+    "middle_selected_folds": 8,
+    "middle_is_majority": true
+  }
+]

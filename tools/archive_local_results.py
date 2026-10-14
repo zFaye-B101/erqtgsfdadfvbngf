@@ -96,11 +96,13 @@ def validate_names(z):
     return names
 
 
-def audit_run(z, root, run, fingerprints, original=None):
+def audit_run(z, root, run, fingerprints, original=None, expected_families=None,
+              allow_skipped=False):
     prefix = f'{root}/{run}/'
     protocols = sorted(n for n in z.namelist() if n.startswith(prefix)
                        and n.endswith('/protocol.json'))
-    require(len(protocols) == (8 if run == LOCAL else 10), 'Missing groups/families')
+    expected = expected_families if expected_families is not None else (8 if run == LOCAL else 10)
+    require(len(protocols) == expected, 'Missing groups/families')
     table, summaries, pairs, identities = {}, [], {}, []
     counts = dict(predictions=0, calibration_models=0, completed_records=0,
                   metric_rows=0, summary_rows=0, paired_delta_rows=0)
@@ -113,7 +115,8 @@ def audit_run(z, root, run, fingerprints, original=None):
         require(cfg['target_validation_recall'] == expected_target and
                 cfg['outer_folds'] == 10 and cfg['inner_folds'] == 3 and
                 cfg['mode'] == 'formal' and not cfg['run_official_test'], 'Protocol mismatch')
-        require(identity['code_fingerprint'] == fingerprints[run], 'Source fingerprint mismatch')
+        require(identity['code_fingerprint'] == fingerprints.get((run, group), fingerprints[run]),
+                'Source fingerprint mismatch')
         identities.append(identity)
         rows = csv_rows(z, base + 'outer_fold_metrics.csv')
         algorithms = ['LR', 'SVM'] if family == 'baselines' else ['SupCon']
@@ -206,10 +209,12 @@ def audit_run(z, root, run, fingerprints, original=None):
             a = table[(r['added_group'],)+key+(r['added_features'],)+tail]
             b = table[(r['baseline_group'],)+key+(r['baseline_features'],)+tail]
             close(r['delta_added_minus_baseline'], float(a[r['metric']])-float(b[r['metric']]))
-        require(not json.loads(z.read(prefix+'comparisons/skipped_incompatible_comparisons.json')),
-                'Skipped comparisons')
+        skipped = json.loads(z.read(prefix+'comparisons/skipped_incompatible_comparisons.json'))
+        require(allow_skipped or not skipped, 'Skipped comparisons')
+        counts['skipped_comparisons'] = skipped
         counts['paired_delta_rows'] = len(deltas)
-    counts.update(run=run, code_fingerprint=fingerprints[run],
+    actual_fingerprints = sorted({d['code_fingerprint'] for d in identities})
+    counts.update(run=run, code_fingerprint=actual_fingerprints[0] if len(actual_fingerprints)==1 else actual_fingerprints,
                   shared_protocol_id=identities[0]['shared_protocol_id'],
                   summary_rows=len(summaries), test_pair_hashes=pairs)
     return counts, table, summaries

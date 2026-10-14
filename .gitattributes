@@ -5,3 +5,5 @@ PythonCode/utils/*.py -text whitespace=blank-at-eol,blank-at-eof,space-before-ta
 docs/experiments/2026-10-12-R1-f5-padding/artifacts/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 docs/experiments/2026-10-13-R2-local-features/artifacts/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 docs/experiments/2026-10-13-R1-R2-recall90/artifacts/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+docs/experiments/2026-10-14-final-experiments/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

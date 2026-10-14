@@ -1,0 +1,244 @@
+{
+  "shared_protocol_id": "68f23a72ae919ce97a9933ab8c5b5594ae824314262bbc9a6c6d322763894e45",
+  "config": {
+    "run_name": "Main_Experiments",
+    "feature_profile": "F1.1_Traditional_Content_HSV48",
+    "data_dir": "processed_sop",
+    "protocol_dir": "Main_Experiments_Organized",
+    "cache_dir": "feature_cache",
+    "results_dir": "results_recall90",
+    "mode": "formal",
+    "seed": 20261011,
+    "minimum_train_images": 10000,
+    "use_all_official_train": false,
+    "outer_folds": 10,
+    "inner_folds": 3,
+    "train_anchor_cap": 1000,
+    "evaluation_anchor_cap": 500,
+    "negative_candidates": 50,
+    "target_validation_recall": 0.9,
+    "run_official_test": false,
+    "calibration_fraction": 0.2,
+    "conditions": {
+      "clean": {},
+      "occlusion25": {
+        "area_fraction": 0.25,
+        "fill": 127
+      },
+      "noise005": {
+        "sigma": 0.05
+      },
+      "blur15": {
+        "radius": 1.5
+      },
+      "rotation15": {
+        "degrees": 15.0
+      }
+    },
+    "extraction": {
+      "device": "auto",
+      "batch_size": 64
+    },
+    "baselines": {
+      "c_grids": {
+        "LR": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "SVM": [
+          0.1,
+          1.0,
+          10.0
+        ]
+      },
+      "maximum_grid_extensions": 2
+    },
+    "supcon": {
+      "temperature_grid": [
+        0.05,
+        0.1,
+        0.2
+      ],
+      "maximum_grid_extensions": 2,
+      "temperature_extension_factor": 2.0,
+      "temperature_bounds": [
+        0.005,
+        1.0
+      ],
+      "epochs": 20,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "products_per_batch": 32,
+      "images_per_product": 2,
+      "hidden_dim": 256,
+      "representation_dim": 128,
+      "projection_dim": 128,
+      "device": "auto",
+      "cpu_threads": 4,
+      "train_product_cap": null,
+      "view_mode": "clean_product_images"
+    },
+    "feature_sets": {
+      "ContentHSV48": {
+        "extractor": "hsv_hog_content",
+        "columns": [
+          0,
+          48
+        ]
+      }
+    },
+    "comparisons": [],
+    "c_grids": {
+      "LR": [
+        0.01,
+        0.1,
+        1.0
+      ],
+      "SVM": [
+        0.1,
+        1.0,
+        10.0
+      ]
+    },
+    "maximum_grid_extensions": 2
+  },
+  "code_fingerprint": "84942fc741db045250ffc3c6a4cfd597e35c52df64c0714042d5a66cc969dbf3",
+  "algorithm_family": "baselines",
+  "python": "3.11.17",
+  "numpy": "2.4.6",
+  "pandas": "3.0.6",
+  "sklearn": "1.9.1",
+  "Pillow": "12.3.0",
+  "extractors": [
+    {
+      "extractor": "hsv_hog_content",
+      "opencv": "5.0.0",
+      "geometry": "metadata_content_rectangle_without_padding",
+      "dimension": 192
+    }
+  ],
+  "recalibration_target": 0.9,
+  "original_protocol": {
+    "shared_protocol_id": "68f23a72ae919ce97a9933ab8c5b5594ae824314262bbc9a6c6d322763894e45",
+    "config": {
+      "run_name": "Main_Experiments",
+      "feature_profile": "F1.1_Traditional_Content_HSV48",
+      "data_dir": "processed_sop",
+      "protocol_dir": "Main_Experiments_Organized",
+      "cache_dir": "feature_cache",
+      "results_dir": "results",
+      "mode": "formal",
+      "seed": 20261011,
+      "minimum_train_images": 10000,
+      "use_all_official_train": false,
+      "outer_folds": 10,
+      "inner_folds": 3,
+      "train_anchor_cap": 1000,
+      "evaluation_anchor_cap": 500,
+      "negative_candidates": 50,
+      "target_validation_recall": 0.95,
+      "run_official_test": false,
+      "calibration_fraction": 0.2,
+      "conditions": {
+        "clean": {},
+        "occlusion25": {
+          "area_fraction": 0.25,
+          "fill": 127
+        },
+        "noise005": {
+          "sigma": 0.05
+        },
+        "blur15": {
+          "radius": 1.5
+        },
+        "rotation15": {
+          "degrees": 15.0
+        }
+      },
+      "extraction": {
+        "device": "auto",
+        "batch_size": 64
+      },
+      "baselines": {
+        "c_grids": {
+          "LR": [
+            0.01,
+            0.1,
+            1.0
+          ],
+          "SVM": [
+            0.1,
+            1.0,
+            10.0
+          ]
+        },
+        "maximum_grid_extensions": 2
+      },
+      "supcon": {
+        "temperature_grid": [
+          0.05,
+          0.1,
+          0.2
+        ],
+        "maximum_grid_extensions": 2,
+        "temperature_extension_factor": 2.0,
+        "temperature_bounds": [
+          0.005,
+          1.0
+        ],
+        "epochs": 20,
+        "learning_rate": 0.001,
+        "weight_decay": 0.0001,
+        "products_per_batch": 32,
+        "images_per_product": 2,
+        "hidden_dim": 256,
+        "representation_dim": 128,
+        "projection_dim": 128,
+        "device": "auto",
+        "cpu_threads": 4,
+        "train_product_cap": null,
+        "view_mode": "clean_product_images"
+      },
+      "feature_sets": {
+        "ContentHSV48": {
+          "extractor": "hsv_hog_content",
+          "columns": [
+            0,
+            48
+          ]
+        }
+      },
+      "comparisons": [],
+      "c_grids": {
+        "LR": [
+          0.01,
+          0.1,
+          1.0
+        ],
+        "SVM": [
+          0.1,
+          1.0,
+          10.0
+        ]
+      },
+      "maximum_grid_extensions": 2
+    },
+    "code_fingerprint": "84942fc741db045250ffc3c6a4cfd597e35c52df64c0714042d5a66cc969dbf3",
+    "algorithm_family": "baselines",
+    "python": "3.11.17",
+    "numpy": "2.4.6",
+    "pandas": "3.0.6",
+    "sklearn": "1.9.1",
+    "Pillow": "12.3.0",
+    "extractors": [
+      {
+        "extractor": "hsv_hog_content",
+        "opencv": "5.0.0",
+        "geometry": "metadata_content_rectangle_without_padding",
+        "dimension": 192
+      }
+    ]
+  },
+  "note": "Postprocessing only; original model/tuning files remain at the source."
+}

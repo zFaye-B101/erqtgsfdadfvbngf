@@ -1,0 +1,46 @@
+{
+  "fold": 3,
+  "algorithm": "SVM",
+  "features": "HSV_HOG192",
+  "C": 0.1,
+  "final_grid": [
+    0.01,
+    0.1,
+    1.0
+  ],
+  "boundary_unresolved": false,
+  "history": [
+    {
+      "stage": 0,
+      "grid": [
+        0.1,
+        1.0,
+        10.0
+      ],
+      "selected_C": 0.1,
+      "mean_validation_auc": {
+        "0.1": 0.744486212867158,
+        "1.0": 0.7398473107664488,
+        "10.0": 0.7244559729806551
+      }
+    },
+    {
+      "stage": 1,
+      "grid": [
+        0.01,
+        0.1,
+        1.0
+      ],
+      "selected_C": 0.1,
+      "mean_validation_auc": {
+        "0.01": 0.7430601623205284,
+        "0.1": 0.744486212867158,
+        "1.0": 0.7398473107664488
+      }
+    }
+  ],
+  "mean_validation_auc": 0.744486212867158,
+  "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+  "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+  "threshold": -1.0979353885792165
+}

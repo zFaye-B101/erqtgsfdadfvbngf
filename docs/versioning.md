@@ -1,5 +1,10 @@
 # 编号与版本规则
 
+## 最终快照（2026-10-14）
+
+F1.1/F2.1正式结果已[归档](experiments/2026-10-14-final-experiments/README.md)，对应旧F5的ContentHSV48/ContentHSV_HOG192。最终结果不再使用F5或F1.2；历史证据不改名。Main_Experiments包含不同指纹，跨版本白边差值独立核对并标注为描述性比较。
+
+
 ## 90%阈值补充分析（2026-10-12）
 
 新增 `PythonCode/03_SOP_Recalibrate_90.py`，复用保存的校准和外层测试分数，

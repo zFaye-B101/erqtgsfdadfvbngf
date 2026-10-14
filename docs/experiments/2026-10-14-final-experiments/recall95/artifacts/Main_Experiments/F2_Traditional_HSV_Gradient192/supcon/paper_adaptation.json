@@ -1,0 +1,14 @@
+{
+  "paper": "Khosla et al., Supervised Contrastive Learning, NeurIPS 2020, Eq. (2)",
+  "paper_url": "https://arxiv.org/abs/2004.11362",
+  "author_code": "https://github.com/HobbitLong/SupContrast",
+  "loss": "mean_over_positive_log_probabilities_outside_log; self_excluded; mean_over_anchors",
+  "positives": "same_product_class_id",
+  "negatives": "other_products_in_batch",
+  "views": "distinct_clean_images_of_same_product; not_two_random_augmentations_of_each_image",
+  "encoder": "trainable_MLP_on_fixed_features; external_image_encoder_is_not_finetuned",
+  "inference": "learned_encoder_retained; projector_discarded; cosine_and_inner_validation_threshold",
+  "evaluation": "unseen_SKU_matching_not_original_ImageNet_classification",
+  "mode": "formal",
+  "torch": "2.14.1+cu130"
+}

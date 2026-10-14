@@ -1,0 +1,60 @@
+{
+  "fold": 4,
+  "algorithm": "LR",
+  "features": "ContentHSV_HOG192",
+  "C": 0.001,
+  "final_grid": [
+    0.0001,
+    0.001,
+    0.01
+  ],
+  "boundary_unresolved": false,
+  "history": [
+    {
+      "stage": 0,
+      "grid": [
+        0.01,
+        0.1,
+        1.0
+      ],
+      "selected_C": 0.01,
+      "mean_validation_auc": {
+        "0.01": 0.7264565638710528,
+        "0.1": 0.7177690724613242,
+        "1.0": 0.7162844008759702
+      }
+    },
+    {
+      "stage": 1,
+      "grid": [
+        0.001,
+        0.01,
+        0.1
+      ],
+      "selected_C": 0.001,
+      "mean_validation_auc": {
+        "0.001": 0.7374879153191637,
+        "0.01": 0.7264565638710528,
+        "0.1": 0.7177690724613242
+      }
+    },
+    {
+      "stage": 2,
+      "grid": [
+        0.0001,
+        0.001,
+        0.01
+      ],
+      "selected_C": 0.001,
+      "mean_validation_auc": {
+        "0.0001": 0.7335681063876258,
+        "0.001": 0.7374879153191637,
+        "0.01": 0.7264565638710528
+      }
+    }
+  ],
+  "mean_validation_auc": 0.7374879153191637,
+  "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+  "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+  "threshold": -1.6319234369906392
+}

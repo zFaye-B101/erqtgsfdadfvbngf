@@ -1,0 +1,98 @@
+[
+  {
+    "baseline_group": "F1_Traditional_HSV48",
+    "added_group": "F1.1_Traditional_Content_HSV48",
+    "family": "baselines",
+    "reason": "Protocol, code or common configuration differs."
+  },
+  {
+    "baseline_group": "F1_Traditional_HSV48",
+    "added_group": "F2.1_Traditional_Content_HSV_Gradient192",
+    "family": "baselines",
+    "reason": "Protocol, code or common configuration differs."
+  },
+  {
+    "baseline_group": "F1.1_Traditional_Content_HSV48",
+    "added_group": "F2_Traditional_HSV_Gradient192",
+    "family": "baselines",
+    "reason": "Protocol, code or common configuration differs."
+  },
+  {
+    "baseline_group": "F1.1_Traditional_Content_HSV48",
+    "added_group": "F3_ResNet_Global512",
+    "family": "baselines",
+    "reason": "Protocol, code or common configuration differs."
+  },
+  {
+    "baseline_group": "F1.1_Traditional_Content_HSV48",
+    "added_group": "F4_ResNet_GlobalLocal2560",
+    "family": "baselines",
+    "reason": "Protocol, code or common configuration differs."
+  },
+  {
+    "baseline_group": "F2_Traditional_HSV_Gradient192",
+    "added_group": "F2.1_Traditional_Content_HSV_Gradient192",
+    "family": "baselines",
+    "reason": "Protocol, code or common configuration differs."
+  },
+  {
+    "baseline_group": "F2.1_Traditional_Content_HSV_Gradient192",
+    "added_group": "F3_ResNet_Global512",
+    "family": "baselines",
+    "reason": "Protocol, code or common configuration differs."
+  },
+  {
+    "baseline_group": "F2.1_Traditional_Content_HSV_Gradient192",
+    "added_group": "F4_ResNet_GlobalLocal2560",
+    "family": "baselines",
+    "reason": "Protocol, code or common configuration differs."
+  },
+  {
+    "baseline_group": "F1_Traditional_HSV48",
+    "added_group": "F1.1_Traditional_Content_HSV48",
+    "family": "supcon",
+    "reason": "Protocol, code or common configuration differs."
+  },
+  {
+    "baseline_group": "F1_Traditional_HSV48",
+    "added_group": "F2.1_Traditional_Content_HSV_Gradient192",
+    "family": "supcon",
+    "reason": "Protocol, code or common configuration differs."
+  },
+  {
+    "baseline_group": "F1.1_Traditional_Content_HSV48",
+    "added_group": "F2_Traditional_HSV_Gradient192",
+    "family": "supcon",
+    "reason": "Protocol, code or common configuration differs."
+  },
+  {
+    "baseline_group": "F1.1_Traditional_Content_HSV48",
+    "added_group": "F3_ResNet_Global512",
+    "family": "supcon",
+    "reason": "Protocol, code or common configuration differs."
+  },
+  {
+    "baseline_group": "F1.1_Traditional_Content_HSV48",
+    "added_group": "F4_ResNet_GlobalLocal2560",
+    "family": "supcon",
+    "reason": "Protocol, code or common configuration differs."
+  },
+  {
+    "baseline_group": "F2_Traditional_HSV_Gradient192",
+    "added_group": "F2.1_Traditional_Content_HSV_Gradient192",
+    "family": "supcon",
+    "reason": "Protocol, code or common configuration differs."
+  },
+  {
+    "baseline_group": "F2.1_Traditional_Content_HSV_Gradient192",
+    "added_group": "F3_ResNet_Global512",
+    "family": "supcon",
+    "reason": "Protocol, code or common configuration differs."
+  },
+  {
+    "baseline_group": "F2.1_Traditional_Content_HSV_Gradient192",
+    "added_group": "F4_ResNet_GlobalLocal2560",
+    "family": "supcon",
+    "reason": "Protocol, code or common configuration differs."
+  }
+]

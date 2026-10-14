@@ -1,0 +1,32 @@
+{
+  "fold": 8,
+  "algorithm": "SVM",
+  "features": "ResNet18_GlobalLocal2560",
+  "C": 1.0,
+  "final_grid": [
+    0.1,
+    1.0,
+    10.0
+  ],
+  "boundary_unresolved": false,
+  "history": [
+    {
+      "stage": 0,
+      "grid": [
+        0.1,
+        1.0,
+        10.0
+      ],
+      "selected_C": 1.0,
+      "mean_validation_auc": {
+        "0.1": 0.8015709946767261,
+        "1.0": 0.8190312308548138,
+        "10.0": 0.8172996931838576
+      }
+    }
+  ],
+  "mean_validation_auc": 0.8190312308548138,
+  "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+  "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+  "threshold": -0.9244110359754928
+}

@@ -1,0 +1,32 @@
+{
+  "fold": 6,
+  "algorithm": "SVM",
+  "features": "ContentHSV48",
+  "C": 1.0,
+  "final_grid": [
+    0.1,
+    1.0,
+    10.0
+  ],
+  "boundary_unresolved": false,
+  "history": [
+    {
+      "stage": 0,
+      "grid": [
+        0.1,
+        1.0,
+        10.0
+      ],
+      "selected_C": 1.0,
+      "mean_validation_auc": {
+        "0.1": 0.6973918674107135,
+        "1.0": 0.713047703584362,
+        "10.0": 0.7019108436111688
+      }
+    }
+  ],
+  "mean_validation_auc": 0.713047703584362,
+  "objective": "Mean clean-validation ROC-AUC across product-grouped inner folds",
+  "threshold_note": "Threshold is calibrated separately after final fitting; calibration products are excluded from tuning.",
+  "threshold": -1.1859565645293786
+}

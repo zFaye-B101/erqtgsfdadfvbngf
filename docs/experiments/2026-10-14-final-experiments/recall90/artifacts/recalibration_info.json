@@ -1,0 +1,9 @@
+{
+  "target_recall": 0.9,
+  "original_target_recall": 0.95,
+  "source": "results",
+  "selection": "Clean held-out calibration positives only; no test threshold tuning.",
+  "training": "No feature extraction, model fitting or hyperparameter search.",
+  "script_sha256": "380b98db2a5d73958bee044b38c81c41152bf111478dc2b182b90abbd3aa41f1",
+  "note": "90% calibration recall does not guarantee 90% test recall or FPR below 50%."
+}

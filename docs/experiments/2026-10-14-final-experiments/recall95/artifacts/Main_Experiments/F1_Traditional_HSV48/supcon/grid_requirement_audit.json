@@ -1,0 +1,9 @@
+[
+  {
+    "algorithm": "SupCon",
+    "features": "HSV48",
+    "boundary_selected_folds": 1,
+    "middle_selected_folds": 9,
+    "middle_is_majority": true
+  }
+]

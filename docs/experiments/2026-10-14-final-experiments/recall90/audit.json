@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-14",
+  "all_eight_metrics_recomputed": true,
+  "summary_mean_sample_sd_verified": true,
+  "fit_calibration_test_disjoint": true,
+  "limits": [
+    "No model loading or retraining; no full preprocessing/inner-membership audit.",
+    "Official holdout unused; fold SD is not a confidence interval.",
+    "Mixed-version comparisons are explicit descriptive postprocessing, not automatic compatible-run comparisons."
+  ],
+  "source": "results_recall90.zip",
+  "runs": [
+    {
+      "predictions": 900,
+      "calibration_models": 180,
+      "completed_records": 0,
+      "metric_rows": 2700,
+      "summary_rows": 2160,
+      "paired_delta_rows": 0,
+      "run": "Main_Experiments",
+      "code_fingerprint": [
+        "84942fc741db045250ffc3c6a4cfd597e35c52df64c0714042d5a66cc969dbf3",
+        "f5708eb496addc1ea87413327cf464b5bd0b8428b7d87c437313bf3cafccd5b4"
+      ],
+      "shared_protocol_id": "68f23a72ae919ce97a9933ab8c5b5594ae824314262bbc9a6c6d322763894e45",
+      "test_pair_hashes": {
+        "1": "bf945bb3478e2fa529db159402cc6ec3e8a0960bddedb8f6fcec202214066031",
+        "2": "a069c7ef07480cc778ddbc2407df8bdfe39d9b1b95751044ee755e9fd8576aa0",
+        "3": "a65009d2caf2c0816cc420b9790a322287fc145ebcb367e42bbaef9bb0828903",
+        "4": "c6b37c57c778c752ddbe62a055af5312bb48798609c03838ac1d63f2253e8919",
+        "5": "69b61ad335b84c248338b7363e4bcb8018466aa5616934bd1ef73060bdee343b",
+        "6": "09695367a364f7097590f3f36a2028164828aa7e61aa271c78fd637246a37714",
+        "7": "62ab6229af18207074e791f26b281740a155c41ac5d95417979be438b4332e76",
+        "8": "c3f6f3ca24382ee854824efadcc618273024054d951b91eabeaebb93ad4edd58",
+        "9": "ec95aa7eeba2db351e26f744e4d7b5d03f872ed62f0d17af88da55283a830c96",
+        "10": "2b084a2add0cda2befb47196a4906e6d34609270e28ec41d6be5fce5082ffa5d"
+      }
+    },
+    {
+      "predictions": 600,
+      "calibration_models": 120,
+      "completed_records": 0,
+      "metric_rows": 1800,
+      "summary_rows": 1440,
+      "paired_delta_rows": 0,
+      "run": "ResNet_LocalFeature_Comparison",
+      "code_fingerprint": "84942fc741db045250ffc3c6a4cfd597e35c52df64c0714042d5a66cc969dbf3",
+      "shared_protocol_id": "68f23a72ae919ce97a9933ab8c5b5594ae824314262bbc9a6c6d322763894e45",
+      "test_pair_hashes": {
+        "1": "bf945bb3478e2fa529db159402cc6ec3e8a0960bddedb8f6fcec202214066031",
+        "2": "a069c7ef07480cc778ddbc2407df8bdfe39d9b1b95751044ee755e9fd8576aa0",
+        "3": "a65009d2caf2c0816cc420b9790a322287fc145ebcb367e42bbaef9bb0828903",
+        "4": "c6b37c57c778c752ddbe62a055af5312bb48798609c03838ac1d63f2253e8919",
+        "5": "69b61ad335b84c248338b7363e4bcb8018466aa5616934bd1ef73060bdee343b",
+        "6": "09695367a364f7097590f3f36a2028164828aa7e61aa271c78fd637246a37714",
+        "7": "62ab6229af18207074e791f26b281740a155c41ac5d95417979be438b4332e76",
+        "8": "c3f6f3ca24382ee854824efadcc618273024054d951b91eabeaebb93ad4edd58",
+        "9": "ec95aa7eeba2db351e26f744e4d7b5d03f872ed62f0d17af88da55283a830c96",
+        "10": "2b084a2add0cda2befb47196a4906e6d34609270e28ec41d6be5fce5082ffa5d"
+      }
+    }
+  ],
+  "threshold_target": 0.9,
+  "scores_and_pairs_unchanged": true,
+  "published_files": 2291,
+  "excluded_files": [],
+  "excluded_note": "Weights, training checkpoints/loss traces, caches and source ZIP are not exported."
+}

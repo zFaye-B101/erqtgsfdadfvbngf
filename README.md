@@ -1,5 +1,12 @@
 # COMP90051 Product Matching
 
+## 最终八组结果（2026-10-14）
+
+- [最终95%与90%结果及说明](docs/experiments/2026-10-14-final-experiments/README.md)：F1、F1.1、F2、F2.1、F3、F4、F4.1、F4.2已回传；新结果不包含F5或F1.2。保存逐折/汇总指标、预测、校准、调参及诊断图，不上传模型、数据和原始ZIP。
+- 八指标、阈值与汇总独立复算；补充跨版本白边描述性配对比较。原自动比较跳过跨指纹组合，并不表示训练或测试缺失。归档工具没有修改PythonCode。
+- 第四部分：4.1总体性能与扰动，4.2特征构建增量（含白边），4.3阈值敏感性，4.4局限；个人正文在聊天提供。
+
+
 ## 白边配置拆分（2026-10-14）
 
 - 活跃F5配置拆成F1.1（ContentHSV48）和F2.1（ContentHSV_HOG192）。运行 `python 02_SOP_Experiments.py --group F1.1,F2.1 --method all`，默认写入 `results/Main_Experiments/`。F2.1为正式组名，不再使用名称映射。
