@@ -5,9 +5,10 @@ Uses saved summaries/protocols only; no fitting, model loading or metric recompu
 Defaults: all eight report groups, LR/SVM/SupCon, five conditions, mixed negatives,
 original 95% calibration target, ten outer folds. Handcrafted groups come from
 Main_Experiments; CNN groups come from ResNet_LocalFeature_Comparison.
-Output: report_figures/figure1_auc_errorbars.png (16 x 4.8 cm, 400 dpi).
+Output: report_figures/figure1_auc_errorbars.png (16 x 7.2 cm, 400 dpi).
 Error bars show sample SD across outer folds, not confidence intervals.
-C/O/N/B/R denote Clean/Occlusion/Noise/Blur/Rotation.
+Full condition labels (Clean/Occlusion/Noise/Blur/Rotation) are tilted 40 degrees.
+Fonts, markers and error-bar lines are enlarged for readability.
 Options: --source results --subset all|random|colour_hard; --overwrite replaces
 only an existing output figure. Other subsets have separate output filenames.
 Dependencies: existing matplotlib plus the Python standard library.

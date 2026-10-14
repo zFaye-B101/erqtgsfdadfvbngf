@@ -5,6 +5,7 @@ Default input: results/ beside this script; no compressed archive is needed.
 Default output: report_figures/figure1_auc_errorbars.png beside this script.
 Error bars show mean +/- one sample SD across ten outer test folds.
 All eight report feature groups are included by default.
+Default figure size is 16 x 7.2 cm, with full condition labels tilted 40 degrees.
 
 Usage:
     python 04_SOP_Report_Figure.py
@@ -102,10 +103,10 @@ def draw(points, groups, output, width_cm, height_cm):
     import matplotlib.pyplot as plt
     from matplotlib.ticker import MaxNLocator
 
-    plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 9.5,
-                         "axes.titlesize": 10, "axes.labelsize": 9.5,
-                         "xtick.labelsize": 9, "ytick.labelsize": 9,
-                         "legend.fontsize": 9, "axes.linewidth": 0.6})
+    plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 10,
+                         "axes.titlesize": 11, "axes.labelsize": 10,
+                         "xtick.labelsize": 10, "ytick.labelsize": 10,
+                         "legend.fontsize": 10, "axes.linewidth": 0.8})
     fig, axes = plt.subplots(1, 3, sharey=True,
                              figsize=(width_cm / 2.54, height_cm / 2.54))
     lows = [m - s for m, s in points.values()]
@@ -114,28 +115,29 @@ def draw(points, groups, output, width_cm, height_cm):
     for axis, algorithm in zip(axes, ALGORITHMS):
         for index, label in enumerate(groups):
             values = [points[label, algorithm, c] for c in CONDITIONS]
-            offset = (index - (len(groups) - 1) / 2) * 0.055
+            offset = (index - (len(groups) - 1) / 2) * 0.07
             axis.errorbar([j + offset for j in range(5)], [v[0] for v in values],
                           yerr=[v[1] for v in values], label=label,
                           color=COLORS[index], marker=MARKERS[index],
-                          markersize=3.0, linewidth=0.85, elinewidth=0.6,
-                          capsize=1.4, markeredgewidth=0.5,
+                          markersize=4.0, linewidth=1.05, elinewidth=1.0,
+                          capsize=2.5, markeredgewidth=0.8,
                           linestyle="--" if label in {"F1", "F2", "F1.1", "F2.1"} else "-")
-        axis.set_title(algorithm, pad=4)
-        axis.set_xticks(range(5), ("C", "O", "N", "B", "R"))
+        axis.set_title(algorithm, pad=7)
+        axis.set_xticks(range(5), ("Clean", "Occlusion", "Noise", "Blur", "Rotation"))
+        plt.setp(axis.get_xticklabels(), rotation=40, ha="right", rotation_mode="anchor")
         axis.set_ylim(max(0, min(lows) - margin), min(1, max(highs) + margin))
         axis.yaxis.set_major_locator(MaxNLocator(4))
         axis.grid(axis="y", color="#dddddd", linewidth=0.5)
         axis.set_axisbelow(True)
         axis.spines["top"].set_visible(False)
         axis.spines["right"].set_visible(False)
-        axis.tick_params(width=0.5, length=2, pad=2)
+        axis.tick_params(width=0.7, length=3, pad=3)
     axes[0].set_ylabel("ROC-AUC", labelpad=3)
     handles, labels = axes[0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc="lower center", bbox_to_anchor=(0.54, 0.005),
+    fig.legend(handles, labels, loc="lower center", bbox_to_anchor=(0.54, 0.015),
                ncol=len(groups), frameon=False, columnspacing=0.5,
                handlelength=1.25, handletextpad=0.25, borderaxespad=0)
-    fig.subplots_adjust(left=0.095, right=0.995, top=0.84, bottom=0.32, wspace=0.11)
+    fig.subplots_adjust(left=0.095, right=0.99, top=0.89, bottom=0.34, wspace=0.16)
     # Keep exact physical size: do not use bbox_inches='tight'.
     output.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output, dpi=400, facecolor="white")
@@ -153,14 +155,14 @@ def main():
     parser.add_argument("--main-run", default="Main_Experiments")
     parser.add_argument("--local-run", default="ResNet_LocalFeature_Comparison")
     parser.add_argument("--width-cm", type=float, default=16.0)
-    parser.add_argument("--height-cm", type=float, default=4.8)
+    parser.add_argument("--height-cm", type=float, default=7.2)
     parser.add_argument("--overwrite", action="store_true")
     args = parser.parse_args()
     groups = [g.strip() for g in args.groups.split(",")]
     if not groups or len(groups) != len(set(groups)) or any(g not in GROUPS for g in groups):
         parser.error("Select unique known group names, e.g. F1,F1.1,F2,F2.1,F3,F4,F4.1,F4.2.")
-    if args.width_cm < 12 or args.height_cm < 4:
-        parser.error("Use width >= 12 cm and height >= 4 cm for readable labels.")
+    if args.width_cm < 16 or args.height_cm < 7:
+        parser.error("Use width >= 16 cm and height >= 7 cm for full condition labels.")
     suffix = "" if args.subset == "all" else "_" + args.subset
     output = (args.output or ROOT / ("report_figures/figure1_auc_errorbars" + suffix + ".png"))
     output = output.expanduser().resolve()
@@ -177,7 +179,7 @@ def main():
     print("Saved:", output)
     print("Size:", args.width_cm, "x", args.height_cm, "cm; subset:", args.subset, "; 95% target.")
     print("Error bars: mean +/- one sample SD across ten outer test folds (not a CI).")
-    print("C=Clean; O=Occlusion 25%; N=Noise sigma 0.05; B=Blur radius 1.5; R=Rotation +15 deg.")
+    print("Conditions: Clean; Occlusion 25%; Noise sigma 0.05; Blur radius 1.5; Rotation +15 deg.")
     print("No models, predictions or input result files were changed.")
 
 
